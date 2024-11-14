@@ -44,7 +44,6 @@ return {
                     barbar = true,
                     aerial = true,
                     gitsigns = true,
-                    nvimtree = true,
                     treesitter = true,
                     notify = false,
                     mason = true,
@@ -164,6 +163,8 @@ return {
             require('lualine').setup({
                 options = {
                     theme = 'catppuccin',
+                    globalstatus = true,
+                    always_show_tabline = true,
                 },
                 sections = {
                     lualine_c = {
@@ -327,12 +328,13 @@ return {
                     filtered_items = {
                         hide_hidden = false,
                         hide_dotfiles = false,
+                        hide_gitignored = false
                     },
                     follow_current_file = {
                         enable = true,
                         leave_dits_open = true
                     }
-                }
+                },
             })
         end
     },
@@ -367,6 +369,8 @@ return {
         end,
         opts = {
             vim.keymap.set("n", "<leader>bp", [[<Cmd>BufferPickDelete<CR>]], { noremap = true, silent = true },
+                { desc = "[P]ick[B]uffertoclose" }),
+            vim.keymap.set("n", "<leader>cb", [[<Cmd>BufferClose<CR>]], { noremap = true, silent = true },
                 { desc = "[C]lose[B]uffer" }),
             vim.keymap.set("n", "<leader>c[", [[<Cmd>BufferCloseBuffersLeft<CR>]], { noremap = true, silent = true },
                 { desc = "Close Left Buffer" }),
