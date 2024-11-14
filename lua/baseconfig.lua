@@ -56,3 +56,22 @@ vim.keymap.set("n", "L", "$", { noremap = true, silent = true })
 vim.keymap.set("v", "L", "$", { noremap = true, silent = true })
 
 vim.keymap.set("n", "<leader>l", "<cmd>echo expand('%:p')<cr>")
+
+function no_paste(reg)
+    return function(lines)
+        -- Do nothing! We can't paste with OSC52
+    end
+end
+
+vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+         ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+         ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+    },
+    paste = {
+        ["+"] = no_paste("+"), -- Pasting disabled
+        ["*"] = no_paste("*"), -- Pasting disabled
+    }
+}
+
