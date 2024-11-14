@@ -192,7 +192,10 @@ return {
         },
         config = function()
             -- vim.api.nvim_command('autocmd FileType lua,python,c,cpp AerialOpen!')
-            vim.api.nvim_command('autocmd VimEnter * AerialOpen!')
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "lua", "python", "c", "cpp", "sh" },
+                command = "AerialOpen!"
+            })
             vim.keymap.set('n', '<leader>a', '<cmd>AerialToggle!<CR>', { desc = "[A]erial" })
             require("aerial").setup({
                 filter_kind = {
@@ -338,8 +341,8 @@ return {
         'vidocqh/auto-indent.nvim',
         config = function()
             require("auto-indent").setup({
-                lightmode = true, -- Lightmode assumes tabstop and indentexpr not change within buffer's lifetime
-                indentexpr = nil, -- Use vim.bo.indentexpr by default, see 'Custom Indent Evaluate Method'
+                lightmode = true,     -- Lightmode assumes tabstop and indentexpr not change within buffer's lifetime
+                indentexpr = nil,     -- Use vim.bo.indentexpr by default, see 'Custom Indent Evaluate Method'
                 ignore_filetype = {}, -- Disable plugin for specific filetypes, e.g. ignore_filetype = { 'javascript' }
             })
         end
