@@ -20,7 +20,7 @@ return {
                 layout_config = {
                     width = 0.75,
                     height = 0.75,
-                    padding = 0,
+                    -- padding = 0,
                 }
             },
             extensions = {

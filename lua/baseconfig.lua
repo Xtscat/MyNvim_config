@@ -59,19 +59,20 @@ vim.keymap.set("n", "<leader>l", "<cmd>echo expand('%:p')<cr>")
 
 function no_paste(reg)
     return function(lines)
-        -- Do nothing! We can't paste with OSC52
+        --[ 返回 “” 寄存器的内容，用来作为 p 操作符的粘贴物 ]
+        local content = vim.fn.getreg('"')
+        return vim.split(content, '\n')
     end
 end
 
 vim.g.clipboard = {
     name = "OSC 52",
     copy = {
-         ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-         ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+        ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+        ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
     },
     paste = {
         ["+"] = no_paste("+"), -- Pasting disabled
         ["*"] = no_paste("*"), -- Pasting disabled
     }
 }
-
