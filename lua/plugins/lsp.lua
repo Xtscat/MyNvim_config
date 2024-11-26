@@ -27,7 +27,8 @@ return {
 
             -- python
             -- pyright = {},
-            ruff_lsp = {},
+            -- ruff_lsp = {},
+            ruff = {},
             jedi_language_server = {},
 
             -- bash
