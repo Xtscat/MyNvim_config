@@ -27,12 +27,18 @@ return {
 
             -- python
             -- pyright = {},
-            -- ruff_lsp = {},
             ruff = {},
             jedi_language_server = {},
 
             -- bash
-            bashls = {},
+            bashls = {
+                settings = {
+                    bash = {
+                        diagnostics = { enable = true },
+                        completion = { enable = true },
+                    },
+                }
+            },
         }
         local on_attach = function(_, bufnr)
             -- Enable completion triggered by <c-x><c-o>
@@ -74,6 +80,7 @@ return {
             -- end, "[F]ormat code")
             -- nmap('<leader>a', "<cmd>Lspsaga outline<cr>", 'LspSaga Outline')
         end
+
         require("lspsaga").setup({
             lightbulb = {
                 enable = false
@@ -83,25 +90,12 @@ return {
             },
         })
         require("mason").setup()
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
         require("mason-lspconfig").setup({
             ensure_installed = vim.tbl_keys(servers),
         })
-        -- require("lsp-lens").setup({
-        --     enable = true,
-        --     include_declaration = true, -- Reference include declaration
-        --     sections = {                -- Enable / Disable specific request, formatter example looks 'Format Requests'
-        --         definition = true,
-        --         references = true,
-        --         implements = true,
-        --         git_authors = true,
-        --     },
-        --     ignore_filetype = {
-        --         -- "lua",
-        --     },
-        -- })
         require("lsp-progress").setup()
 
+        local capabilities = require('cmp_nvim_lsp').default_capabilities()
         for server, config in pairs(servers) do
             require("lspconfig")[server].setup(
                 vim.tbl_deep_extend("keep",
