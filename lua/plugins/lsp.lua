@@ -5,10 +5,6 @@ return {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
         "nvimdev/lspsaga.nvim",
-        {
-            "folke/trouble.nvim",
-            opts = {}
-        },
         "linrongbin16/lsp-progress.nvim",
     },
     config = function()
