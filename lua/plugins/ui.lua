@@ -384,10 +384,10 @@ return {
                     buffer_index = true,
                     buffer_numbers = true,
                 },
-                sidebar_filetypes = {
-                    ['neo-tree'] = { event = 'BufWipeout' },
-                    Outline = { event = 'BufWinLeave', text = 'symbols-outline', align = 'right' }
-                }
+                -- sidebar_filetypes = {
+                --     ['neo-tree'] = { event = 'BufWipeout' },
+                --     Outline = { event = 'BufWinLeave', text = 'symbols-outline', align = 'right' }
+                -- }
             })
         end,
         opts = {
