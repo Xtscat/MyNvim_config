@@ -10,39 +10,6 @@ return {
         "hrsh7th/cmp-cmdline",
         "windwp/nvim-autopairs",
         {
-            "folke/trouble.nvim",
-            vim.keymap.set("n", "<leader>tr", "<cmd>Trouble mydiags toggle<CR>", { desc = "[T][R]ouble" }),
-            config = function()
-                --     local actions = require("telescope.actions")
-                --     local open_with_trouble = require("trouble.sources.telescope").open
-                --     local add_to_trouble = require("trouble.sources.telescope").add
-                --     local telescope = require("telescope")
-                --     telescope.setup({
-                --         defaults = {
-                --             mappings = {
-                --                 i = { ["<c-t>"] = open_with_trouble },
-                --                 n = { ["<c-t>"] = open_with_trouble },
-                --             },
-                --         },
-                --     })
-                require('trouble').setup({
-                    focus = true,
-                    modes = {
-                        mydiags = {
-                            mode = "diagnostics",
-                            preview = {
-                                type = "split",
-                                relative = "win",
-                                position = "right",
-                                size = 0.3,
-                            },
-                        },
-                    },
-                    cmd = 'Trouble'
-                })
-            end,
-        },
-        {
             "saadparwaiz1/cmp_luasnip",
             dependencies = {
                 "L3MON4D3/LuaSnip",
