@@ -1,38 +1,60 @@
 return {
     {
-        'JManch/sunset.nvim',
-        dependencies = {
-            "catppuccin/nvim",
-        },
-        lazy = false,
-        priority = 1000,
+        'navarasu/onedark.nvim',
         config = function()
-            local catppuccin = require('catppuccin').setup
-            require('sunset').setup({
-                latitude = 36.31,
-                longitude = 104.48,
-                day_callback = function()
-                    if vim.g.is_day then
-                        catppuccin.flavour = 'latte'
-                    else
-                        catppuccin.flavour = 'mocha'
-                    end
-                end
-            })
+            -- Lua
+            require('onedark').setup {
+                -- Main options --
+                -- style = 'dark',   -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+                transparent = false, -- Show/hide background
+                term_colors = true, -- Change terminal color as per the selected theme style
+                ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
+                cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
+
+                -- toggle theme style ---
+                toggle_style_key = nil,                                                -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
+                toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
+
+                -- Change code style ---
+                -- Options are italic, bold, underline, none
+                -- You can configure multiple style with comma separated, For e.g., keywords = 'italic,bold'
+                code_style = {
+                    comments = 'italic',
+                    keywords = 'none',
+                    functions = 'none',
+                    strings = 'none',
+                    variables = 'none'
+                },
+
+                -- Lualine options --
+                lualine = {
+                    transparent = false, -- lualine center bar transparency
+                },
+
+                -- Custom Highlights --
+                colors = {}, -- Override default colors
+                highlights = {}, -- Override highlight groups
+
+                -- Plugins Config --
+                diagnostics = {
+                    darker = true, -- darker colors for diagnostic
+                    undercurl = true, -- use undercurl instead of underline for diagnostics
+                    background = true, -- use background color for virtual text
+                },
+            }
         end
     },
     {
         "catppuccin/nvim",
         name = "catppuccin",
-        priority = 1000,
+        -- priority = 1000,
         config = function()
             require("catppuccin").setup({
-                flavour = "auto", -- latte, frappe, macchiato, mocha
-                -- flavour = "mocha", -- latte, frappe, macchiato, mocha
-                background = {    -- :h background
-                    light = "latte",
-                    dark = "mocha",
-                },
+                -- flavour = "auto", -- latte, frappe, macchiato, mocha
+                -- background = { -- :h background
+                --     light = "latte",
+                --     dark = "mocha",
+                -- },
                 transparent_background = false, -- disables setting the background color.
                 show_end_of_buffer = false,     -- shows the '~' characters after the end of buffers
                 term_colors = false,            -- sets terminal colors (e.g. `g:terminal_color_0`)
@@ -59,44 +81,44 @@ return {
                     operators = {},
                     -- miscs = {}, -- Uncomment to turn off hard-coded styles
                 },
-                color_overrides = {
-                    {
-                        -- this 16 colors are changed to onedark
-                        base = "#282c34",
-                        mantle = "#353b45",
-                        surface0 = "#3e4451",
-                        surface1 = "#545862",
-                        surface2 = "#565c64",
-                        text = "#abb2bf",
-                        rosewater = "#b6bdca",
-                        lavender = "#c8ccd4",
-                        red = "#e06c75",
-                        peach = "#d19a66",
-                        yellow = "#e5c07b",
-                        green = "#98c379",
-                        teal = "#56b6c2",
-                        blue = "#61afef",
-                        mauve = "#c678dd",
-                        flamingo = "#be5046",
-
-                        -- now patching extra palettes
-                        maroon = "#e06c75",
-                        sky = "#d19a66",
-
-                        -- extra colors not decided what to do
-                        pink = "#F5C2E7",
-                        sapphire = "#74C7EC",
-
-                        subtext1 = "#BAC2DE",
-                        subtext0 = "#A6ADC8",
-                        overlay2 = "#9399B2",
-                        overlay1 = "#7F849C",
-                        overlay0 = "#6C7086",
-
-                        crust = "#11111B",
-                    }
-                },
-                custom_highlights = {},
+                -- color_overrides = {
+                --     mocha = {
+                --         -- this 16 colors are changed to onedark
+                --         base = "#282c34",
+                --         mantle = "#353b45",
+                --         surface0 = "#3e4451",
+                --         surface1 = "#545862",
+                --         surface2 = "#565c64",
+                --         text = "#abb2bf",
+                --         -- rosewater = "#b6bdca",
+                --         -- lavender = "#c8ccd4",
+                --         -- red = "#e06c75",
+                --         -- peach = "#d19a66",
+                --         -- yellow = "#e5c07b",
+                --         -- green = "#98c379",
+                --         -- teal = "#56b6c2",
+                --         blue = "#61afef",
+                --         -- mauve = "#c678dd",
+                --         -- flamingo = "#be5046",
+                --
+                --         -- now patching extra palettes
+                --         maroon = "#e06c75",
+                --         sky = "#d19a66",
+                --
+                --         -- extra colors not decided what to do
+                --         -- pink = "#F5C2E7",
+                --         -- sapphire = "#74C7EC",
+                --         --
+                --         subtext1 = "#BAC2DE",
+                --         subtext0 = "#A6ADC8",
+                --         overlay2 = "#9399B2",
+                --         overlay1 = "#7F849C",
+                --         overlay0 = "#6C7086",
+                --
+                --         crust = "#11111B",
+                --     }
+                -- },
+                -- custom_highlights = {},
                 default_integrations = true,
                 integrations = {
                     cmp = true,
@@ -151,7 +173,39 @@ return {
             })
 
             -- setup must be called before loading
-            vim.cmd.colorscheme "catppuccin"
+            -- vim.cmd.colorscheme "catppuccin"
+        end,
+    },
+    {
+        'JManch/sunset.nvim',
+        dependencies = {
+            "catppuccin/nvim",
+            'navarasu/onedark.nvim',
+        },
+        lazy = false,
+        priority = 1000,
+        config = function()
+            local catppuccin = require('catppuccin')
+            local onedark = require('onedark')
+            require('sunset').setup({
+                latitude = 36.31,
+                longitude = 104.48,
+                day_callback = function()
+                    if vim.g.is_day then
+                        catppuccin.flavour = 'latte'
+                        onedark.style = 'light'
+                    else
+                        catppuccin.flavour = 'mocha'
+                        onedark.style = 'warmer'
+                    end
+                end,
+            })
+            if vim.g.is_day then
+                vim.cmd.colorscheme "catppuccin"
+            else
+                -- vim.cmd.colorscheme "catppuccin"
+                vim.cmd.colorscheme "onedark"
+            end
         end,
     },
     {
