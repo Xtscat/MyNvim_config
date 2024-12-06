@@ -46,35 +46,26 @@ return {
                 vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
             end
 
-            -- gd 跳转到变量定义
-            nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+            -- gd: Goto the definition of the word under the cursor, if there's only one, otherwise show all options in Telescope
             nmap('gd', require "telescope.builtin".lsp_definitions, '[G]oto [D]efinition')
-            -- nmap('gd', "<cmd>Lspsaga peek_definition<cr>", '[G]oto [D]eclaration')
-            -- nmap('gD', "<cmd>Lspsaga peek_type_definition<cr>", '[G]oto [D]efinition')
-            -- K 显示文档
-            nmap('K', "<cmd>Lspsaga hover_doc<cr>", 'Hover Documentation')
-            -- gi 快速跳转到变量声明
+            -- gD: Goto the definition of the type of the word under the cursor, if there's only one, otherwise show all options in Telescope
+            nmap('gD', require "telescope.builtin".lsp_type_definitions, '[G]oto Type [D]efinition')
+            -- gr: Lists LSP references for word under the cursor
+            nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+            -- gi: Goto the implementation of the word under the cursor if there's only one, otherwise show all options in Telescope
             nmap('gi', require "telescope.builtin".lsp_implementations, '[G]oto [I]mplementation')
-            -- <leader>da 显示代码中所有错误及警告
-            -- nmap('<leader>da', require "telescope.builtin".diagnostics, '[D]i[A]gnostics')
-            nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-            nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-            nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-            -- <leader>wl 显示当前文件路径
-            nmap('<leader>wl', function()
-                print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-            end, '[W]orkspace [L]ist Folders')
-            nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
+            -- gt: Goto error of warnings in the current buffer
+            nmap('gt', "<cmd>Telescope diagnostics bufnr=0 severity_bound=0<cr>", '[G]oto [T]roubles in current buffer')
+            -- gT: Goto error of warnings in all buffers
+            nmap('gT', "<cmd>Telescope diagnostics severity_bound=0<cr>", '[G]oto [T]roubles in all buffers')
+            -- <leader>K 显示文档
+            nmap('<leader>K', "<cmd>Lspsaga hover_doc<cr>", 'Hover Documentation')
+            -- <leader>k 显示当前函数帮助文档
+            nmap('<leader>k', vim.lsp.buf.signature_help, 'Signature Documentation')
             -- <leader>rn 更给变量名称 <c-k>退出窗口
             nmap('<leader>rn', "<cmd>Lspsaga rename ++project<cr>", '[R]e[n]ame')
             -- <leader>ca 显示当前代码可执行行为
             nmap('<leader>ca', "<cmd>Lspsaga code_action<cr>", '[C]ode [A]ction')
-            -- gr 快速跳转到引用此变量的地方
-            nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-            -- nmap("<c-l>", function()
-            --     vim.lsp.buf.format()
-            -- end, "[F]ormat code")
-            -- nmap('<leader>a', "<cmd>Lspsaga outline<cr>", 'LspSaga Outline')
         end
 
         require("lspsaga").setup({

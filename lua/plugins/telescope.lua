@@ -11,7 +11,6 @@ return {
         { "<leader>ff",      ":Telescope find_files<cr>",                   desc = "find files" },
         { "<leader>fc",      ":Telescope live_grep<cr>",                    desc = "find codes" },
         { "<leader><space>", ":Telescope buffers<cr>",                      desc = "find buffers" },
-        { "<leader>ft",      ":Telescope diagnostics bufnr=0 severity_bound=0<cr>", desc = "find trouble" }
     },
     config = function()
         -- You dont need to set any of these options. These are the default ones. Only

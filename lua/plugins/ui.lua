@@ -202,6 +202,7 @@ return {
             })
             if vim.g.is_day then
                 vim.cmd.colorscheme "catppuccin"
+                -- vim.cmd.colorscheme "onedark"
             else
                 -- vim.cmd.colorscheme "catppuccin"
                 vim.cmd.colorscheme "onedark"
