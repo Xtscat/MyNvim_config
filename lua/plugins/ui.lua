@@ -307,11 +307,11 @@ return {
         },
         config = function()
             -- vim.api.nvim_command('autocmd FileType lua,python,c,cpp AerialOpen!')
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "lua", "python", "c", "cpp", "sh" },
-                command = "AerialOpen!"
-            })
-            vim.keymap.set('n', '<leader>a', '<cmd>AerialToggle!<CR>', { desc = "[A]erial" })
+            -- vim.api.nvim_create_autocmd("FileType", {
+            --     pattern = { "lua", "python", "c", "cpp", "sh" },
+            --     command = "AerialOpen!"
+            -- })
+            vim.keymap.set('n', '<leader>s', '<cmd>AerialToggle!<CR>', { desc = "Aerial" })
             require("aerial").setup({
                 filter_kind = {
                     -- "Array",
