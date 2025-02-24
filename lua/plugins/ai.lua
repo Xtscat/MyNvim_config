@@ -5,11 +5,16 @@ return {
     version = false, -- 设置为"*"始终使用最新版本，false表示使用最新代码
     opts = {
         -- 深度思考AI配置
-        provider = "deepseek",
+        provider = "gemini",
+        gemini = {
+            model = 'gemini-exp-1206',
+            temperature = 0,
+            max_tokens = 8192
+        },
         vendors = {
             deepseek = {
                 __inherited_from = "openai",                           -- 继承OpenAI的配置
-                api_key_name = "api-key-20250223181100",               -- 环境变量中的API密钥名称
+                api_key_name = "Deepseek_API_KEY",                     -- 环境变量中的API密钥名称
                 endpoint = "https://ark.cn-beijing.volces.com/api/v3", -- 深度思考API端点
                 model = "ep-20250223181020-p2zgj",                     -- 使用的模型名称
                 disable_tools = true,                                  -- 禁用工具调用
