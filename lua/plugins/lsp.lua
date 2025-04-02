@@ -82,7 +82,8 @@ return {
         })
         require("lsp-progress").setup()
 
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
+        -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
+        local capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
         for server, config in pairs(servers) do
             require("lspconfig")[server].setup(
                 vim.tbl_deep_extend("keep",

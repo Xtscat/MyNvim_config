@@ -6,13 +6,13 @@ return {
             require('onedark').setup {
                 -- Main options --
                 -- style = 'dark',   -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-                transparent = false, -- Show/hide background
-                term_colors = true, -- Change terminal color as per the selected theme style
-                ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
+                transparent = false,          -- Show/hide background
+                term_colors = true,           -- Change terminal color as per the selected theme style
+                ending_tildes = false,        -- Show the end-of-buffer tildes. By default they are hidden
                 cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
 
                 -- toggle theme style ---
-                toggle_style_key = nil,                                                -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
+                toggle_style_key = nil,                                                              -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
                 toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
 
                 -- Change code style ---
@@ -32,13 +32,13 @@ return {
                 },
 
                 -- Custom Highlights --
-                colors = {}, -- Override default colors
+                colors = {},     -- Override default colors
                 highlights = {}, -- Override highlight groups
 
                 -- Plugins Config --
                 diagnostics = {
-                    darker = true, -- darker colors for diagnostic
-                    undercurl = true, -- use undercurl instead of underline for diagnostics
+                    darker = true,     -- darker colors for diagnostic
+                    undercurl = true,  -- use undercurl instead of underline for diagnostics
                     background = true, -- use background color for virtual text
                 },
             }
@@ -81,46 +81,9 @@ return {
                     operators = {},
                     -- miscs = {}, -- Uncomment to turn off hard-coded styles
                 },
-                -- color_overrides = {
-                --     mocha = {
-                --         -- this 16 colors are changed to onedark
-                --         base = "#282c34",
-                --         mantle = "#353b45",
-                --         surface0 = "#3e4451",
-                --         surface1 = "#545862",
-                --         surface2 = "#565c64",
-                --         text = "#abb2bf",
-                --         -- rosewater = "#b6bdca",
-                --         -- lavender = "#c8ccd4",
-                --         -- red = "#e06c75",
-                --         -- peach = "#d19a66",
-                --         -- yellow = "#e5c07b",
-                --         -- green = "#98c379",
-                --         -- teal = "#56b6c2",
-                --         blue = "#61afef",
-                --         -- mauve = "#c678dd",
-                --         -- flamingo = "#be5046",
-                --
-                --         -- now patching extra palettes
-                --         maroon = "#e06c75",
-                --         sky = "#d19a66",
-                --
-                --         -- extra colors not decided what to do
-                --         -- pink = "#F5C2E7",
-                --         -- sapphire = "#74C7EC",
-                --         --
-                --         subtext1 = "#BAC2DE",
-                --         subtext0 = "#A6ADC8",
-                --         overlay2 = "#9399B2",
-                --         overlay1 = "#7F849C",
-                --         overlay0 = "#6C7086",
-                --
-                --         crust = "#11111B",
-                --     }
-                -- },
-                -- custom_highlights = {},
                 default_integrations = true,
                 integrations = {
+                    blink_cmp = true,
                     cmp = true,
                     barbar = true,
                     aerial = true,
@@ -297,45 +260,46 @@ return {
         end,
     },
     {
-        -- outline
-        'stevearc/aerial.nvim',
-        -- event = "VeryLazy",
-        opts = {},
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter",
-            "nvim-tree/nvim-web-devicons"
-        },
+        "hedyhli/outline.nvim",
         config = function()
-            -- vim.api.nvim_command('autocmd FileType lua,python,c,cpp AerialOpen!')
-            -- vim.api.nvim_create_autocmd("FileType", {
-            --     pattern = { "lua", "python", "c", "cpp", "sh" },
-            --     command = "AerialOpen!"
-            -- })
-            vim.keymap.set('n', '<leader>s', '<cmd>AerialToggle!<CR>', { desc = "Aerial" })
-            require("aerial").setup({
-                filter_kind = {
-                    -- "Array",
-                    -- "Boolean",
-                    "Class",
-                    -- "Constant",
-                    "Constructor",
-                    "Enum",
-                    -- "File",
-                    "Function",
-                    "Interface",
-                    -- "Key",
-                    "Module",
-                    "Method",
-                    -- "Object",
-                    "Package",
-                    "Struct",
-                    -- "Variable"
-                },
-                backends = { "treesitter", "lsp" },
-                highlight_on_jump = 1000,
-                autojump = true
+            vim.api.nvim_create_autocmd("VimEnter", {
+                callback = function()
+                    vim.cmd("Outline!")
+                end
             })
-        end
+            vim.keymap.set("n", "<leader>a", "<cmd>Outline<CR>",
+                { desc = "Toggle Outline" })
+
+            require("outline").setup {
+                outline_window = {
+                    show_relative_numbers = true,
+                    width = 17,
+                },
+                outline_items = {
+                    show_symbol_details = false,
+                    auto_expand = true
+                },
+                symbols = {
+                    filter = {
+                        default = { "Variable", "Package", "String", exclude = true },
+                        -- python = {"function", "Class"},
+                    }
+                },
+                symbol_folding = {
+                    -- Depth past which nodes will be folded by default. Set to false to unfold all on open.
+                    autofold_depth = 3,
+                    -- When to auto unfold nodes
+                    auto_unfold = {
+                        -- Auto unfold currently hovered symbol
+                        hovered = true,
+                        -- Auto fold when the root level only has this many nodes.
+                        -- Set true for 1 node, false for 0.
+                        only = true,
+                    },
+                    markers = { '', '' },
+                },
+            }
+        end,
     },
     {
         -- tt 打开侧边目录
@@ -366,33 +330,11 @@ return {
                 end,
             },
         },
+        vim.api.nvim_command('autocmd VimEnter * Neotree show'),
+        vim.keymap.set({ "n", "v" }, "tt", [[<cmd>Neotree toggle<CR>]]),
         config = function()
-            vim.api.nvim_command('autocmd VimEnter * Neotree show')
-            vim.keymap.set({ "n", "v" }, "tt", [[<cmd>Neotree toggle<CR>]])
             require("neo-tree").setup({
                 close_if_last_window = true,
-                document_symbols = {
-                    follow_cursor = true,
-                    client_filters = "first",
-                    renderers = {
-                        root = {
-                            { "indent" },
-                            { "icon",  default = "C" },
-                            { "name",  zindex = 10 },
-                        },
-                        symbol = {
-                            { "indent",    with_expanders = true },
-                            { "kind_icon", default = "?" },
-                            {
-                                "container",
-                                content = {
-                                    { "name",      zindex = 10 },
-                                    { "kind_name", zindex = 20, align = "right" },
-                                }
-                            }
-                        },
-                    }
-                },
                 window = {
                     position = "left",
                     width = 30,
@@ -401,53 +343,21 @@ return {
                         nowait = false,
                     },
                     mappings = {
-                        -- ["<space>"] = {
-                        --     "toggle_node",
-                        --     nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use
-                        -- },
-                        -- ["<2-LeftMouse>"] = "open",
                         ["<cr>"] = "open",
                         ["<esc>"] = "cancel", -- close preview or floating neo-tree window
                         ["P"] = { "toggle_preview", config = { use_float = true, use_image_nvim = true } },
-                        -- Read `# Preview Mode` for more information
-                        -- ["l"] = "focus_preview",
                         ["l"] = "open",
                         ["s"] = "open_rightbelow_vs",
                         ["S"] = "open_split",
-                        -- ["S"] = "open_split",
-                        -- ["s"] = "open_vsplit",
-                        -- ["S"] = "split_with_window_picker",
-                        -- ["s"] = "vsplit_with_window_picker",
-                        -- ["t"] = "open_tabnew",
-                        -- ["<cr>"] = "open_drop",
-                        -- ["t"] = "open_tab_drop",
                         ["w"] = "open_with_window_picker",
-                        --["P"] = "toggle_preview", -- enter preview mode, which shows the current node without focusing
                         ["C"] = "close_node",
-                        -- ['C'] = 'close_all_subnodes',
                         ["z"] = "close_all_nodes",
-                        --["Z"] = "expand_all_nodes",
-                        -- ["a"] = {
-                        --     "add",
-                        --     -- this command supports BASH style brace expansion ("x{a,b,c}" -> xa,xb,xc). see `:h neo-tree-file-actions` for details
-                        --     -- some commands may take optional config options, see `:h neo-tree-mappings` for details
-                        --     config = {
-                        --         show_path = "none" -- "none", "relative", "absolute"
-                        --     }
-                        -- },
-                        -- ["A"] = "add_directory", -- also accepts the optional config.show_path option like "add". this also supports BASH style brace expansion.
                         ["d"] = "delete",
                         ["r"] = "rename",
                         ["y"] = "copy_to_clipboard",
                         ["x"] = "cut_to_clipboard",
                         ["p"] = "paste_from_clipboard",
                         ["c"] = "copy", -- takes text input for destination, also accepts the optional config.show_path option like "add":
-                        -- ["c"] = {
-                        --  "copy",
-                        --  config = {
-                        --    show_path = "none" -- "none", "relative", "absolute"
-                        --  }
-                        --}
                         ["m"] = "move", -- takes text input for destination, also accepts the optional config.show_path option like "add".
                         ["q"] = "close_window",
                         ["R"] = "refresh",
