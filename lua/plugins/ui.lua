@@ -260,47 +260,88 @@ return {
         end,
     },
     {
-        "hedyhli/outline.nvim",
+        -- outline
+        'stevearc/aerial.nvim',
+        -- event = "VeryLazy",
+        opts = {},
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-tree/nvim-web-devicons"
+        },
         config = function()
-            vim.api.nvim_create_autocmd("VimEnter", {
-                callback = function()
-                    vim.cmd("Outline!")
-                end
+            -- vim.api.nvim_command('autocmd FileType lua,python,c,cpp AerialOpen!')
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "lua", "python", "c", "cpp", "sh" },
+                command = "AerialOpen!"
             })
-            vim.keymap.set("n", "<leader>a", "<cmd>Outline<CR>",
-                { desc = "Toggle Outline" })
-
-            require("outline").setup {
-                outline_window = {
-                    show_relative_numbers = true,
-                    width = 17,
+            vim.keymap.set('n', '<leader>a', '<cmd>AerialToggle!<CR>', { desc = "Aerial" })
+            require("aerial").setup({
+                filter_kind = {
+                    -- "Array",
+                    -- "Boolean",
+                    "Class",
+                    -- "Constant",
+                    "Constructor",
+                    "Enum",
+                    -- "File",
+                    "Function",
+                    "Interface",
+                    -- "Key",
+                    "Module",
+                    "Method",
+                    -- "Object",
+                    "Package",
+                    "Struct",
+                    -- "Variable"
                 },
-                outline_items = {
-                    show_symbol_details = false,
-                    auto_expand = true
-                },
-                symbols = {
-                    filter = {
-                        default = { "Variable", "Package", "String", exclude = true },
-                        -- python = {"function", "Class"},
-                    }
-                },
-                symbol_folding = {
-                    -- Depth past which nodes will be folded by default. Set to false to unfold all on open.
-                    autofold_depth = 3,
-                    -- When to auto unfold nodes
-                    auto_unfold = {
-                        -- Auto unfold currently hovered symbol
-                        hovered = true,
-                        -- Auto fold when the root level only has this many nodes.
-                        -- Set true for 1 node, false for 0.
-                        only = true,
-                    },
-                    markers = { '', '' },
-                },
-            }
-        end,
+                backends = { "treesitter", "lsp" },
+                highlight_on_jump = 1000,
+                autojump = true
+            })
+        end
     },
+    -- {
+    --     "hedyhli/outline.nvim",
+    --     config = function()
+    --         vim.api.nvim_create_autocmd("VimEnter", {
+    --             callback = function()
+    --                 vim.cmd("Outline!")
+    --             end
+    --         })
+    --         vim.keymap.set("n", "<leader>a", "<cmd>Outline<CR>",
+    --             { desc = "Toggle Outline" })
+    --
+    --         require("outline").setup {
+    --             outline_window = {
+    --                 show_relative_numbers = true,
+    --                 width = 17,
+    --             },
+    --             outline_items = {
+    --                 show_symbol_details = false,
+    --                 auto_expand = true
+    --             },
+    --             symbols = {
+    --                 filter = {
+    --                     default = { "Variable", "Package", "String", exclude = true },
+    --                     -- python = {"function", "Class"},
+    --                 }
+    --             },
+    --             symbol_folding = {
+    --                 -- Depth past which nodes will be folded by default. Set to false to unfold all on open.
+    --                 autofold_depth = 3,
+    --                 -- When to auto unfold nodes
+    --                 auto_unfold = {
+    --                     -- Auto unfold currently hovered symbol
+    --                     hovered = true,
+    --                     -- Auto fold when the root level only has this many nodes.
+    --                     -- Set true for 1 node, false for 0.
+    --                     only = true,
+    --                 },
+    --                 markers = { '', '' },
+    --             },
+    --         }
+    --     end,
+    -- },
     {
         -- tt 打开侧边目录
         "nvim-neo-tree/neo-tree.nvim",
