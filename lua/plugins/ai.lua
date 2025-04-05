@@ -1,9 +1,41 @@
-local function ToggleChatAndOutline()
-    -- 切换 Outline (直接调用你的 Toggle 命令)
-    pcall(vim.cmd, 'Outline')
-    -- 切换 CodeCompanion Chat
-    pcall(vim.cmd, 'CodeCompanionChat Toggle')
-    -- 可选: 尝试将焦点跳回之前的窗口 (如果需要)
+-- Helper function to check if CodeCompanion chat window is currently open
+local function is_codecompanion_open()
+    for _, winid in ipairs(vim.api.nvim_list_wins()) do
+        -- Check if the window is valid before getting the buffer
+        if vim.api.nvim_win_is_valid(winid) then
+            local bufid = vim.api.nvim_win_get_buf(winid)
+            -- Check if the buffer is valid and loaded before getting options
+            if vim.api.nvim_buf_is_valid(bufid) and vim.api.nvim_buf_is_loaded(bufid) then
+                -- Use pcall for safety when getting the option
+                local success, ft = pcall(vim.api.nvim_buf_get_option, bufid, 'filetype')
+                if success and ft == 'codecompanion' then
+                    return true -- Found the CodeCompanion window
+                end
+            end
+        end
+    end
+    return false -- CodeCompanion window not found
+end
+-- Modified function to manage Aerial based on CodeCompanion state
+local function ToggleChatManageAerial()
+    if is_codecompanion_open() then
+        -- CodeCompanion is currently OPEN, so we are about to CLOSE it.
+        -- Close CodeCompanion first
+        pcall(vim.cmd, 'CodeCompanionChat Toggle')
+        -- THEN open Aerial
+        -- Use AerialOpen to ensure it opens, even if it was already open (though toggle might work too)
+        pcall(vim.cmd, 'AerialOpen')
+        vim.notify("CodeCompanion closed, Aerial opened.", vim.log.levels.INFO, { title = "Window Manager" })
+    else
+        -- CodeCompanion is currently CLOSED, so we are about to OPEN it.
+        -- Close Aerial first
+        pcall(vim.cmd, 'AerialClose')
+        -- THEN open CodeCompanion
+        pcall(vim.cmd, 'CodeCompanionChat Toggle')
+        vim.notify("Aerial closed, CodeCompanion opened.", vim.log.levels.INFO, { title = "Window Manager" })
+    end
+    -- Optional: Try to focus the main window after toggling.
+    -- You might need to adjust this depending on your window layout and desired focus.
     -- vim.cmd('wincmd p')
 end
 
@@ -15,7 +47,8 @@ return {
         "echasnovski/mini.diff"
     },
     -- 在普通模式下，按下 <leader>o 来切换 CodeCompanion 聊天缓冲区, 同时自动关闭和打开 Outline
-    vim.keymap.set('n', '<leader>o', ToggleChatAndOutline, { silent = true, desc = "Toggle CodeCompanion & Outline" }),
+    vim.keymap.set('n', '<leader>o', ToggleChatManageAerial,
+        { silent = true, desc = "Toggle CodeCompanion & Outline" }),
     -- 在普通模式和可视模式下，按下 <leader>m 来执行 CodeCompanion 命令
     vim.keymap.set({ "n", "v" }, "<Leader>m", "<cmd>CodeCompanion<cr>", { noremap = true, silent = true }),
     config = function()
