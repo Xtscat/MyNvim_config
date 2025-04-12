@@ -6,7 +6,6 @@ local global = vim.g
 global.mapleader = " "
 -- global.python3_host_prog = "/home/xtscat/miniconda3/envs/Brain/bin/python3"
 global.python3_host_prog = "/home/fmi/miniconda3/envs/xt/bin/python"
-option.background = 'light'
 option.clipboard = "unnamedplus"
 option.virtualedit = "onemore"
 option.showmode = false

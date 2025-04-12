@@ -72,9 +72,9 @@ return {
             lightbulb = {
                 enable = false
             },
-            ui = {
-                kind = require("catppuccin.groups.integrations.lsp_saga").custom_kind(),
-            },
+            -- ui = {
+            --     kind = require("catppuccin.groups.integrations.lsp_saga").custom_kind(),
+            -- },
         })
         require("mason").setup()
         require("mason-lspconfig").setup({

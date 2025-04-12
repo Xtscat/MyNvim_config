@@ -1,175 +1,33 @@
 return {
     {
         'navarasu/onedark.nvim',
-        config = function()
-            -- Lua
-            require('onedark').setup {
-                -- Main options --
-                -- style = 'dark',   -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-                transparent = false,          -- Show/hide background
-                term_colors = true,           -- Change terminal color as per the selected theme style
-                ending_tildes = false,        -- Show the end-of-buffer tildes. By default they are hidden
-                cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
-
-                -- toggle theme style ---
-                toggle_style_key = nil,                                                              -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
-                toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
-
-                -- Change code style ---
-                -- Options are italic, bold, underline, none
-                -- You can configure multiple style with comma separated, For e.g., keywords = 'italic,bold'
-                code_style = {
-                    comments = 'italic',
-                    keywords = 'none',
-                    functions = 'none',
-                    strings = 'none',
-                    variables = 'none'
-                },
-
-                -- Lualine options --
-                lualine = {
-                    transparent = false, -- lualine center bar transparency
-                },
-
-                -- Custom Highlights --
-                colors = {},     -- Override default colors
-                highlights = {}, -- Override highlight groups
-
-                -- Plugins Config --
-                diagnostics = {
-                    darker = true,     -- darker colors for diagnostic
-                    undercurl = true,  -- use undercurl instead of underline for diagnostics
-                    background = true, -- use background color for virtual text
-                },
-            }
-        end
+        lazy = false,
     },
     {
-        "catppuccin/nvim",
-        name = "catppuccin",
-        -- priority = 1000,
-        config = function()
-            require("catppuccin").setup({
-                -- flavour = "auto", -- latte, frappe, macchiato, mocha
-                -- background = { -- :h background
-                --     light = "latte",
-                --     dark = "mocha",
-                -- },
-                transparent_background = false, -- disables setting the background color.
-                show_end_of_buffer = false,     -- shows the '~' characters after the end of buffers
-                term_colors = false,            -- sets terminal colors (e.g. `g:terminal_color_0`)
-                dim_inactive = {
-                    enabled = false,            -- dims the background color of inactive window
-                    shade = "dark",
-                    percentage = 0.15,          -- percentage of the shade to apply to the inactive window
-                },
-                no_italic = false,              -- Force no italic
-                no_bold = false,                -- Force no bold
-                no_underline = false,           -- Force no underline
-                styles = {                      -- Handles the styles of general hi groups (see `:h highlight-args`):
-                    comments = { "italic" },    -- Change the style of comments
-                    conditionals = { "italic" },
-                    loops = {},
-                    functions = {},
-                    keywords = {},
-                    strings = {},
-                    variables = {},
-                    numbers = {},
-                    booleans = {},
-                    properties = {},
-                    types = {},
-                    operators = {},
-                    -- miscs = {}, -- Uncomment to turn off hard-coded styles
-                },
-                default_integrations = true,
-                integrations = {
-                    blink_cmp = true,
-                    cmp = true,
-                    barbar = true,
-                    aerial = true,
-                    gitsigns = true,
-                    treesitter = true,
-                    notify = false,
-                    mason = true,
-                    lspsaga = false,
-                    neotree = true,
-                    lsp_trouble = true,
-                    which_key = true,
-                    mini = {
-                        enabled = true,
-                        indentscope_color = "",
-                    },
-                    indent_blankline = {
-                        enabled = true,
-                        scope_color = "lavender", -- catppuccin color (eg. `lavender`) Default: text
-                        colored_indent_levels = false,
-                    },
-                    barbecue = {
-                        dim_dirname = true, -- directory name is dimmed by default
-                        bold_basename = true,
-                        dim_context = false,
-                        alt_background = false,
-                    },
-                    telescope = {
-                        enable = true,
-                        style = "lavender"
-                    },
-                    native_lsp = {
-                        enabled = true,
-                        virtual_text = {
-                            errors = { "italic" },
-                            hints = { "italic" },
-                            warnings = { "italic" },
-                            information = { "italic" },
-                        },
-                        underlines = {
-                            errors = { "bold" },
-                            hints = { "bold" },
-                            warnings = { "bold" },
-                            information = { "bold" },
-                        },
-                        inlay_hints = {
-                            background = true,
-                        },
-                    },
-                },
-            })
-
-            -- setup must be called before loading
-            -- vim.cmd.colorscheme "catppuccin"
-        end,
+        'sainnhe/edge',
+        lazy = false,
     },
     {
         'JManch/sunset.nvim',
-        dependencies = {
-            "catppuccin/nvim",
-            'navarasu/onedark.nvim',
-        },
         lazy = false,
         priority = 1000,
         config = function()
-            local catppuccin = require('catppuccin')
             local onedark = require('onedark')
             require('sunset').setup({
                 latitude = 36.31,
                 longitude = 104.48,
                 day_callback = function()
-                    if vim.g.is_day then
-                        catppuccin.flavour = 'latte'
-                        onedark.style = 'light'
-                    else
-                        catppuccin.flavour = 'mocha'
-                        onedark.style = 'warmer'
-                    end
+                    vim.opt.background = 'light'
+                    vim.g.edge_style = 'aura'
+                    vim.cmd.colorscheme('edge')
                 end,
+
+                night_callback = function()
+                    vim.opt.background = 'dark'
+                    onedark.style = 'warmer'
+                    vim.cmd.colorscheme('onedark')
+                end
             })
-            if vim.g.is_day then
-                vim.cmd.colorscheme "catppuccin"
-                -- vim.cmd.colorscheme "onedark"
-            else
-                -- vim.cmd.colorscheme "catppuccin"
-                vim.cmd.colorscheme "onedark"
-            end
         end,
     },
     {
@@ -239,7 +97,7 @@ return {
         config = function()
             require('lualine').setup({
                 options = {
-                    theme = 'catppuccin',
+                    -- theme = 'catppuccin',
                     globalstatus = true,
                     always_show_tabline = true,
                 },
@@ -355,7 +213,7 @@ return {
             -- })
             vim.api.nvim_create_autocmd("VimEnter", {
                 callback = function()
-                    vim.cmd("AerialOpen")
+                    vim.cmd("AerialOpen!")
                     vim.cmd("Neotree show")
                 end
             })
