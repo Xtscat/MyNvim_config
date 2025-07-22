@@ -39,54 +39,6 @@ local function ToggleChatManageAerial()
     -- vim.cmd('wincmd p')
 end
 
---- 切换并显示模型及其倍率信息
-local function switch_chat_model()
-    -- 1. 这是您提供的模型列表，已经整合进来
-    local models = {
-        -- GPT
-        { name = "gpt-4.1-2025-04-14",        magnification = "0x" },
-        { name = "gpt-4o-2024-11-20",         magnification = "0x" },
-        { name = "o1-2021-12-17",             magnification = "10x" },
-        { name = "o3-mini-2025-01-31",        magnification = "0.33x" },
-        { name = "o4-mini-2025-04-06",        magnification = "0.33x" },
-        -- Claude
-        { name = "claude-3.5-sonnet",         magnification = "1x" },
-        { name = "claude-3.7-sonnet",         magnification = "1x" },
-        { name = "claude-3.7-sonnet-thought", magnification = "1.25x" },
-        { name = "claude-sonnet-4",           magnification = "1x" },
-        -- Gemini
-        { name = "gemini-2.0-flash-001",      magnification = "0.25x" },
-        { name = "gemini-2.5-pro",            magnification = "1x" },
-    }
-
-    -- 2. 使用 vim.ui.select 创建选择界面
-    vim.ui.select(models, {
-        prompt = "选择一个模型:",
-        -- 3. 自定义每个选项的显示格式
-        format_item = function(item)
-            return string.format("%-30s (倍率: %s)", item.name, item.magnification or "N/A")
-        end,
-    }, function(choice)
-        -- 4. 用户选择后的回调函数
-        if not choice then
-            vim.notify("取消选择", vim.log.levels.INFO)
-            return
-        end
-
-        -- 修正: 调用 setup 函数来更新配置
-        require('codecompanion').setup({
-            strategies = {
-                chat = {
-                    adapter = {
-                        model = choice.name
-                    }
-                }
-            }
-        })
-
-        vim.notify("已切换到模型: " .. choice.name, vim.log.levels.INFO)
-    end)
-end
 
 --[[ 内置指令：
 * Variables: Variables, accessed via #, contain data about the present state of Neovim
@@ -118,8 +70,11 @@ end
     * /lsp: Explain the LSP diagnostics for the selected code (visual mode and select some code)
     * /tests: Generate unit tests for selected code (visual mode and select some code)
 -- ]]
---
--- 在 chat buffer 里面使用 'cm' 打开切换模型窗口
+
+
+---------------------------------------------------
+-- 在 chat buffer 里面使用 'ga' 打开切换模型窗口 --
+---------------------------------------------------
 return {
     "olimorris/codecompanion.nvim",
     dependencies = {
@@ -133,7 +88,6 @@ return {
         { silent = true, desc = "Toggle CodeCompanion & Outline" }),
     -- 在普通模式和可视模式下，按下 <leader>m 来执行 CodeCompanion 命令
     vim.keymap.set({ "n", "v" }, "<Leader>m", "<cmd>CodeCompanion<cr>", { noremap = true, silent = true }),
-    vim.keymap.set('n', '<leader>cm', switch_chat_model, { silent = true, desc = "Switch CodeCompanion Chat Model" }),
 
     config = function()
         require('copilot').setup({})
@@ -146,7 +100,7 @@ return {
                     },
                     keymaps = {
                         send = {
-                            modes = { n = "<leader>k", i = "<leader>k" },
+                            modes = { n = "<c-k>", i = "<c-k>" },
                         },
                         close = {
                             modes = { n = "<leader>xo", i = "<leder>xo" },

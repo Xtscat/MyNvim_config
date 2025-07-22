@@ -1,38 +1,127 @@
 return {
+    -- {
+    --     "gaoDean/autolist.nvim",
+    --     ft = {
+    --         "markdown",
+    --         "text",
+    --         "tex",
+    --         "plaintex",
+    --         "norg",
+    --     },
+    --     config = function()
+    --         require("autolist").setup(
+    --             {
+    --                 enter = {
+    --                     enable_mapping  = true,
+    --                     enable_cond     = false,
+    --                     enable_fallback = function()
+    --                         -- https://github.com/gaoDean/autolist.nvim/issues/77
+    --                         vim.loop.new_timer():start(0, 0, vim.schedule_wrap(function()
+    --                             require("autolist").new_bullet()
+    --                         end))
+    --
+    --                         require('pairs.utils').feedkeys('<cr>')
+    --                     end,
+    --                 },
+    --             }
+    --         )
+    --
+    --         vim.keymap.set("i", "<tab>", "<cmd>AutolistTab<cr>")
+    --         vim.keymap.set("i", "<s-tab>", "<cmd>AutolistShiftTab<cr>")
+    --         -- vim.keymap.set("i", "<c-t>", "<c-t><cmd>AutolistRecalculate<cr>") -- an example of using <c-t> to indent
+    --         -- vim.keymap.set("i", "<CR>", "<CR><cmd>AutolistNewBullet<cr>")
+    --
+    --         vim.keymap.set("n", "o", "o<cmd>AutolistNewBullet<cr>")
+    --         vim.keymap.set("n", "O", "O<cmd>AutolistNewBulletBefore<cr>")
+    --         vim.keymap.set("n", "<CR>", "<cmd>AutolistToggleCheckbox<cr><CR>")
+    --         vim.keymap.set("n", "<C-r>", "<cmd>AutolistRecalculate<cr>")
+    --
+    --         -- cycle list types with dot-repeat
+    --         vim.keymap.set("n", "<leader>cn", require("autolist").cycle_next_dr, { expr = true })
+    --         vim.keymap.set("n", "<leader>cp", require("autolist").cycle_prev_dr, { expr = true })
+    --
+    --         -- if you don't want dot-repeat
+    --         -- vim.keymap.set("n", "<leader>cn", "<cmd>AutolistCycleNext<cr>")
+    --         -- vim.keymap.set("n", "<leader>cp", "<cmd>AutolistCycleNext<cr>")
+    --
+    --         -- functions to recalculate list on edit
+    --         vim.keymap.set("n", ">>", ">><cmd>AutolistRecalculate<cr>")
+    --         vim.keymap.set("n", "<<", "<<<cmd>AutolistRecalculate<cr>")
+    --         vim.keymap.set("n", "dd", "dd<cmd>AutolistRecalculate<cr>")
+    --         vim.keymap.set("v", "d", "d<cmd>AutolistRecalculate<cr>")
+    --     end,
+    -- },
+    -- {
+    --     'kaymmm/bullets.nvim',
+    --     opts = {
+    --         colon_indent = true,
+    --         delete_last_bullet = true,
+    --         empty_buffers = true,
+    --         file_types = { 'markdown', 'text', 'gitcommit' },
+    --         line_spacing = 1,
+    --         mappings = false,
+    --         outline_levels = { 'ROM', 'ABC', 'num', 'abc', 'rom', 'std*', 'std-', 'std+' },
+    --         renumber = true,
+    --         alpha = {
+    --             len = 2,
+    --         },
+    --         checkbox = {
+    --             nest = true,
+    --             markers = ' .oOx',
+    --             toggle_partials = true,
+    --         },
+    --     }
+    -- },
+    -- {
+    --     'efirlus/keepin-md.nvim',
+    --     config = function()
+    --         require('keepin-md').setup()
+    --     end
+    -- },
+    -- {
+    --     'oliver-hughes/md-list.nvim',
+    --     config = function()
+    --         require('mdlist').setup()
+    --     end
+    -- },
+    -- {
+    --     "yutanagano/smark.nvim",
+    --     ft = { "markdown", "text" },
+    --     config = true
+    -- },
     {
-        "gaoDean/autolist.nvim",
-        ft = {
-            "markdown",
-            "text",
-            "tex",
-            "plaintex",
-            "norg",
-        },
+        "yutanagano/smark.nvim",
+        ft = { "markdown", "text" },
         config = function()
-            require("autolist").setup()
+            -- 步骤 1: 运行插件的默认 setup 函数。
+            -- 这会创建它自己的 autocmd，并设置好 <C-t> 和 <C-d> 的映射。
+            require("smark").setup()
 
-            vim.keymap.set("i", "<tab>", "<cmd>AutolistTab<cr>")
-            vim.keymap.set("i", "<s-tab>", "<cmd>AutolistShiftTab<cr>")
-            -- vim.keymap.set("i", "<c-t>", "<c-t><cmd>AutolistRecalculate<cr>") -- an example of using <c-t> to indent
-            vim.keymap.set("i", "<CR>", "<CR><cmd>AutolistNewBullet<cr>")
-            vim.keymap.set("n", "o", "o<cmd>AutolistNewBullet<cr>")
-            vim.keymap.set("n", "O", "O<cmd>AutolistNewBulletBefore<cr>")
-            vim.keymap.set("n", "<CR>", "<cmd>AutolistToggleCheckbox<cr><CR>")
-            vim.keymap.set("n", "<C-r>", "<cmd>AutolistRecalculate<cr>")
+            -- 步骤 2: 创建我们自己的 autocmd 来覆盖和禁用其他插件。
+            local group = vim.api.nvim_create_augroup('MarkdownSmarkOverrides', { clear = true })
+            vim.api.nvim_create_autocmd('FileType', {
+                group = group,
+                pattern = 'markdown', -- 只对 markdown 文件生效
+                callback = function()
+                    -- 核心操作 1: 禁用 blink.cmp，避免冲突
+                    vim.b.completion = false
 
-            -- cycle list types with dot-repeat
-            vim.keymap.set("n", "<leader>cn", require("autolist").cycle_next_dr, { expr = true })
-            vim.keymap.set("n", "<leader>cp", require("autolist").cycle_prev_dr, { expr = true })
+                    -- 核心操作 2: 设置我们的 Tab 键来“代理”插件的默认键
+                    -- 当我们按 Tab 时，实际触发的是 <C-t> 的功能
+                    vim.keymap.set('i', '<Tab>', '<C-t>', {
+                        buffer = true, -- 仅对当前 buffer 生效
+                        remap = true, -- 关键！允许映射到另一个映射
+                        desc = "Smark: Indent List"
+                    })
 
-            -- if you don't want dot-repeat
-            -- vim.keymap.set("n", "<leader>cn", "<cmd>AutolistCycleNext<cr>")
-            -- vim.keymap.set("n", "<leader>cp", "<cmd>AutolistCycleNext<cr>")
-
-            -- functions to recalculate list on edit
-            vim.keymap.set("n", ">>", ">><cmd>AutolistRecalculate<cr>")
-            vim.keymap.set("n", "<<", "<<<cmd>AutolistRecalculate<cr>")
-            vim.keymap.set("n", "dd", "dd<cmd>AutolistRecalculate<cr>")
-            vim.keymap.set("v", "d", "d<cmd>AutolistRecalculate<cr>")
+                    -- 同理，S-Tab 代理 <C-d>
+                    vim.keymap.set('i', '<S-Tab>', '<C-d>', {
+                        buffer = true,
+                        remap = true,
+                        desc = "Smark: Un-indent List"
+                    })
+                end,
+            })
         end,
     },
     {

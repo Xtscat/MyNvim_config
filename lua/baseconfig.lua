@@ -56,22 +56,42 @@ vim.keymap.set("v", "L", "$", { noremap = true, silent = true })
 
 vim.keymap.set("n", "<leader>l", "<cmd>echo expand('%:p')<cr>")
 
-function no_paste(reg)
-    return function(lines)
-        --[ 返回 “” 寄存器的内容，用来作为 p 操作符的粘贴物 ]
-        local content = vim.fn.getreg('"')
-        return vim.split(content, '\n')
-    end
-end
+-- function no_paste(reg)
+--     return function(lines)
+--         --[ 返回 “” 寄存器的内容，用来作为 p 操作符的粘贴物 ]
+--         local content = vim.fn.getreg('"')
+--         return vim.split(content, '\n')
+--     end
+-- end
+--
+-- vim.g.clipboard = {
+--     name = "OSC 52",
+--     copy = {
+--         ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+--         ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+--     },
+--     paste = {
+--         ["+"] = no_paste("+"), -- Pasting disabled
+--         ["*"] = no_paste("*"), -- Pasting disabled
+--     }
+-- }
 
+-- ===================================================================
+--  配置 WSL 与 Windows 共享剪切板
+--  通过直接调用 win32yank.exe 实现双向同步
+-- ===================================================================
 vim.g.clipboard = {
-    name = "OSC 52",
+    name = 'win32yank-wsl',
     copy = {
-        ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-        ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+        ['+'] = 'win32yank.exe -i --crlf',
+        ['*'] = 'win32yank.exe -i --crlf',
     },
     paste = {
-        ["+"] = no_paste("+"), -- Pasting disabled
-        ["*"] = no_paste("*"), -- Pasting disabled
-    }
+        ['+'] = 'win32yank.exe -o --crlf',
+        ['*'] = 'win32yank.exe -o --crlf',
+    },
+    cache_enabled = 0,
 }
+
+-- 确保这一行仍然存在且有效
+vim.opt.clipboard = 'unnamedplus'

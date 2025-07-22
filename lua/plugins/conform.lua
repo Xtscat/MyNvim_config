@@ -49,8 +49,8 @@ return {
             notify_on_error = true,
             formatters = {
                 clang_format = {
-                    args = { "--style={BasedOnStyle: google, IndentWidth: 2, ColumnLimit: 120}" }
-                    -- args = { "--style={BasedOnStyle: google, IndentWidth: 4, ColumnLimit: 120}" }
+                    -- args = { "--style={BasedOnStyle: google, IndentWidth: 2, ColumnLimit: 120}" }
+                    args = { "--style={BasedOnStyle: google, IndentWidth: 4, ColumnLimit: 120}" }
                 }
             },
             vim.api.nvim_create_user_command("Format", function(args)
