@@ -44,7 +44,12 @@ return {
                 python = { "yapf", "isort" },
                 -- python = { "yapf" },
                 c = { "clang_format" },
-                cpp = { "clang_format" }
+                cpp = { "clang_format" },
+                javascript = { 'prettier' },
+                typescript = { 'prettier' },
+                html = { 'prettier' },
+                css = { 'prettier' },
+                markdown = { 'prettier' }
             },
             notify_on_error = true,
             formatters = {

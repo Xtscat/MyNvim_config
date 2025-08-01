@@ -100,13 +100,13 @@ return {
         "Pocco81/auto-save.nvim",
         config = function()
             require("auto-save").setup {
-                enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
+                enabled = true,          -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
                 execution_message = {
                     message = function() -- message to print on save
                         return ("AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"))
                     end,
-                    dim = 0.18,                      -- dim the color of `message`
-                    cleaning_interval = 1250,        -- (milliseconds) automatically clean MsgArea after displaying `message`. See :h MsgArea
+                    dim = 0.18,                                                             -- dim the color of `message`
+                    cleaning_interval = 1250,                                               -- (milliseconds) automatically clean MsgArea after displaying `message`. See :h MsgArea
                 },
                 trigger_events = { "InsertLeave", "TextChanged", "BufLeave", "FocusLost" }, -- vim events that trigger auto-save. See :h events
                 -- function that determines whether to save the current buffer or not
@@ -118,43 +118,55 @@ return {
 
                     if
                         fn.getbufvar(buf, "&modifiable") == 1 and
-                        utils.not_in(fn.getbufvar(buf, "&filetype"), {'lua'}) then
-                        return true -- met condition(s), can save
+                        utils.not_in(fn.getbufvar(buf, "&filetype"), { 'lua' }) then
+                        return true              -- met condition(s), can save
                     end
-                    return false -- can't save
+                    return false                 -- can't save
                 end,
-                write_all_buffers = true, -- write all buffers when the current one meets `condition`
-                debounce_delay = 135, -- saves the file at most every `debounce_delay` milliseconds
-                callbacks = {  -- functions to be executed at different intervals
-                    enabling = nil, -- ran when enabling auto-save
-                    disabling = nil, -- ran when disabling auto-save
+                write_all_buffers = true,        -- write all buffers when the current one meets `condition`
+                debounce_delay = 135,            -- saves the file at most every `debounce_delay` milliseconds
+                callbacks = {                    -- functions to be executed at different intervals
+                    enabling = nil,              -- ran when enabling auto-save
+                    disabling = nil,             -- ran when disabling auto-save
                     before_asserting_save = nil, -- ran before checking `condition`
-                    before_saving = nil, -- ran before doing the actual save
-                    after_saving = nil -- ran after doing the actual save
+                    before_saving = nil,         -- ran before doing the actual save
+                    after_saving = nil           -- ran after doing the actual save
                 }
             }
         end,
     },
     {
-        -- nvim-sorround
-        -- add / delete / change can be done with keys: ys{motion}{char} / ds{char} / cs{target}{replacement}
-        --     Old text                    Command         New text
-        ----------------------------------------------------------------
-        -- surr*ound_words             ysiw)           (surround_words)
-        -- *make strings               ys$"            "make strings"
-        -- [delete ar*ound me!]        ds]             delete around me!
-        -- remove <b>HTML t*ags</b>    dst             remove HTML tags
-        -- 'change quot*es'            cs'"            "change quotes"
-        -- <b>or tag* types</b>        csth1<CR>       <h1>or tag types</h1>
-        -- delete(functi*on calls)     dsf             function calls
         "kylechui/nvim-surround",
-        version = "*", -- Use for stability; omit to use `main` branch for the latest features
+        version = "*",
         event = "VeryLazy",
         config = function()
             require("nvim-surround").setup({
-                -- Configuration here, or leave empty to use defaults
+                keymaps = {
+                    -- 添加包围 (Normal Mode): <Leader>sa
+                    -- "sa" 可记为 "Surround Add"
+                    -- 使用方法: <Leader>sa + 文本对象 + 包围符号
+                    -- 示例 1: <Leader>saiw)  ->  给光标下的单词(word)加上圆括号 -> (word)
+                    -- 示例 2: <Leader>sat"   ->  给整个HTML标签(tag)加上双引号 -> "<b>text</b>"
+                    normal = "<Leader>sa",
+
+                    -- 删除包围 (Normal Mode): <Leader>sd
+                    -- "sd" 可记为 "Surround Delete"
+                    -- 使用方法: <Leader>sd + 要删除的包围符号
+                    -- 示例: <Leader>sd"  ->  删除光标内外围的双引号
+                    delete = "<Leader>sd",
+
+                    -- 更改/替换包围 (Normal Mode): <Leader>sr
+                    -- "sr" 可记为 "Surround Replace"
+                    -- 使用方法: <Leader>sr + 旧符号 + 新符号
+                    -- 示例: <Leader>sr'"  ->  将外围的单引号(')替换为双引号(")
+                    change = "<Leader>sr",
+
+                    -- 添加包围 (Visual Mode): <Leader>s
+                    -- 使用方法: 先用 v 或 V 选中一段文本, 然后按 <Leader>s, 最后输入你想要的包围符号
+                    visual = "<Leader>s",
+                },
             })
-        end
+        end,
     },
     {
         "windwp/nvim-autopairs",
