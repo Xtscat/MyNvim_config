@@ -183,37 +183,35 @@ return {
         config = true,
     },
     {
-        -- tabout
-        "kawre/neotab.nvim",
-        event = "InsertEnter",
-        act_as_tab = true,
-        opts = {
-            tabkey = "<c-l>",
-            act_as_tab = true,
-            behavior = "nested",
-            pairs = {
-                { open = "(", close = ")" },
-                { open = "[", close = "]" },
-                { open = "{", close = "}" },
-                { open = "'", close = "'" },
-                { open = '"', close = '"' },
-                { open = "`", close = "`" },
-                { open = "<", close = ">" },
-                { open = "$", close = "$" },
-            },
-            exclude = {},
-            smart_punctuators = {
-                enabled = false,
-                semicolon = {
-                    enabled = false,
-                    ft = { "cs", "c", "cpp", "java" },
+        'abecodes/tabout.nvim',
+        dependencies = {
+            'saghen/blink.cmp',
+            'nvim-treesitter/nvim-treesitter',
+        },
+        priority = 1000,
+        config = function()
+            require('tabout').setup {
+                tabkey = '<Tab>',
+                backwards_tabkey = '<S-Tab>',
+
+                -- 它告诉 tabout：如果补全菜单是打开的，就不要执行跳出操作。
+                completion = true,
+
+                -- 其他推荐配置
+                act_as_tab = true, -- 当无法跳出时，行为类似原生 <Tab>
+                enable_backwards = true,
+                ignore_beginning = true,
+                tabouts = {
+                    { open = "'", close = "'" },
+                    { open = '"', close = '"' },
+                    { open = '`', close = '`' },
+                    { open = '(', close = ')' },
+                    { open = '[', close = ']' },
+                    { open = '{', close = '}' },
                 },
-                escape = {
-                    enabled = false,
-                    triggers = {},
-                },
-            },
-        }
+                exclude = {} -- 你可以在这里排除不想使用 tabout 的文件类型
+            }
+        end,
     },
     {
         -- \fw快速跳转到任意窗口

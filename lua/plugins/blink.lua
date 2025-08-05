@@ -19,13 +19,6 @@ return {
             ['<CR>'] = { 'select_and_accept', 'fallback' },               -- 更改成'select_and_accept'会选择第一项插入
             ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
             ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' }, -- 同时存在补全列表和snippet时，补全列表选择优先级更高
-
-            -- ['<C-b>'] = { 'scroll_documentation_up', 'fallback' },
-            -- ['<C-f>'] = { 'scroll_documentation_down', 'fallback' },
-
-            -- ['<C-e>'] = { 'snippet_forward', 'select_next', 'fallback' }, -- 同时存在补全列表和snippet时，snippet跳转优先级更高
-            -- ['<C-u>'] = { 'snippet_backward', 'select_prev', 'fallback' },
-
         },
         completion = {
             -- 示例：使用'prefix'对于'foo_|_bar'单词将匹配'foo_'(光标前面的部分),使用'full'将匹配'foo__bar'(整个单词)
