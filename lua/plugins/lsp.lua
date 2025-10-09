@@ -5,7 +5,6 @@ return {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
         "nvimdev/lspsaga.nvim",
-        "linrongbin16/lsp-progress.nvim",
     },
     config = function()
         local servers = {
@@ -80,7 +79,7 @@ return {
         -- require("mason-lspconfig").setup({
         --     ensure_installed = vim.tbl_keys(servers),
         -- })
-        require("lsp-progress").setup()
+        -- require("lsp-progress").setup()
 
         -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
         -- local capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)

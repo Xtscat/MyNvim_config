@@ -96,7 +96,7 @@ return {
                 chat = {
                     adapter = {
                         name = 'copilot',
-                        model = 'gemini-2.5-pro'
+                        model = 'gpt-5-mini'
                     },
                     keymaps = {
                         send = {

@@ -9,11 +9,11 @@ return {
     },
     opts = {
         arg = 'leetcode.nvim',
-        lang = "python3",
+        lang = "cpp",
         cn = {
             enabled = true,
             translator = true,
             translate_problems = true,
-        },
+        }
     },
 }

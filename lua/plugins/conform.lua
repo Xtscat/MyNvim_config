@@ -45,6 +45,7 @@ return {
                 -- python = { "yapf" },
                 c = { "clang_format" },
                 cpp = { "clang_format" },
+                cuda = { "clang_format" },
                 javascript = { 'prettier' },
                 typescript = { 'prettier' },
                 html = { 'prettier' },
