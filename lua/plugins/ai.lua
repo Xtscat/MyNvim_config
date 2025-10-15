@@ -71,7 +71,6 @@ end
     * /tests: Generate unit tests for selected code (visual mode and select some code)
 -- ]]
 
-
 ---------------------------------------------------
 -- 在 chat buffer 里面使用 'ga' 打开切换模型窗口 --
 ---------------------------------------------------
@@ -139,16 +138,17 @@ return {
                 }
             },
             adapters = {
-                opts = {
-                    -- show_defaults 会导致copilot不能正常工作
-                    show_defaults = false,
-                    show_model_choices = true
-                    -- log_level = "DEBUG",
-                },
+                http = {
+                    opts = {
+                        -- show_defaults 会导致copilot不能正常工作
+                        show_defaults = false,
+                        show_model_choices = true,
+                        -- log_level = "DEBUG",
+                        language = "Chinese"
+                    },
+
+                }
             },
-            opts = {
-                language = "Chinese"
-            }
         })
     end
 }
