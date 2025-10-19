@@ -315,7 +315,7 @@ return {
             })
         end,
         opts = {
-            vim.keymap.set("n", "<leader>bp", [[<Cmd>BufferPickDelete<CR>]], { noremap = true, silent = true },
+            vim.keymap.set("n", "<leader>pb", [[<Cmd>BufferPickDelete<CR>]], { noremap = true, silent = true },
                 { desc = "[P]ick[B]uffertoclose" }),
             vim.keymap.set("n", "<leader>cb", [[<Cmd>BufferClose<CR>]], { noremap = true, silent = true },
                 { desc = "[C]lose[B]uffer" }),
