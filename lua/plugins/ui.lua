@@ -31,6 +31,56 @@ return {
         end,
     },
     {
+        -- 窗口布局控制
+        "folke/edgy.nvim",
+        event = "VeryLazy",
+        init = function()
+            vim.opt.laststatus = 3
+            vim.opt.splitkeep = "screen"
+        end,
+        opts = {
+            animate = { enabled = false },
+            close_when_all_hidden = true,
+            exit_when_last = true,
+            -- wo = { winbar = false },
+            left = {
+                {
+                    ft = "neo-tree",
+                    pinned = true,
+                    collapsed = false,
+                    size = { height = 0.5, width = 0.12 },
+                    open = "Neotree show"
+                },
+                {
+                    ft = "aerial",
+                    pinned = true,
+                    collapsed = false,
+                    size = { height = 0.5, width = 0.12 },
+                    open = "AerialToggle!"
+                }
+            },
+            bottom = {
+                {
+                    ft = 'toggleterm',
+                    size = { height = 0.3 },
+                    filter = function(_, win)
+                        local cfg = vim.api.nvim_win_get_config(win)
+                        local term = require("toggleterm.terminal").get(1)
+                        return cfg.relative == "" and term.direction == "horizontal"
+                    end
+                }
+            },
+            right = {
+                {
+                    ft = "codecompanionchat",
+                    size = { width = 0.3 },
+                    collapsed = false,
+                    open = "CodeCompanionChat Toggle",
+                }
+            }
+        }
+    },
+    {
         -- 滚动条
         "dstein64/nvim-scrollview",
         config = function()
@@ -189,6 +239,7 @@ return {
         config = function()
             require("neo-tree").setup({
                 close_if_last_window = true,
+                open_files_do_not_replace_types = { "terminal", "trouble", "qf", "edgy" },
                 window = {
                     position = "left",
                     width = 30,
