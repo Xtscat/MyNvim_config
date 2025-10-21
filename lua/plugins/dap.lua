@@ -69,8 +69,8 @@ return {
         -- `leader dl` 重新运行上一次调试会话
         -- `leader dh` 悬浮显示变量信息
         vim.keymap.set('n', '<F5>', function()
-            edgy.close()
             dap.continue()
+            edgy.close()
         end, { desc = 'DAP: Close Edgy & Continue' })
         vim.keymap.set('n', '<F6>', function()
             dap.terminate()
