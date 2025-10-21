@@ -8,6 +8,9 @@ return {
         lazy = false,
     },
     {
+        'projekt0n/github-nvim-theme'
+    },
+    {
         'JManch/sunset.nvim',
         lazy = false,
         priority = 1000,
@@ -33,16 +36,16 @@ return {
     {
         -- 窗口布局控制
         "folke/edgy.nvim",
-        event = "VeryLazy",
+        -- event = "VeryLazy",
         init = function()
-            vim.opt.laststatus = 3
+            -- vim.opt.laststatus = 3
             vim.opt.splitkeep = "screen"
         end,
         opts = {
             animate = { enabled = false },
             close_when_all_hidden = true,
             exit_when_last = true,
-            -- wo = { winbar = false },
+            wo = { winbar = false },
             left = {
                 {
                     ft = "neo-tree",
@@ -52,11 +55,11 @@ return {
                     open = "Neotree show"
                 },
                 {
-                    ft = "aerial",
+                    ft = "Outline",
                     pinned = true,
                     collapsed = false,
                     size = { height = 0.5, width = 0.12 },
-                    open = "AerialToggle!"
+                    open = "Outline"
                 }
             },
             bottom = {
@@ -68,6 +71,11 @@ return {
                         local term = require("toggleterm.terminal").get(1)
                         return cfg.relative == "" and term.direction == "horizontal"
                     end
+                },
+                {
+                    ft = 'trouble',
+                    size = { height = 0.3 },
+                    open = 'Trouble diagnostics toggle',
                 }
             },
             right = {
@@ -169,10 +177,6 @@ return {
                     enable = true,
                     min_length = 3,
                     hl = {
-                        -- fg="#CACACA",
-                        -- standout = true,
-                        -- underline = true,
-                        -- reverse = true,
                         underline = true
                     },
                 }
@@ -201,7 +205,7 @@ return {
             vim.api.nvim_create_autocmd("User", {
                 group = "lualine_augroup",
                 pattern = "LspProgressStatusUpdated",
-                callback = require("lualine").refresh,
+                callback = require("lualine").refresh
             })
         end,
     },
@@ -234,7 +238,6 @@ return {
                 end,
             },
         },
-        -- vim.api.nvim_command('autocmd VimEnter * Neotree show'),
         vim.keymap.set({ "n", "v" }, "tt", [[<cmd>Neotree toggle<CR>]]),
         config = function()
             require("neo-tree").setup({
@@ -288,61 +291,21 @@ return {
     },
     {
         -- outline
-        'stevearc/aerial.nvim',
-        -- event = "VeryLazy",
-        opts = {},
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter",
-            "nvim-tree/nvim-web-devicons"
-        },
+        "hedyhli/outline.nvim",
+        vim.keymap.set("n", "<leader>a", "<cmd>Outline<CR>", { desc = "Toggle Outline" }),
         config = function()
-            -- vim.api.nvim_create_autocmd("FileType", {
-            --     pattern = { "lua", "python", "c", "cpp", "sh", "markdown" },
-            --     command = "AerialOpen!"
-            -- })
             vim.api.nvim_create_autocmd("VimEnter", {
                 callback = function()
-                    vim.cmd("AerialOpen!")
                     vim.cmd("Neotree show")
+                    vim.cmd("Outline")
                 end
             })
-            vim.keymap.set('n', '<leader>a', '<cmd>AerialToggle!<CR>', { desc = "Aerial" })
-            require("aerial").setup({
-                filter_kind = {
-                    -- "Array",
-                    -- "Boolean",
-                    "Class",
-                    -- "Constant",
-                    "Constructor",
-                    "Enum",
-                    -- "File",
-                    "Function",
-                    "Interface",
-                    -- "Key",
-                    "Module",
-                    "Method",
-                    -- "Object",
-                    "Package",
-                    "Struct",
-                    -- "Variable"
-                },
-                backends = { "treesitter", "lsp" },
-                highlight_on_jump = 1000,
-                autojump = true
-            })
-        end
+
+            require("outline").setup {
+                -- Your setup opts here (leave empty to use defaults)
+            }
+        end,
     },
-    -- {
-    --     -- indent line
-    --     'vidocqh/auto-indent.nvim',
-    --     config = function()
-    --         require("auto-indent").setup({
-    --             lightmode = true,     -- Lightmode assumes tabstop and indentexpr not change within buffer's lifetime
-    --             indentexpr = nil,     -- Use vim.bo.indentexpr by default, see 'Custom Indent Evaluate Method'
-    --             ignore_filetype = {}, -- Disable plugin for specific filetypes, e.g. ignore_filetype = { 'javascript' }
-    --         })
-    --     end
-    -- },
     {
         -- 顶端 buffer 配置
         'romgrk/barbar.nvim',
@@ -366,42 +329,24 @@ return {
             })
         end,
         opts = {
-            vim.keymap.set("n", "<leader>pb", [[<Cmd>BufferPickDelete<CR>]], { noremap = true, silent = true },
-                { desc = "[P]ick[B]uffertoclose" }),
-            vim.keymap.set("n", "<leader>cb", [[<Cmd>BufferClose<CR>]], { noremap = true, silent = true },
-                { desc = "[C]lose[B]uffer" }),
-            vim.keymap.set("n", "<leader>c[", [[<Cmd>BufferCloseBuffersLeft<CR>]], { noremap = true, silent = true },
-                { desc = "Close Left Buffer" }),
-            vim.keymap.set("n", "<leader>c]", [[<Cmd>BufferCloseBuffersRight<CR>]], { noremap = true, silent = true },
-                { desc = "Close Right Buffer" }),
-            vim.keymap.set("n", "\\[", [[<Cmd>BufferPrevious<CR>]], { noremap = true, silent = true },
-                { desc = "Previous Buffer" }),
-            vim.keymap.set("n", "\\]", [[<Cmd>BufferNext<CR>]], { noremap = true, silent = true },
-                { desc = "Next Buffer" }),
-            vim.keymap.set("n", "\\{", [[<Cmd>BufferMovePrevious<CR>]], { noremap = true, silent = true },
-                { desc = "Move Buffer to Previous" }),
-            vim.keymap.set("n", "\\}", [[<Cmd>BufferMoveNext<CR>]], { noremap = true, silent = true },
-                { desc = "Move Buffer to Next" }),
-            vim.keymap.set("n", "<leader>1", [[<Cmd>BufferGoto 1<CR>]], { noremap = true, silent = true },
-                { desc = "Buffer 1" }),
-            vim.keymap.set("n", "<leader>2", [[<Cmd>BufferGoto 2<CR>]], { noremap = true, silent = true },
-                { desc = "Buffer 2" }),
-            vim.keymap.set("n", "<leader>3", [[<Cmd>BufferGoto 3<CR>]], { noremap = true, silent = true },
-                { desc = "Buffer 3" }),
-            vim.keymap.set("n", "<leader>4", [[<Cmd>BufferGoto 4<CR>]], { noremap = true, silent = true },
-                { desc = "Buffer 4" }),
-            vim.keymap.set("n", "<leader>5", [[<Cmd>BufferGoto 5<CR>]], { noremap = true, silent = true },
-                { desc = "Buffer 5" }),
-            vim.keymap.set("n", "<leader>6", [[<Cmd>BufferGoto 6<CR>]], { noremap = true, silent = true },
-                { desc = "Buffer 6" }),
-            vim.keymap.set("n", "<leader>7", [[<Cmd>BufferGoto 7<CR>]], { noremap = true, silent = true },
-                { desc = "Buffer 7" }),
-            vim.keymap.set("n", "<leader>8", [[<Cmd>BufferGoto 8<CR>]], { noremap = true, silent = true },
-                { desc = "Buffer 8" }),
-            vim.keymap.set("n", "<leader>9", [[<Cmd>BufferGoto 9<CR>]], { noremap = true, silent = true },
-                { desc = "Buffer 9" }),
-            vim.keymap.set("n", "<leader>0", [[<Cmd>BufferLast<CR>]], { noremap = true, silent = true },
-                { desc = "Buffer Last" }),
+            vim.keymap.set("n", "<leader>pb", [[<Cmd>BufferPickDelete<CR>]], { desc = "[P]ick[B]uffertoclose" }),
+            vim.keymap.set("n", "<leader>cb", [[<Cmd>BufferClose<CR>]], { desc = "[C]lose[B]uffer" }),
+            vim.keymap.set("n", "<leader>c[", [[<Cmd>BufferCloseBuffersLeft<CR>]], { desc = "Close Left Buffer" }),
+            vim.keymap.set("n", "<leader>c]", [[<Cmd>BufferCloseBuffersRight<CR>]], { desc = "Close Right Buffer" }),
+            vim.keymap.set("n", "\\[", [[<Cmd>BufferPrevious<CR>]], { desc = "Previous Buffer" }),
+            vim.keymap.set("n", "\\]", [[<Cmd>BufferNext<CR>]], { desc = "Next Buffer" }),
+            vim.keymap.set("n", "\\{", [[<Cmd>BufferMovePrevious<CR>]], { desc = "Move Buffer to Previous" }),
+            vim.keymap.set("n", "\\}", [[<Cmd>BufferMoveNext<CR>]], { desc = "Move Buffer to Next" }),
+            vim.keymap.set("n", "<leader>1", [[<Cmd>BufferGoto 1<CR>]], { desc = "Buffer 1" }),
+            vim.keymap.set("n", "<leader>2", [[<Cmd>BufferGoto 2<CR>]], { desc = "Buffer 2" }),
+            vim.keymap.set("n", "<leader>3", [[<Cmd>BufferGoto 3<CR>]], { desc = "Buffer 3" }),
+            vim.keymap.set("n", "<leader>4", [[<Cmd>BufferGoto 4<CR>]], { desc = "Buffer 4" }),
+            vim.keymap.set("n", "<leader>5", [[<Cmd>BufferGoto 5<CR>]], { desc = "Buffer 5" }),
+            vim.keymap.set("n", "<leader>6", [[<Cmd>BufferGoto 6<CR>]], { desc = "Buffer 6" }),
+            vim.keymap.set("n", "<leader>7", [[<Cmd>BufferGoto 7<CR>]], { desc = "Buffer 7" }),
+            vim.keymap.set("n", "<leader>8", [[<Cmd>BufferGoto 8<CR>]], { desc = "Buffer 8" }),
+            vim.keymap.set("n", "<leader>9", [[<Cmd>BufferGoto 9<CR>]], { desc = "Buffer 9" }),
+            vim.keymap.set("n", "<leader>0", [[<Cmd>BufferLast<CR>]], { desc = "Buffer Last" }),
         },
     },
 }

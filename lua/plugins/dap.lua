@@ -3,10 +3,12 @@ return {
     dependencies = {
         "rcarriga/nvim-dap-ui",
         "nvim-neotest/nvim-nio",
+        "folke/edgy.nvim",
     },
     config = function()
         local dap = require("dap")
         local dapui = require("dapui")
+        local edgy = require("edgy")
 
         -- dap-ui 的基本设置
         dapui.setup()
@@ -54,8 +56,8 @@ return {
         -- 为 C 语言也设置相同的配置
         dap.configurations.c = dap.configurations.cpp
 
-        -- F5  启动调试
-        -- F6  关闭调试
+        -- F5: 关闭所有 edgy 窗口，然后启动/继续调试
+        -- F6: 终止调试会话，并在 dap-ui 关闭后，重新打开 edgy 左侧窗口
         -- F10 单步跳过, 完整地执行函数单不在函数中停留
         -- F11 单步进入, 进入函数内部执行函数每条语句
         -- F12 单步调出, 单步进入之后执行函数后面所有内容, 跳出函数不在函数中停留
@@ -66,9 +68,14 @@ return {
         -- `leader dr` 打开REPL窗口(一个交互式控制台)
         -- `leader dl` 重新运行上一次调试会话
         -- `leader dh` 悬浮显示变量信息
-        vim.keymap.set('n', '<F5>', dap.continue, { desc = 'DAP: Continue' })
-        vim.keymap.set('n', '<F6>', function() require('dap').terminate() end,
-            { desc = 'DAP: Terminate Session & Close UI' })
+        vim.keymap.set('n', '<F5>', function()
+            edgy.close()
+            dap.continue()
+        end, { desc = 'DAP: Close Edgy & Continue' })
+        vim.keymap.set('n', '<F6>', function()
+            dap.terminate()
+            edgy.open('left')
+        end, { desc = 'DAP: Terminate & Open Edgy Left' })
         vim.keymap.set('n', '<F10>', dap.step_over, { desc = 'DAP: Step Over' })
         vim.keymap.set('n', '<F11>', dap.step_into, { desc = 'DAP: Step Into' })
         vim.keymap.set('n', '<F12>', dap.step_out, { desc = 'DAP: Step Out' })

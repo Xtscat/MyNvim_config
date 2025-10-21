@@ -15,30 +15,19 @@ return {
 
         -- 服务器配置定义
         local servers = {
-            -- lua
-            -- lua_ls = {
-            --     settings = {
-            --         Lua = {
-            --             runtime = { version = 'LuaJIT' },
-            --             diagnostics = { globals = { 'vim' } },
-            --             workspace = {
-            --                 checkThirdParty = false,
-            --                 library = vim.api.nvim_get_runtime_file("", true),
-            --             },
-            --             telemetry = { enable = false }
-            --         }
-            --     }
-            -- },
             emmylua_ls = {
                 settings = {
-                    runtime = {
-                        version = 'LuaJIT'
-                    },
-                    diagnostics = {
-                        globals = { 'vim' }
-                    },
-                    workspace = {
-                        library = vim.api.nvim_get_runtime_file("", true)
+                    Lua = {
+                        runtime = {
+                            version = 'LuaJIT'
+                        },
+                        diagnostics = {
+                            globals = { "vim" }
+                        },
+                        workspace = {
+                            library = vim.api.nvim_get_runtime_file("", true)
+                        }
+
                     }
                 }
             },
@@ -63,7 +52,6 @@ return {
 
         -- LSP attach 回调函数
         local on_attach = function(client, bufnr)
-            -- Enable completion triggered by <c-x><c-o>
             local nmap = function(keys, func, desc)
                 if desc then
                     desc = 'LSP: ' .. desc
