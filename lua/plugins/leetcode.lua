@@ -14,6 +14,19 @@ return {
             enabled = true,
             translator = true,
             translate_problems = true,
+        },
+        editor = {
+            reset_previous_code = true, ---@type boolean
+            fold_imports = false, ---@type boolean
+        },
+        theme = {
+            ["alt"] = {
+                bg = "#FAFAFA",
+                fg = "#000000"
+            },
+            ["normal"] = {
+                fg = "#000000"
+            }
         }
     },
 }

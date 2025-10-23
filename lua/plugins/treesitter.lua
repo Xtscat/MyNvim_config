@@ -4,11 +4,11 @@ return {
     event = "VeryLazy",
     config = function()
         require 'nvim-treesitter.configs'.setup {
-            ensure_installed = { "c", "cpp", "python", "bash", "lua", "markdown", "markdown_inline"},
+            ensure_installed = { "c", "cpp", "python", "bash", "html", "lua", "markdown", "markdown_inline"},
             auto_install = true,
             highlight = {
                 enable = true,
-                additional_vim_regex_highlighting = false,
+                additional_vim_regex_highlighting = true,
             },
         }
     end

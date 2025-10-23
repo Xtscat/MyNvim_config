@@ -89,7 +89,7 @@ return {
         -- 配置诊断显示
         vim.diagnostic.config({
             float = { border = "rounded" },
-            virtual_text = { prefix = "●" },
+            virtual_text = { prefix = "=>" },
             severity_sort = true,
         })
 
