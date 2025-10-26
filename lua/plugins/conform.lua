@@ -21,7 +21,7 @@ return {
             formatters = {
                 clang_format = {
                     -- args = { "--style={BasedOnStyle: google, IndentWidth: 2, ColumnLimit: 120}" }
-                    args = { "--style={BasedOnStyle: google, IndentWidth: 4, ColumnLimit: 120, IndentAccessModifiers: true, AccessModifierOffset: 4, PointerAlignment: Middle}" }
+                    args = { "--style={BasedOnStyle: google, IndentWidth: 4, ColumnLimit: 120, IndentAccessModifiers: false, AccessModifierOffset: -2, PointerAlignment: Middle}" }
                 }
             },
             vim.api.nvim_create_user_command("Format", function(args)
