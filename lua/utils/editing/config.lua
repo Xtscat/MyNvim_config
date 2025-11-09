@@ -78,14 +78,13 @@ function M.autosave_config()
     }
 end
 
-
 function M.neotab_config()
     require('neotab').setup({
         tabkey = "<Tab>",
         reverse_key = "<S-Tab>",
         act_as_tab = true,
-        behavior = "nested", ---@type ntab.behavior
-        pairs = { ---@type ntab.pair[]
+        behavior = "nested",
+        pairs = {
             { open = "(", close = ")" },
             { open = "[", close = "]" },
             { open = "{", close = "}" },
@@ -104,7 +103,7 @@ function M.neotab_config()
             },
             escape = {
                 enabled = false,
-                triggers = {}, ---@type table<string, ntab.trigger>
+                triggers = {},
             },
         },
     })
