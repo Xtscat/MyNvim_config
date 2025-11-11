@@ -45,7 +45,7 @@ function M.neotree_config()
                 enable = true,
                 leave_dits_open = true
             }
-        },
+        }
     })
 end
 

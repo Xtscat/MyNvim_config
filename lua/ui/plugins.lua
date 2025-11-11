@@ -66,6 +66,11 @@ return {
         end
     },
     {
+        -- mamage nvim window
+        -- left top: neo-tree
+        -- left bottom: outline
+        -- bottom: toggleterm
+        -- right: codecompanionchat
         "folke/edgy.nvim",
         init = function()
             vim.opt.splitkeep = "screen"

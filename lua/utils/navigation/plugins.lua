@@ -29,6 +29,7 @@ return {
         "hedyhli/outline.nvim",
         config = function()
             require("utils.navigation.config").outline_config()
+            require("utils.navigation.keymaps").outline_keymaps()
         end
     },
 }

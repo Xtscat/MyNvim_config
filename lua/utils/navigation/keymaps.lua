@@ -18,7 +18,8 @@ end
 
 function M.neotree_keymaps()
     -- for neotree
-    return{
+    return {
+        nmap("tt", "<cmd>Neotree toggle<CR>", "Toggle Neotree Window"),
         window = {
             mappings = {
                 ["<cr>"] = "open",
@@ -46,6 +47,11 @@ function M.neotree_keymaps()
             }
         }
     }
+end
+
+function M.outline_keymaps()
+    -- for outline
+    nmap("<leader>a", "<cmd>Outline<CR>", "Toggle Outline Window")
 end
 
 return M
