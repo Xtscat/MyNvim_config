@@ -23,6 +23,7 @@ require("lazy").setup({
         { import = "utils.markdown.plugins" },
         { import = "utils.navigation.plugins" },
         { import = "utils.window.plugins" },
+        { import = "utils.coding.plugins" },
     },
     defaults = { lazy = false },
     checker = { enabled = false },
