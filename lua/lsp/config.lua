@@ -80,7 +80,7 @@ function M.blink_config()
             nerd_font_variant = 'mono'
         },
         sources = {
-            default = { 'buffer', 'lsp', 'path', 'snippets', },
+            default = { 'buffer', 'lsp', 'path', 'snippets' },
             providers = {
                 lsp = { score_offset = 4 },
                 snippets = { score_offset = 3 },

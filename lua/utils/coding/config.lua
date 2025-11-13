@@ -1,14 +1,7 @@
 -- utils/coding/config.lua
--- 自动项目运行配置 for code_runner.nvim
--- 分离辅助函数，稳定执行
 
 local M = {}
 
-------------------------------------------------------------
--- 辅助函数部分
-------------------------------------------------------------
-
--- 自动项目根目录检测函数
 local function get_root()
     return vim.fs.root(0, {
         "xmake.lua",
@@ -22,7 +15,6 @@ local function get_root()
     }) or vim.fn.getcwd()
 end
 
--- 根据项目内容选择正确的运行命令
 local function detect_project_command(root)
     if vim.fn.filereadable(root .. "/xmake.lua") == 1 then
         return "xmake && xmake run"
@@ -56,7 +48,6 @@ local function detect_project_command(root)
     end
 end
 
--- 生成完整的 code_runner 配置（可以在 BufEnter 中重复调用）
 local function update_project_config()
     local root = get_root()
     if not root or root == "" then
@@ -68,10 +59,6 @@ local function update_project_config()
 
     return command, name
 end
-
-------------------------------------------------------------
--- 导出模块方法
-------------------------------------------------------------
 
 function M.code_runner_config()
     local command, name = update_project_config()
@@ -87,6 +74,30 @@ function M.code_runner_config()
                 command = command,
             },
         },
+    })
+end
+
+function M.leetcode_config()
+    require("leetcode").setup({
+        arg = 'leetcode.nvim',
+        lang = 'cpp',
+        cn = {
+            enabled = true,
+            translator = true,
+            translate_problems = true,
+        },
+        editor = {
+            reset_previous_code = true, ---@type boolean
+            fold_imports = false, ---@type boolean
+        },
+        theme = {
+            ["alt"] = {
+                bg = "#FAFAFA",
+                fg = "#000000"
+            },
+            -- ["normal"] = {
+            -- }
+        }
     })
 end
 
