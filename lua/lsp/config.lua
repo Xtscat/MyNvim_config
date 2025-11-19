@@ -167,7 +167,7 @@ function M.conform_config()
         notify_on_error = true,
         formatters = {
             clang_format = {
-                args = { "--style={BasedOnStyle: google, IndentWidth: 4, ColumnLimit: 120, AllowShortBlocksOnASingleLine: Empty, AllowShortFunctionsOnASingleLine: Empty, IndentAccessModifiers: false, AccessModifierOffset: -2, PointerAlignment: Middle}" }
+                args = { "--style={BasedOnStyle: google, IndentWidth: 4, ColumnLimit: 120, AllowShortBlocksOnASingleLine: Empty, AllowShortFunctionsOnASingleLine: Empty, IndentAccessModifiers: false, AccessModifierOffset: -2, PointerAlignment: Left}" }
             }
         },
         vim.api.nvim_create_user_command("Format", function(args)
