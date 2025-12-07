@@ -8,11 +8,12 @@ return {
         require("utils.window.keymaps").toggleterm_keymap()
     },
     {
-        "s1n7ax/nvim-window-picker",
-        event = "VeryLazy",
+        "MarcusGrass/nvim_winpick",
+        branch = "x86_64-unknown-linux-gnu-latest",
+        lazy = false,
         config = function()
-            require("utils.window.config").window_picker_config()
-            require("utils.window.keymaps").window_picker_keymap()
+            require("utils.window.config").winpick_config()
+            require("utils.window.keymaps").winpick_keymap()
         end
     },
 }

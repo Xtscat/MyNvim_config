@@ -2,14 +2,14 @@
 
 local M = {}
 
-function M.window_picker_config()
-    require("window-picker").setup({
+function M.winpick_config()
+    require("nvim_winpick").setup({
+        selection_chars = "FJDKSLA;CMRUEIWOQP",
         filter_rules = {
-            include_current_win = true,
             bo = {
-                filetype = { "fidget" }
-            }
-        }
+                filetype = { "notify", "snacks_notif" }
+            },
+        },
     })
 end
 

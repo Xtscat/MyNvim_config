@@ -50,7 +50,14 @@ function M.neotree_config()
 end
 
 function M.outline_config()
-    require("outline").setup()
+    require("outline").setup({
+        -- symbols = {
+        --     filter = {
+        --         'Namespace', 'Class', 'Struct', 'Enum', 'Interface', 'Function', 'Method', 'Constructor', 'TypeAlias',
+        --         'Macro'
+        --     }
+        -- }
+    })
 end
 
 return M
