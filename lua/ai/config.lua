@@ -9,7 +9,8 @@ function M.codecompanion_config()
             chat = {
                 adapter = {
                     name = 'copilot',
-                    model = 'gpt-5-mini'
+                    model = 'gemini-3-flash-preview'
+                    -- model = 'gpt-5-mini'
                 },
                 keymaps = {
                     send = {

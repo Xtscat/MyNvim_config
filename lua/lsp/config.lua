@@ -117,36 +117,38 @@ function M.mason_config()
 end
 
 function M.fidget_config()
-    require('fidget').setup({})
-    -- -- CodeCompanion 状态显示逻辑
-    -- local handler
-    -- vim.api.nvim_create_autocmd({ "User" }, {
-    --     pattern = "CodeCompanionRequest*",
-    --     group = vim.api.nvim_create_augroup("CodeCompanionFidget", { clear = true }),
-    --     callback = function(request)
-    --         local fidget = require("fidget")
-    --         if not fidget then
-    --             return
-    --         end
-    --
-    --         if request.match == "CodeCompanionRequestStarted" then
-    --             if handler then
-    --                 handler:cancel()
-    --                 handler = nil
-    --             end
-    --             handler = fidget.progress.handle.create({
-    --                 title = "CodeCompanion",
-    --                 message = "Progressing...",
-    --                 lsp_client = { name = "CodeCompanion" },
-    --             })
-    --         elseif request.match == "CodeCompanionRequestFinished" then
-    --             if handler then
-    --                 handler:finish()
-    --                 handler = nil
-    --             end
-    --         end
-    --     end,
-    -- })
+    local handler
+    require('fidget').setup({
+        -- CodeCompanion 状态显示逻辑
+        vim.api.nvim_create_autocmd({ "User" }, {
+            pattern = "CodeCompanionRequest*",
+            group = vim.api.nvim_create_augroup("CodeCompanionFidget", { clear = true }),
+            callback = function(request)
+                local fidget = require("fidget")
+                if not fidget then
+                    return
+                end
+
+                if request.match == "CodeCompanionRequestStarted" then
+                    if handler then
+                        handler:cancel()
+                        handler = nil
+                    end
+                    handler = fidget.progress.handle.create({
+                        title = "CodeCompanion",
+                        message = "Progressing...",
+                        lsp_client = { name = "CodeCompanion" },
+                    })
+                elseif request.match == "CodeCompanionRequestFinished" then
+                    if handler then
+                        handler:finish()
+                        handler = nil
+                    end
+                end
+            end,
+        })
+
+    })
 end
 
 function M.conform_config()
