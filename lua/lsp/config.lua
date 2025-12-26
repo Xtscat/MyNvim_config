@@ -54,47 +54,59 @@ function M.lsp_config()
 end
 
 function M.blink_config()
-    require("blink.cmp").setup({
-        completion = {
-            keyword = { range = 'full' },
-            documentation = { auto_show = true, auto_show_delay_ms = 500 },
-            list = { selection = { preselect = false, auto_insert = true } },
-            menu = {
-                draw = {
-                    columns = {
-                        { "kind_icon" }, { "label", "label_description", gap = 1 }
+    require("blink.cmp").setup( ---@as blink.cmp.Config
+        {
+            completion = {
+                keyword = { range = 'full' },
+                trigger = {
+                    show_on_trigger_character = true,
+                    show_on_blocked_trigger_characters = { ' ', '\n', '\t' }
+                },
+                documentation = { auto_show = true, auto_show_delay_ms = 500 },
+                list = { selection = { preselect = false, auto_insert = true } },
+                menu = {
+                    draw = {
+                        columns = {
+                            { "kind_icon" }, { "label", "label_description", gap = 1 }
+                        },
+                        treesitter = { 'lsp' }
                     },
-                    treesitter = { 'lsp' }
                 },
             },
-        },
-        enabled = function()
-            return not vim.tbl_contains({
-                    -- "lua",
-                    -- "markdown"
-                }, vim.bo.filetype)
-                and vim.bo.buftype ~= "prompt"
-                and vim.b.completion ~= false
-        end,
-        appearance = {
-            nerd_font_variant = 'mono'
-        },
-        sources = {
-            default = { 'buffer', 'lsp', 'path', 'snippets' },
-            providers = {
-                lsp = { score_offset = 4 },
-                snippets = { score_offset = 3 },
-                path = { score_offset = 2 },
-                buffer = { score_offset = 1 },
+            enabled = function()
+                return not vim.tbl_contains({
+                        -- "lua",
+                        -- "markdown"
+                    }, vim.bo.filetype)
+                    and vim.bo.buftype ~= "prompt"
+                    and vim.b.completion ~= false
+            end,
+            appearance = {
+                nerd_font_variant = 'mono'
             },
-        },
-        cmdline = {
-            completion = {
-                menu = { auto_show = true },
+            sources = {
+                default = { 'buffer', 'lsp', 'path', 'snippets' },
+                providers = {
+                    lsp = { score_offset = 4 },
+                    snippets = { score_offset = 3 },
+                    path = { score_offset = 2 },
+                    buffer = { score_offset = 1 },
+                },
             },
-        },
-        fuzzy = { implementation = "prefer_rust_with_warning" },
-    })
+            cmdline = {
+                completion = {
+                    menu = { auto_show = true },
+                },
+            },
+            fuzzy = { implementation = "prefer_rust_with_warning" },
+            keymap = {
+                preset = 'none',
+                ['<C-space>'] = { 'hide' },
+                ['<CR>'] = { 'select_and_accept', 'fallback' },
+                ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+                ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
+            },
+        })
 end
 
 function M.lspsaga_config()

@@ -46,7 +46,7 @@ return {
         'saghen/blink.cmp',
         version = "1.*",
         config = function()
-            require("lsp.keymaps").blink_keymaps()
+            -- require("lsp.keymaps").blink_keymaps()
             require("lsp.config").blink_config()
         end,
     },

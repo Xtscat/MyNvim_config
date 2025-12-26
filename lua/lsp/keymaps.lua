@@ -33,17 +33,17 @@ function M.lsp_keymaps()
     })
 end
 
-function M.blink_keymaps()
-    require("blink.cmp").setup({
-        keymap = {
-            preset = 'none',
-            ['<C-space>'] = { 'hide' },
-            ['<CR>'] = { 'select_and_accept', 'fallback' },
-            ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
-            ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
-        },
-    })
-end
+-- function M.blink_keymaps()
+--     require("blink.cmp").setup({
+--         keymap = {
+--             preset = 'none',
+--             ['<C-space>'] = { 'hide' },
+--             ['<CR>'] = { 'select_and_accept', 'fallback' },
+--             ['<S-Tab>'] = { 'select_prev', 'snippet_backward', 'fallback' },
+--             ['<Tab>'] = { 'select_next', 'snippet_forward', 'fallback' },
+--         },
+--     })
+-- end
 
 function M.conform_keymaps()
     local nmap = function(keys, func, desc)
