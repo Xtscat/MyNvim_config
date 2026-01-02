@@ -177,8 +177,7 @@ local window = {
     {
         "akinsho/toggleterm.nvim",
         version = "*",
-        -- config = true,
-        config = with_config_and_keys("configs.window", nil, "toggleterm_keymap")
+        config = with_config_and_keys("configs.window", "toggleterm_config", "toggleterm_keymaps")
     },
     {
         "folke/snacks.nvim",
@@ -233,10 +232,10 @@ local md = {
         "MeanderingProgrammer/render-markdown.nvim",
         config = with_config_and_keys("configs.md", "render_markdown_config", nil)
     },
-    {
-        "DingDean/smark.nvim",
-        config = with_config_and_keys("configs.md", "smark_config", nil)
-    },
+    -- {
+    --     "DingDean/smark.nvim",
+    --     config = with_config_and_keys("configs.md", "smark_config", nil)
+    -- },
 }
 
 return join(base, edit, ui, lsp, dap, window, navigation, ai, md)

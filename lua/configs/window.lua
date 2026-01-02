@@ -41,10 +41,10 @@ function M.edgy_config()
         },
         right = {
             {
-                ft = "codecompanionchat",
+                ft = "opencode_terminal",
                 size = { width = 0.3 },
                 collapsed = false,
-                open = "CodeCompanionChat Toggle",
+                open = "OpenCode",
             }
         }
     })
@@ -61,6 +61,10 @@ function M.winpick_config()
     })
 end
 
+function M.toggleterm_config()
+    require("toggleterm").setup()
+end
+
 function M.snacks_config()
     require("snacks").setup({
         input = { enabled = true },
@@ -69,7 +73,7 @@ function M.snacks_config()
     })
 end
 
-function M.toggleterm_keymap()
+function M.toggleterm_keymaps()
     Map.nmap('<leader>T', '<cmd>ToggleTerm<CR>', "Open Toggleterm terminal")
 end
 

@@ -18,7 +18,6 @@ function M.with_prefix(prefix)
         tmap = "t",
     }
 
-    -- 【修复】简化逻辑，只检查 prefix 和 desc 是否存在
     helper.map = function(mode, lhs, rhs, desc, opts)
         local full_desc = desc
         if prefix and desc then
@@ -40,8 +39,7 @@ function M.with_prefix(prefix)
     return helper
 end
 
--- 【修复】传入 nil 而不是空字符串
-local default = M.with_prefix(nil) -- 或者 M.with_prefix()
+local default = M.with_prefix(nil)
 M.nmap = default.nmap
 M.vmap = default.vmap
 M.imap = default.imap
