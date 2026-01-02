@@ -1,15 +1,16 @@
 -- ai/plugins.lua
 
 return {
-    { "zbirenbaum/copilot.lua" },
-    { "nvim-lua/plenary.nvim" },
-    { "echasnovski/mini.diff" },
+    -- {
+    --     "folke/snacks.nvim",
+    --     opts = { input = {}, picker = {}, terminal = {} }
+    -- },
     {
-        "olimorris/codecompanion.nvim",
-        event = "VeryLazy",
+        "NickvanDyke/opencode.nvim",
+        -- require utils/window/'snacks.nvim'
         config = function()
-            require("ai.config").codecompanion_config()
-            require("ai.keymaps").codecompanion_keymaps()
+            require("ai.config").opencode_config()
+            require("ai.keymaps").opencode_keymaps()
         end
-    }
+    },
 }

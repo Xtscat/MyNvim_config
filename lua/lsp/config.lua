@@ -24,7 +24,15 @@ function M.lsp_config()
         },
 
         -- for c&cpp
-        clangd = {},
+        clangd = {
+            cmd = {
+                "clangd",
+                "--background-index",
+                "--completion-style=detailed",
+                "--all-scopes-completion",
+                "--header-insertion=iwyu",
+            }
+        },
 
         -- for python
         ruff = {},
@@ -173,6 +181,7 @@ function M.conform_config()
             cpp = { "clang_format" },
             cuda = { "clang_format" },
             javascript = { 'prettier' },
+            json = { 'biome' },
             typescript = { 'prettier' },
             html = { 'prettier' },
             css = { 'prettier' },
@@ -181,7 +190,18 @@ function M.conform_config()
         notify_on_error = true,
         formatters = {
             clang_format = {
-                args = { "--style={BasedOnStyle: google, IndentWidth: 4, ColumnLimit: 120, AllowShortBlocksOnASingleLine: Empty, AllowShortFunctionsOnASingleLine: Empty, IndentAccessModifiers: false, AccessModifierOffset: -2, PointerAlignment: Left}" }
+                args = {
+                    [[--style={
+                        BasedOnStyle: google,
+                        IndentWidth: 4,
+                        ColumnLimit: 120,
+                        AllowShortBlocksOnASingleLine: Empty,
+                        AllowShortFunctionsOnASingleLine: Empty,
+                        IndentAccessModifiers: false,
+                        AccessModifierOffset: -2,
+                        PointerAlignment: Left,
+                    }]],
+                },
             }
         },
         vim.api.nvim_create_user_command("Format", function(args)

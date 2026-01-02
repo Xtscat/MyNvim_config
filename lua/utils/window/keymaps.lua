@@ -23,4 +23,8 @@ function M.winpick_keymap()
     )
 end
 
+-- function M.snscks_keymap()
+--
+-- end
+
 return M

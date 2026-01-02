@@ -11,6 +11,7 @@ function M.sunset_config()
             vim.opt.background = 'light'
             vim.g.edge_style = 'aura'
             vim.cmd.colorscheme('edge')
+            -- vim.cmd.colorscheme('dawnfox')
         end,
 
         night_callback = function()
@@ -90,6 +91,11 @@ function M.lualine_config()
                 function()
                     return require('lsp-progress').progress()
                 end
+            },
+            lualine_z = {
+                {
+                    require("opencode").statusline,
+                },
             }
         }
     })
@@ -156,7 +162,6 @@ function M.edgy_config()
                 open = "CodeCompanionChat Toggle",
             }
         }
-
     })
 end
 

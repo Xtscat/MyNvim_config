@@ -16,6 +16,9 @@ return {
         lazy = false,
     },
     {
+        "EdenEast/nightfox.nvim",
+    },
+    {
         'sainnhe/edge',
         lazy = false,
     },

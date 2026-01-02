@@ -13,4 +13,12 @@ function M.winpick_config()
     })
 end
 
+function M.snacks_config()
+    require("snacks").setup({
+        input = { enabled = true },
+        picker = { enabled = true },
+        terminal = { enabled = true }
+    })
+end
+
 return M
