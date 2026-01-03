@@ -29,13 +29,15 @@ local base = {
         event = "VeryLazy",
         config = with_config_and_keys("configs.base", "treesitter_config", nil)
     },
+    {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        config = with_config_and_keys("configs.base", "snacks_config", "snacks_keymaps")
+    },
 }
 
 local edit = {
-    {
-        "numToStr/Comment.nvim",
-        config = with_config_and_keys("configs.edit", "comment_config", nil),
-    },
     {
         -- 括号 / 成对符号
         "kylechui/nvim-surround",
@@ -43,124 +45,66 @@ local edit = {
         event = "VeryLazy",
         config = with_config_and_keys("configs.edit", nil, "nvim_surround_keymaps"),
     },
-    { "windwp/nvim-autopairs",    event = "InsertEnter", opts = {} },
-    {
-        -- 更多的 'a'/'i' 对象
-        "echasnovski/mini.ai",
-        event = "VeryLazy",
-        opts = {},
-    },
-    {
-        -- tabout
-        "kawre/neotab.nvim",
-        config = with_config_and_keys("configs.edit", "neotab_config", nil)
-    },
-    {
-        -- 在 'true/false', 'on/off', 'yes/no', 'enabled/disable' 之间切换
-        "nguyenvukhang/nvim-toggler",
-        config = with_config_and_keys("configs.edit", "nvim_toggler_config", nil)
-    },
-    {
-        -- 高亮搜索增强
-        "kevinhwang91/nvim-hlslens",
-        config = with_config_and_keys("configs.edit", "hlslens_config", "hlslens_keymaps")
-    },
-    {
-        "Pocco81/auto-save.nvim",
-        config = with_config_and_keys("configs.edit", "autosave_config", nil)
-    },
-    { "ethanholz/nvim-lastplace", opts = {} },
+    { "numToStr/Comment.nvim",      config = with_config_and_keys("configs.edit", "comment_config", nil), },
+    { "windwp/nvim-autopairs",      event = "InsertEnter",                                                             opts = {} },
+    -- 更多的 'a'/'i' 对象
+    { "echasnovski/mini.ai",        event = "VeryLazy",                                                                opts = {} },
+    -- tabout
+    { "kawre/neotab.nvim",          config = with_config_and_keys("configs.edit", "neotab_config", nil) },
+    -- 在 'true/false', 'on/off', 'yes/no', 'enabled/disable' 之间切换
+    { "nguyenvukhang/nvim-toggler", config = with_config_and_keys("configs.edit", "nvim_toggler_config", nil) },
+    -- 高亮搜索增强
+    { "kevinhwang91/nvim-hlslens",  config = with_config_and_keys("configs.edit", "hlslens_config", "hlslens_keymaps") },
+    { "Pocco81/auto-save.nvim",     config = with_config_and_keys("configs.edit", "autosave_config", nil) },
+    { "ethanholz/nvim-lastplace",   opts = {} },
 
 }
 
 local ui = {
     -->>> theme
-    { "sainnhe/edge",          lazy = false },
-    { "navarasu/onedark.nvim", lazy = false },
     {
         "JManch/sunset.nvim",
         lazy = false,
         priority = 1000,
         config = with_config_and_keys("configs.ui", "sunset_config", nil)
     },
+    { "sainnhe/edge",                        lazy = false },
+    { "navarasu/onedark.nvim",               lazy = false },
     -->>> widgets
-    {
-        -- 上方状态栏
-        "nvim-lualine/lualine.nvim",
-        config = with_config_and_keys("configs.ui", "lualine_config", nil)
-    },
-    {
-        -- 标签页增强
-        "romgrk/barbar.nvim",
-        config = with_config_and_keys("configs.ui", "barbar_config", "barbar_keymaps")
-    },
-    {
-        -- 右侧滚动条
-        "dstein64/nvim-scrollview",
-        config = with_config_and_keys("configs.ui", "nvim_scrollview_config", nil)
-    },
-    {
-        -- 缩进线
-        "lukas-reineke/indent-blankline.nvim",
-        main = "ibl",
-        config = with_config_and_keys("configs.ui", "indent_blankline_config", nil)
-    },
-    {
-        -- 高亮当前行 / 列
-        "yamatsum/nvim-cursorline",
-        config = with_config_and_keys("configs.ui", "nvim_cursorline_config", nil)
-    },
-    { "lewis6991/gitsigns.nvim", opts = {} },
-
+    -- 下方状态栏
+    { "nvim-lualine/lualine.nvim",           config = with_config_and_keys("configs.ui", "lualine_config", nil) },
+    -- 标签页增强
+    { "romgrk/barbar.nvim",                  config = with_config_and_keys("configs.ui", "barbar_config", "barbar_keymaps") },
+    -- 右侧滚动条
+    { "dstein64/nvim-scrollview",            config = with_config_and_keys("configs.ui", "nvim_scrollview_config", nil) },
+    -- 缩进线
+    { "lukas-reineke/indent-blankline.nvim", config = with_config_and_keys("configs.ui", "indent_blankline_config", nil) },
+    -- 高亮当前行 / 列
+    { "yamatsum/nvim-cursorline",            config = with_config_and_keys("configs.ui", "nvim_cursorline_config", nil) },
+    { "lewis6991/gitsigns.nvim",             opts = {} },
 }
 
 local lsp = {
     -->>> LSP
-    {
-        -- lsp 管理
-        "williamboman/mason.nvim",
-        config = with_config_and_keys("configs.lsp", "mason_config", nil)
-    },
+    -- lsp 管理
+    { "neovim/nvim-lspconfig",            event = { "BufReadPost", "BufNewFile" },                           config = with_config_and_keys("configs.lsp", "lsp_config", nil) },
+    { "williamboman/mason.nvim",          config = with_config_and_keys("configs.lsp", "mason_config", nil) },
     { "williamboman/mason-lspconfig.nvim" },
-    {
-        "neovim/nvim-lspconfig",
-        event = { "BufReadPost", "BufNewFile" },
-        config = with_config_and_keys("configs.lsp", "lsp_config", nil)
-    },
-    {
-        -- lsp 美化
-        "nvimdev/lspsaga.nvim",
-        config = with_config_and_keys("configs.lsp", "lspsaga_config", "lsp_keymaps")
-    },
-    {
-        -- lsp 进度条
-        "j-hui/fidget.nvim",
-        config = with_config_and_keys("configs.lsp", "fidget_config", nil)
-    },
-    { "folke/trouble.nvim",               cmd = "Trouble",  opts = {}, },
+    { "folke/trouble.nvim",               cmd = "Trouble",                                                   config = with_config_and_keys("configs.lsp", "trouble_config", nil) },
+    -- lsp 进度条
+    { "j-hui/fidget.nvim",                config = with_config_and_keys("configs.lsp", "fidget_config", nil) },
     -->>> CMP
-    { "L3MON4D3/LuaSnip",                 version = "v2.*", build = "make install_jsregexp" },
     { "rafamadriz/friendly-snippets" },
-    {
-        -- 补全
-        "saghen/blink.cmp",
-        version = "1.*",
-        config = with_config_and_keys("configs.lsp", "blink_config", nil)
-    },
+    { "L3MON4D3/LuaSnip",                 version = "v2.*",                                                  build = "make install_jsregexp" },
+    -- 补全
+    { "saghen/blink.cmp",                 version = "1.*",                                                   config = with_config_and_keys("configs.lsp", "blink_config", nil) },
     -->>> Formatter
-    {
-        "stevearc/conform.nvim",
-        event = "VeryLazy",
-        config = with_config_and_keys("configs.lsp", "conform_config", "conform_keymaps")
-    },
+    { "stevearc/conform.nvim",            event = "VeryLazy",                                                config = with_config_and_keys("configs.lsp", "conform_config", "conform_keymaps") }
 
 }
 
 local dap = {
-    {
-        "mfussenegger/nvim-dap",
-        config = with_config_and_keys("configs.dap", "nvim_dap_config", "nvim_dap_keymaps")
-    },
+    { "mfussenegger/nvim-dap", config = with_config_and_keys("configs.dap", "nvim_dap_config", "nvim_dap_keymaps") },
     { "rcarriga/nvim-dap-ui" },
     { "nvim-neotest/nvim-nio" },
 }
@@ -180,12 +124,6 @@ local window = {
         config = with_config_and_keys("configs.window", "toggleterm_config", "toggleterm_keymaps")
     },
     {
-        "folke/snacks.nvim",
-        priority = 1000,
-        lazy = false,
-        config = with_config_and_keys("configs.window", "snacks_config", nil)
-    },
-    {
         "MarcusGrass/nvim_winpick",
         branch = "x86_64-unknown-linux-gnu-latest",
         lazy = false,
@@ -194,16 +132,6 @@ local window = {
 }
 
 local navigation = {
-    -- for telescope
-    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-    { "nvim-lua/plenary.nvim" },
-    {
-        "nvim-telescope/telescope.nvim",
-        cmd = "Telescope",
-        event = "VeryLazy",
-        config = with_config_and_keys("configs.navigation", "telescope_config", "telescope_keymaps")
-    },
-
     -->>> neo-tree
     { "MunifTanjim/nui.nvim" },
     {
@@ -211,7 +139,6 @@ local navigation = {
         branch = "v3.x",
         config = with_config_and_keys("configs.navigation", "neotree_config", "neotree_keymaps")
     },
-
     -->>> outline
     {
         "hedyhli/outline.nvim",
@@ -232,10 +159,10 @@ local md = {
         "MeanderingProgrammer/render-markdown.nvim",
         config = with_config_and_keys("configs.md", "render_markdown_config", nil)
     },
-    -- {
-    --     "DingDean/smark.nvim",
-    --     config = with_config_and_keys("configs.md", "smark_config", nil)
-    -- },
+    {
+        "yutanagano/smark.nvim",
+        config = with_config_and_keys("configs.md", "smark_config", nil)
+    },
 }
 
 return join(base, edit, ui, lsp, dap, window, navigation, ai, md)

@@ -1,27 +1,6 @@
 local M = {}
 local Map = require("utils.map").with_prefix("Navigation")
 
-function M.telescope_config()
-    require('telescope').setup {
-        defaults = {
-            layout_config = {
-                width = 0.75,
-                height = 0.75,
-                -- padding = 0,
-            }
-        },
-        extensions = {
-            fzf = {
-                fuzzy = true,
-                override_generic_sorter = true,
-                override_file_sorter = true,
-                case_mode = "smart_case",
-            }
-        }
-    }
-    require('telescope').load_extension('fzf')
-end
-
 function M.neotree_config()
     require("neo-tree").setup({
         close_if_last_window = true,
@@ -49,20 +28,7 @@ function M.neotree_config()
 end
 
 function M.outline_config()
-    require("outline").setup({
-        -- symbols = {
-        --     filter = {
-        --         'Namespace', 'Class', 'Struct', 'Enum', 'Interface', 'Function', 'Method', 'Constructor', 'TypeAlias',
-        --         'Macro'
-        --     }
-        -- }
-    })
-end
-
-function M.telescope_keymaps()
-    Map.nmap("<leader>ff", "<cmd>Telescope find_files<CR>", "Find Files")
-    Map.nmap("<leader>fc", "<cmd>Telescope live_grep<CR>", "Find Codes")
-    Map.nmap("<leader><space>", "<cmd>Telescope buffers<CR>", "Find Buffers")
+    require("outline").setup({})
 end
 
 function M.neotree_keymaps()

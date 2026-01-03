@@ -65,21 +65,6 @@ function M.lsp_config()
     })
 end
 
-function M.lspsaga_config()
-    require("lspsaga").setup({
-        lightbulb = {
-            enable = false
-        },
-        rename = {
-            in_select = true,
-            auto_save = true,
-            keys = {
-                quit = '<C-k>',
-            }
-        }
-    })
-end
-
 function M.blink_config()
     require("blink.cmp").setup( ---@as blink.cmp.Config
         {
@@ -184,60 +169,12 @@ function M.conform_config()
 end
 
 function M.fidget_config()
-    local handler
-    require('fidget').setup({
-        -- CodeCompanion 状态显示逻辑
-        vim.api.nvim_create_autocmd({ "User" }, {
-            pattern = "CodeCompanionRequest*",
-            group = vim.api.nvim_create_augroup("CodeCompanionFidget", { clear = true }),
-            callback = function(request)
-                local fidget = require("fidget")
-                if not fidget then
-                    return
-                end
-
-                if request.match == "CodeCompanionRequestStarted" then
-                    if handler then
-                        handler:cancel()
-                        handler = nil
-                    end
-                    handler = fidget.progress.handle.create({
-                        title = "CodeCompanion",
-                        message = "Progressing...",
-                        lsp_client = { name = "CodeCompanion" },
-                    })
-                elseif request.match == "CodeCompanionRequestFinished" then
-                    if handler then
-                        handler:finish()
-                        handler = nil
-                    end
-                end
-            end,
-        })
-
-    })
+    require('fidget').setup({})
 end
 
-function M.lsp_keymaps()
-    local on_attach = function(_client, bufnr)
-        Map.nmap('gd', "<cmd>Telescope lsp_definitions<CR>", '[G]oto [D]efinition')
-        Map.nmap('gD', "<cmd>Telescope lsp_type_definitions<CR>", '[G]oto Type [D]efinition')
-        Map.nmap('gr', "<cmd>Telescope lsp_references<CR>", '[G]oto [R]eferences')
-        Map.nmap('gR', "<cmd>Telescope lsp_implementations<CR>", '[G]oto [R]ealization')
-        Map.nmap('gt', "<cmd>Trouble diagnostics toggle<CR>", '[G]oto [T]rouble')
-        Map.nmap('<leader>K', "<cmd>Lspsaga hover_doc<cr>", 'Hover Documentation')
-        Map.nmap('<leader>rn', "<cmd>Lspsaga rename ++project<cr>", '[R]e[n]ame')
-        Map.nmap('<leader>ca', "<cmd>Lspsaga code_action<cr>", '[C]ode [A]ction')
-    end
-
-    vim.api.nvim_create_autocmd('LspAttach', {
-        group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-        callback = function(ev)
-            local client = vim.lsp.get_client_by_id(ev.data.client_id)
-            if client then
-                on_attach(client, ev.buf)
-            end
-        end,
+function M.trouble_config()
+    require('trouble').setup({
+        auto_preview = false
     })
 end
 

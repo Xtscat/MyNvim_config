@@ -33,11 +33,6 @@ function M.edgy_config()
                     return cfg.relative == "" and term.direction == "horizontal"
                 end
             },
-            {
-                ft = 'trouble',
-                size = { height = 0.3 },
-                open = 'Trouble diagnostics toggle',
-            }
         },
         right = {
             {
@@ -45,6 +40,11 @@ function M.edgy_config()
                 size = { width = 0.3 },
                 collapsed = false,
                 open = "OpenCode",
+            },
+            {
+                ft = "trouble",
+                size = { width = 0.3 },
+                open = "Trouble diagnostics toggle",
             }
         }
     })
@@ -65,13 +65,13 @@ function M.toggleterm_config()
     require("toggleterm").setup()
 end
 
-function M.snacks_config()
-    require("snacks").setup({
-        input = { enabled = true },
-        picker = { enabled = true },
-        terminal = { enabled = true }
-    })
-end
+-- function M.snacks_config()
+--     require("snacks").setup({
+--         input = { enabled = true },
+--         picker = { enabled = true },
+--         terminal = { enabled = true }
+--     })
+-- end
 
 function M.toggleterm_keymaps()
     Map.nmap('<leader>T', '<cmd>ToggleTerm<CR>', "Open Toggleterm terminal")
@@ -83,7 +83,7 @@ function M.winpick_keymap()
         function()
             require("nvim_winpick").pick_focus_window()
         end,
-        "[F]ind[Window]"
+        "[F]ind[W]indow"
     )
 end
 

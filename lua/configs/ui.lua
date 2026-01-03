@@ -22,30 +22,37 @@ function M.sunset_config()
 end
 
 function M.lualine_config()
+    local function lsp_name()
+        local msg = "No Active LSP"
+        local clients = vim.lsp.get_clients({ bufnr = 0 })
+        local client = clients and clients[1]
+        return (client and client.name) or msg
+    end
+
     require('lualine').setup({
         options = {
-            -- theme = 'catppuccin',
             globalstatus = true,
-            always_show_tabline = true,
+            component_separators = '', -- 去掉组件之间的分隔符
+            section_separators = '',   -- 去掉 section 之间的分隔符
         },
         sections = {
+            --[[
+            --  lualine_a: 左侧最左; lualine_b: 左边中间; lualine_c: 左边靠右
+            --  lualine_x: 右边靠左; lualine_y: 右边中间; lualine_z: 右边靠右
+            --]]
+            lualine_a = { 'mode' },
+            lualine_b = { 'filename', 'branch', 'diff' },
             lualine_c = {
-                function()
-                    return require('lsp-progress').progress()
-                end
+                -- 'filename',
+                -- { symbols.get, cond = symbols.has },
+                { function() return "%=" end },
+                { lsp_name, icon = " LSP:" },
+                { 'diagnostics', sources = { 'nvim_diagnostic' } },
             },
-            lualine_z = {
-                {
-                    require("opencode").statusline,
-                },
-            }
+            lualine_x = { 'encoding', 'fileformat', 'filetype' },
+            lualine_y = { 'progress' },
+            lualine_z = { 'location', { require("opencode").statusline } }
         }
-    })
-    vim.api.nvim_create_augroup("lualine_augroup", { clear = true })
-    vim.api.nvim_create_autocmd("User", {
-        group = "lualine_augroup",
-        pattern = "LspProgressStatusUpdated",
-        callback = require("lualine").refresh
     })
 end
 
