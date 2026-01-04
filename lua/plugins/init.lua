@@ -73,6 +73,8 @@ local ui = {
     -->>> widgets
     -- 下方状态栏
     { "nvim-lualine/lualine.nvim",           config = with_config_and_keys("configs.ui", "lualine_config", nil) },
+    -- 上方winbar
+    { "Bekaboo/dropbar.nvim",                config = with_config_and_keys("configs.ui", "dropbar_config", nil) },
     -- 标签页增强
     { "romgrk/barbar.nvim",                  config = with_config_and_keys("configs.ui", "barbar_config", "barbar_keymaps") },
     -- 右侧滚动条
@@ -87,19 +89,24 @@ local ui = {
 local lsp = {
     -->>> LSP
     -- lsp 管理
-    { "neovim/nvim-lspconfig",            event = { "BufReadPost", "BufNewFile" },                           config = with_config_and_keys("configs.lsp", "lsp_config", nil) },
+    { "neovim/nvim-lspconfig",            event = { "BufReadPost", "BufNewFile" },                          config = with_config_and_keys("configs.lsp", "lsp_config", nil) },
     { "williamboman/mason.nvim",          config = with_config_and_keys("configs.lsp", "mason_config", nil) },
     { "williamboman/mason-lspconfig.nvim" },
-    { "folke/trouble.nvim",               cmd = "Trouble",                                                   config = with_config_and_keys("configs.lsp", "trouble_config", nil) },
+    {
+        "folke/trouble.nvim",
+        lazy = false,
+        cmd = "Trouble",
+        config = with_config_and_keys("configs.lsp", "trouble_config", "trouble_keymaps")
+    },
     -- lsp 进度条
-    { "j-hui/fidget.nvim",                config = with_config_and_keys("configs.lsp", "fidget_config", nil) },
+    { "j-hui/fidget.nvim",           config = with_config_and_keys("configs.lsp", "fidget_config", nil) },
     -->>> CMP
     { "rafamadriz/friendly-snippets" },
-    { "L3MON4D3/LuaSnip",                 version = "v2.*",                                                  build = "make install_jsregexp" },
+    { "L3MON4D3/LuaSnip",            version = "v2.*",                                                  build = "make install_jsregexp" },
     -- 补全
-    { "saghen/blink.cmp",                 version = "1.*",                                                   config = with_config_and_keys("configs.lsp", "blink_config", nil) },
+    { "saghen/blink.cmp",            version = "1.*",                                                   config = with_config_and_keys("configs.lsp", "blink_config", nil) },
     -->>> Formatter
-    { "stevearc/conform.nvim",            event = "VeryLazy",                                                config = with_config_and_keys("configs.lsp", "conform_config", "conform_keymaps") }
+    { "stevearc/conform.nvim",       event = "VeryLazy",                                                config = with_config_and_keys("configs.lsp", "conform_config", "conform_keymaps") }
 
 }
 

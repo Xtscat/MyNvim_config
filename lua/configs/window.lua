@@ -44,6 +44,7 @@ function M.edgy_config()
             {
                 ft = "trouble",
                 size = { width = 0.3 },
+                collapsed = false,
                 open = "Trouble diagnostics toggle",
             }
         }

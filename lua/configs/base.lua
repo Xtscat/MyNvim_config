@@ -14,11 +14,13 @@ end
 
 function M.snacks_config()
     vim.api.nvim_set_hl(0, "SnacksIndentGray", { fg = "#31353F" })
+    vim.api.nvim_set_hl(0, "SnacksPickerCursorline", { bg = "#2a2e38" })
+    vim.api.nvim_set_hl(0, "SnacksPickerBorder", { link = "FloatBorder" })
     require("snacks").setup({
         input = { enabled = true },
-        picker = { enabled = true },
         terminal = { enabled = true },
         lazygit = { configure = true },
+        notify = { enabled = true },
         notifier = {
             enabled = true,
             style = {
@@ -42,6 +44,70 @@ function M.snacks_config()
                     vim.bo[buf].buftype ~= "terminal"
             end,
         },
+        picker = {
+            enabled = true,
+            -- 布局预设：左右分栏，右侧预览
+            layout = {
+                preset = "ivy", -- 你也可以用 "minimal" / "vertical" 等
+                width = 0.9,
+                height = 0.85,
+                preview = "right",
+            },
+            -- 统一的边框/背景等窗口样式
+            win = {
+                backdrop = { enabled = true, blend = 10 }, -- 半透明背景
+                input = {
+                    border = "rounded",
+                    title = " Search ",
+                    title_pos = "center",
+                    row = 1,
+                    padding = { 1, 2 },
+                    winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+                },
+                list = {
+                    border = "rounded",
+                    title = " Results ",
+                    title_pos = "center",
+                    winhighlight = table.concat({
+                        "Normal:NormalFloat",
+                        "FloatBorder:FloatBorder",
+                        "CursorLine:SnacksPickerCursorline",
+                    }, ","),
+                },
+                preview = {
+                    border = "rounded",
+                    title = " Preview ",
+                    title_pos = "center",
+                    winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+                },
+            },
+            source = {
+                files = { hidden = true },
+                explorer = {
+                    layout = {
+                        auto_hide = { "input" },
+                    },
+                },
+            }
+        },
+        explorer = {
+            enabled = true,
+            replace_netrw = true, -- 替换 netrw
+            layout = {
+                preset = "sidebar",
+                preview = false, -- 不要预览窗
+                auto_hide = { "input" },
+            },
+            git = { enabled = true },
+            columns = { "icon", "git", "name" },
+            sort = { dirs_first = true },
+            -- 可选：顶部状态栏
+            win = {
+                -- 给 Edgy 可识别的 filetype
+                list = { bo = { filetype = "snacks_explorer" } },
+                preview = { bo = { filetype = "snacks_explorer_preview" } },
+            },
+        },
     })
 end
 
@@ -57,6 +123,8 @@ function M.snacks_keymaps()
     Map.nmap("<leader>rn", vim.lsp.buf.rename, 'Lsp Rename')
     -- lazygit
     Map.nmap('<leader>lg', function() Snacks.lazygit.open() end, '[L]azy[G]it')
+    -- file explorer
+    Map.nmap('tt', function() Snacks.explorer({ focus = true }) end, 'File explorer')
 end
 
 return M

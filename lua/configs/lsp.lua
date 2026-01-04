@@ -182,4 +182,8 @@ function M.conform_keymaps()
     Map.nmap("<c-l>", "<cmd>Format<CR>", "Code Format")
 end
 
+function M.trouble_keymaps()
+    Map.nmap("<leader>t", "<cmd>Trouble diagnostics toggle<CR>", "Trouble toggle")
+end
+
 return M
