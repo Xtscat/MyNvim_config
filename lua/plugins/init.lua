@@ -112,6 +112,7 @@ local lsp = {
 
 local dap = {
     { "mfussenegger/nvim-dap", config = with_config_and_keys("configs.dap", "nvim_dap_config", "nvim_dap_keymaps") },
+    { "igorlfs/nvim-dap-view", config = with_config_and_keys("configs.dap", "dap_view_config", nil) },
     { "rcarriga/nvim-dap-ui" },
     { "nvim-neotest/nvim-nio" },
 }

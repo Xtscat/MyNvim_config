@@ -3,22 +3,22 @@ local Map = require("utils.map").with_prefix("DAP")
 
 function M.nvim_dap_config()
     local dap = require("dap")
-    local dapui = require("dapui")
-    local edgy = require("edgy")
+    -- local dapui = require("dapui")
+    -- local edgy = require("edgy")
 
-    -- dap-ui 的基本设置
-    dapui.setup()
-
-    -- 设置监听器，在调试会话开始时打开 dap-ui，在结束时关闭
-    dap.listeners.after.event_initialized["dapui_config"] = function()
-        dapui.open()
-    end
-    dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close()
-    end
-    dap.listeners.before.event_exited["dapui_config"] = function()
-        dapui.close()
-    end
+    -- -- dap-ui 的基本设置
+    -- dapui.setup()
+    --
+    -- -- 设置监听器，在调试会话开始时打开 dap-ui，在结束时关闭
+    -- dap.listeners.after.event_initialized["dapui_config"] = function()
+    --     dapui.open()
+    -- end
+    -- dap.listeners.before.event_terminated["dapui_config"] = function()
+    --     dapui.close()
+    -- end
+    -- dap.listeners.before.event_exited["dapui_config"] = function()
+    --     dapui.close()
+    -- end
 
     -- [核心修改] 手动配置 codelldb 调试适配器
     -- 我们直接指定 mason 安装的 codelldb 的路径
@@ -53,6 +53,10 @@ function M.nvim_dap_config()
     dap.configurations.c = dap.configurations.cpp
 end
 
+function M.dap_view_config()
+    require("dap-view").setup()
+end
+
 function M.nvim_dap_keymaps()
     -- F5: 关闭所有 edgy 窗口，然后启动/继续调试
     -- F6: 终止调试会话，并在 dap-ui 关闭后，重新打开 edgy 左侧窗口
@@ -67,15 +71,12 @@ function M.nvim_dap_keymaps()
     -- `leader dl` 重新运行上一次调试会话
     -- `leader dh` 悬浮显示变量信息
     local dap = require('dap')
-    local edgy = require('edgy')
 
     Map.nmap('<F5>', function()
         dap.continue()
-        edgy.close()
     end, 'DAP: Close Edgy & Continue')
     Map.nmap('<F6>', function()
         dap.terminate()
-        edgy.open('left')
     end, 'DAP: Terminate & Open Edgy Left')
     Map.nmap('<F10>', dap.step_over, 'DAP: Step Over')
     Map.nmap('<F11>', dap.step_into, 'DAP: Step Into')
