@@ -46,6 +46,12 @@ function M.edgy_config()
                 size = { width = 0.3 },
                 collapsed = false,
                 open = "Trouble diagnostics toggle",
+            },
+            {
+                ft = "dap-view",
+                size = { width = 0.3 },
+                collapsed = false,
+                open = "DapViewToggle"
             }
         }
     })

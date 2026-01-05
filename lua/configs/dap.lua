@@ -3,48 +3,47 @@ local Map = require("utils.map").with_prefix("DAP")
 
 function M.nvim_dap_config()
     local dap = require("dap")
-    -- local dapui = require("dapui")
-    -- local edgy = require("edgy")
 
-    -- -- dap-ui 的基本设置
-    -- dapui.setup()
-    --
-    -- -- 设置监听器，在调试会话开始时打开 dap-ui，在结束时关闭
-    -- dap.listeners.after.event_initialized["dapui_config"] = function()
-    --     dapui.open()
-    -- end
-    -- dap.listeners.before.event_terminated["dapui_config"] = function()
-    --     dapui.close()
-    -- end
-    -- dap.listeners.before.event_exited["dapui_config"] = function()
-    --     dapui.close()
-    -- end
+    -- 自定义 DAP 符号（断点/停止等）
+    vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "DiagnosticSignError", numhl = "DiagnosticSignError" })
+    vim.fn.sign_define("DapBreakpointCondition",
+        { text = "", texthl = "DiagnosticSignWarn", numhl = "DiagnosticSignWarn" })
+    vim.fn.sign_define("DapBreakpointRejected",
+        { text = "", texthl = "DiagnosticSignError", numhl = "DiagnosticSignError" })
+    vim.fn.sign_define("DapStopped", { text = "", texthl = "DiagnosticSignInfo", numhl = "DiagnosticSignInfo" })
+    vim.fn.sign_define("DapLogPoint", { text = "", texthl = "DiagnosticSignHint", numhl = "DiagnosticSignHint" })
 
-    -- [核心修改] 手动配置 codelldb 调试适配器
-    -- 我们直接指定 mason 安装的 codelldb 的路径
     dap.adapters.codelldb = {
         type = 'server',
         port = "${port}",
         executable = {
-            -- vim.fn.stdpath("data") 返回 Neovim 的数据目录
-            -- mason 将工具安装在 'data/mason/bin/' 下
             command = vim.fn.stdpath("data") .. "/mason/bin/codelldb",
             args = { "--port", "${port}" },
-
-            -- 以下对于 codelldb 不是必需的，但作为示例保留
-            -- detached = false,
         }
     }
+
+    local function pick_program()
+        local cwd = vim.fn.getcwd()
+        local build = cwd .. "/build"
+        local candidates = vim.fn.globpath(build, "*", false, true)
+        table.sort(candidates, function(a, b)
+            return vim.fn.getftime(a) > vim.fn.getftime(b)
+        end)
+        for _, path in ipairs(candidates) do
+            if vim.fn.isdirectory(path) == 0 and vim.fn.executable(path) == 1 then
+                return path
+            end
+        end
+        return vim.fn.input('Path to executable: ', build .. '/', 'file')
+    end
 
     -- 为 C/C++ 配置调试启动项
     dap.configurations.cpp = {
         {
-            name = "Launch file",
+            name = "Launch build target",
             type = "codelldb", -- 这个 'type' 必须与上面的 dap.adapters.codelldb 匹配
             request = "launch",
-            program = function()
-                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-            end,
+            program = pick_program,
             cwd = '${workspaceFolder}',
             stopOnEntry = false,
         },
@@ -54,42 +53,133 @@ function M.nvim_dap_config()
 end
 
 function M.dap_view_config()
-    require("dap-view").setup()
+    local ok_view, dap_view = pcall(require, "dap-view")
+    if not ok_view then
+        return
+    end
+
+    dap_view.setup({
+        winbar = {
+            show = true,
+            sections = { "watches", "scopes", "exceptions", "breakpoints", "threads", "repl", "console" },
+            default_section = "watches",
+            base_sections = {
+                breakpoints = {
+                    keymap = "B",
+                    label = "Breakpoints [B]",
+                    short_label = " [B]",
+                },
+                scopes = {
+                    keymap = "S",
+                    label = "Scopes [S]",
+                    short_label = "󰂥 [S]",
+                },
+                exceptions = {
+                    keymap = "E",
+                    label = "Exceptions [E]",
+                    short_label = "󰢃 [E]",
+                },
+                watches = {
+                    keymap = "W",
+                    label = "Watches [W]",
+                    short_label = "󰛐 [W]",
+                },
+                threads = {
+                    keymap = "T",
+                    label = "Threads [T]",
+                    short_label = "󱉯 [T]",
+                },
+                repl = {
+                    keymap = "R",
+                    label = "REPL [R]",
+                    short_label = "󰯃 [R]",
+                },
+                sessions = {
+                    keymap = "K",
+                    label = "Sessions [K]",
+                    short_label = " [K]",
+                },
+                console = {
+                    keymap = "C",
+                    label = "Console [C]",
+                    short_label = "󰆍 [C]",
+                },
+            },
+            custom_sections = {},
+            controls = {
+                enabled = true,
+                position = "right",
+                buttons = {
+                    "play",
+                    "step_into",
+                    "step_over",
+                    "step_out",
+                    "step_back",
+                    "run_last",
+                    "terminate",
+                    "disconnect",
+                },
+                custom_buttons = {},
+            },
+        },
+        windows = {
+            height = 0.25,
+            position = "below",
+            terminal = {
+                width = 0.5,
+                position = "left",
+                hide = {},
+                start_hidden = true,
+            },
+        },
+        icons = {
+            disabled = "",
+            disconnect = "",
+            enabled = "",
+            filter = "󰈲",
+            negate = " ",
+            pause = "",
+            play = "",
+            run_last = "",
+            step_back = "",
+            step_into = "",
+            step_out = "",
+            step_over = "",
+            terminate = "",
+        },
+        help = {
+            border = nil,
+        },
+        render = {
+            sort_variables = nil,
+        },
+        switchbuf = "usetab,uselast",
+        auto_toggle = "keep_terminal",
+        follow_tab = true,
+    })
 end
 
 function M.nvim_dap_keymaps()
     -- F5: 关闭所有 edgy 窗口，然后启动/继续调试
     -- F6: 终止调试会话，并在 dap-ui 关闭后，重新打开 edgy 左侧窗口
+    -- F9 单步进入, 进入函数内部执行函数每条语句
     -- F10 单步跳过, 完整地执行函数单不在函数中停留
-    -- F11 单步进入, 进入函数内部执行函数每条语句
-    -- F12 单步调出, 单步进入之后执行函数后面所有内容, 跳出函数不在函数中停留
+    -- F11 单步调出, 单步进入之后执行函数后面所有内容, 跳出函数不在函数中停留
 
-    -- `leader b`  添加/移除断点
-    -- `leader B`  条件断点
-    -- `leader lp` 日志点(不暂停程序执行单执行到日志点时输出内容)
-    -- `leader dr` 打开REPL窗口(一个交互式控制台)
-    -- `leader dl` 重新运行上一次调试会话
-    -- `leader dh` 悬浮显示变量信息
+    -- 'leader b'  添加/移除断点
+    -- 'leader B'  条件断点
+    -- 'leader dv' 打开dapview窗口
     local dap = require('dap')
 
-    Map.nmap('<F5>', function()
-        dap.continue()
-    end, 'DAP: Close Edgy & Continue')
-    Map.nmap('<F6>', function()
-        dap.terminate()
-    end, 'DAP: Terminate & Open Edgy Left')
-    Map.nmap('<F10>', dap.step_over, 'DAP: Step Over')
-    Map.nmap('<F11>', dap.step_into, 'DAP: Step Into')
-    Map.nmap('<F12>', dap.step_out, 'DAP: Step Out')
-    Map.nmap('<Leader>b', dap.toggle_breakpoint, 'DAP: Toggle Breakpoint')
-    Map.nmap('<Leader>B', function()
-        dap.set_breakpoint(vim.fn.input('Breakpoint condition: '))
-    end, 'DAP: Set Conditional Breakpoint')
-    Map.nmap('<Leader>lp', function()
-        dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))
-    end, 'DAP: Set Log Point')
-    Map.nmap('<Leader>dr', dap.repl.open, 'DAP: Open REPL')
-    Map.nmap('<Leader>dl', dap.run_last, 'DAP: Run Last')
+    Map.nmap('<F5>', function() dap.continue() end, 'Close Edgy & Continue')
+    Map.nmap('<F6>', function() dap.terminate() end, 'Terminate & Open Edgy Left')
+    Map.nmap('<F9>', dap.step_into, 'Step Into')
+    Map.nmap('<F10>', dap.step_over, 'Step Over')
+    Map.nmap('<F11>', dap.step_out, 'Step Out')
+    Map.nmap('<Leader>dv', '<cmd>DapViewToggle<CR>', 'DapView Toggle')
+    Map.nmap('<Leader>b', dap.toggle_breakpoint, 'Toggle Breakpoint')
+    Map.nmap('<Leader>B', function() dap.set_breakpoint(vim.fn.input('Breakpoint condition: ')) end,
+        'Set Conditional Breakpoint')
 end
 
 return M
