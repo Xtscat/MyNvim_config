@@ -2,6 +2,8 @@ local M = {}
 local Map = require("utils.map").with_prefix("Window")
 
 function M.edgy_config()
+    vim.opt.laststatus = 3
+    vim.opt.splitkeep = "screen"
     require("edgy").setup({
         animate = { enabled = false },
         close_when_all_hidden = true,
@@ -26,31 +28,36 @@ function M.edgy_config()
         bottom = {
             {
                 ft = 'toggleterm',
+                pinned = true,
+                collapsed = false,
                 size = { height = 0.3 },
                 filter = function(_, win)
                     local cfg = vim.api.nvim_win_get_config(win)
                     local term = require("toggleterm.terminal").get(1)
                     return cfg.relative == "" and term.direction == "horizontal"
-                end
+                end,
             },
         },
         right = {
             {
                 ft = "opencode_terminal",
-                size = { width = 0.3 },
+                pinned = false,
                 collapsed = false,
+                size = { width = 0.3 },
                 open = "OpenCode",
             },
             {
                 ft = "trouble",
-                size = { width = 0.3 },
+                pinned = false,
                 collapsed = false,
+                size = { width = 0.3 },
                 open = "Trouble diagnostics toggle",
             },
             {
                 ft = "dap-view",
-                size = { width = 0.3 },
+                pinned = false,
                 collapsed = false,
+                size = { width = 0.3 },
                 open = "DapViewToggle"
             }
         }

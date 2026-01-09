@@ -20,9 +20,9 @@ function M.snacks_config()
         input = { enabled = true },
         terminal = { enabled = true },
         lazygit = { configure = true },
-        notify = { enabled = true },
+        notify = { enabled = false },
         notifier = {
-            enabled = true,
+            enabled = false,
             style = {
                 anchor = "bottom_right"
             }
@@ -109,8 +109,6 @@ function M.snacks_config()
             },
         },
     })
-    -- 让所有 vim.notify（含 nvim-dap）走 Snacks
-    vim.notify = require("snacks").notify
 end
 
 function M.snacks_keymaps()
