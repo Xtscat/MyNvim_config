@@ -155,10 +155,15 @@ local navigation = {
 }
 
 local ai = {
+    -- {
+    --     "NickvanDyke/opencode.nvim",
+    --     config = with_config_and_keys("configs.ai", "opencode_config", "opencode_keymaps")
+    -- },
+
     {
-        "NickvanDyke/opencode.nvim",
+        "sudo-tee/opencode.nvim",
         config = with_config_and_keys("configs.ai", "opencode_config", "opencode_keymaps")
-    },
+    }
 
 }
 

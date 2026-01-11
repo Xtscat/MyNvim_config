@@ -40,11 +40,18 @@ function M.edgy_config()
         },
         right = {
             {
-                ft = "opencode_terminal",
+                ft = "opencode_output",
                 pinned = false,
                 collapsed = false,
-                size = { width = 0.3 },
-                open = "OpenCode",
+                size = { height = 0.8, width = 0.3 },
+                open = "Opencode toggle",
+            },
+            {
+                ft = "opencode",
+                pinned = false,
+                collapsed = false,
+                size = { height = 0.2, width = 0.3 },
+                open = "Opencode toggle",
             },
             {
                 ft = "trouble",

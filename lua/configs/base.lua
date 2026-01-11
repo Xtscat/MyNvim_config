@@ -47,48 +47,48 @@ function M.snacks_config()
         picker = {
             enabled = true,
             -- 布局预设：左右分栏，右侧预览
-            layout = {
-                preset = "ivy", -- 你也可以用 "minimal" / "vertical" 等
-                width = 0.9,
-                height = 0.85,
-                preview = "right",
-            },
+            -- layout = {
+            --     preset = "ivy", -- 你也可以用 "minimal" / "vertical" 等
+            --     width = 0.9,
+            --     height = 0.85,
+            --     preview = "right",
+            -- },
             -- 统一的边框/背景等窗口样式
-            win = {
-                backdrop = { enabled = true, blend = 10 }, -- 半透明背景
-                input = {
-                    border = "rounded",
-                    title = " Search ",
-                    title_pos = "center",
-                    row = 1,
-                    padding = { 1, 2 },
-                    winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
-                },
-                list = {
-                    border = "rounded",
-                    title = " Results ",
-                    title_pos = "center",
-                    winhighlight = table.concat({
-                        "Normal:NormalFloat",
-                        "FloatBorder:FloatBorder",
-                        "CursorLine:SnacksPickerCursorline",
-                    }, ","),
-                },
-                preview = {
-                    border = "rounded",
-                    title = " Preview ",
-                    title_pos = "center",
-                    winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
-                },
-            },
-            source = {
-                files = { hidden = true },
-                explorer = {
-                    layout = {
-                        auto_hide = { "input" },
-                    },
-                },
-            }
+            -- win = {
+            --     backdrop = { enabled = true, blend = 10 }, -- 半透明背景
+            --     input = {
+            --         border = "rounded",
+            --         title = " Search ",
+            --         title_pos = "center",
+            --         row = 1,
+            --         padding = { 1, 2 },
+            --         winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+            --     },
+            --     list = {
+            --         border = "rounded",
+            --         title = " Results ",
+            --         title_pos = "center",
+            --         winhighlight = table.concat({
+            --             "Normal:NormalFloat",
+            --             "FloatBorder:FloatBorder",
+            --             "CursorLine:SnacksPickerCursorline",
+            --         }, ","),
+            --     },
+            --     preview = {
+            --         border = "rounded",
+            --         title = " Preview ",
+            --         title_pos = "center",
+            --         winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder",
+            --     },
+            -- },
+            -- source = {
+            --     files = { hidden = true },
+            --     explorer = {
+            --         layout = {
+            --             auto_hide = { "input" },
+            --         },
+            --     },
+            -- }
         },
         explorer = {
             enabled = true,
