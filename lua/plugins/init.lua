@@ -178,4 +178,8 @@ local md = {
     },
 }
 
-return join(base, edit, ui, lsp, dap, window, navigation, ai, md)
+local tex = {
+    { "lervag/vimtex", lazy = false, config = with_config_and_keys("configs.tex", "tex_config", nil) }
+}
+
+return join(base, edit, ui, lsp, dap, window, navigation, ai, md, tex)

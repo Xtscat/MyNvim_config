@@ -48,6 +48,11 @@ function M.lsp_config()
                 diagnostics = { enable = true },
                 completion = { enable = true },
             },
+        },
+
+        -- for latex
+        texlab = {
+            filetypes = { "tex", "plaintex", "bib" }
         }
     }
     for server_name, config in pairs(servers) do
