@@ -40,7 +40,7 @@ option.wrap = true
 option.splitright = false
 option.splitbelow = false
 -- Buffer Settings
-buffer.fileenconding = "utf-8"
+buffer.fileencoding = "utf-8"
 
 
 -- function no_paste(reg)
@@ -65,20 +65,26 @@ buffer.fileenconding = "utf-8"
 
 -- ===================================================================
 --  配置 WSL 与 Windows 共享剪切板
---  通过直接调用 win32yank.exe 实现双向同步
+--  通过 OSC52 实现跨终端剪切板, OSC52 只负责读
 -- ===================================================================
+local function osc52_paste_disabled()
+    return function()
+        return { "" }, "v"
+    end
+end
+
 vim.g.clipboard = {
-    name = 'win32yank-wsl',
+    name = "OSC 52 (copy only)",
     copy = {
-        ['+'] = 'win32yank.exe -i --crlf',
-        ['*'] = 'win32yank.exe -i --crlf',
+        ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+        ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
     },
     paste = {
-        ['+'] = 'win32yank.exe -o --crlf',
-        ['*'] = 'win32yank.exe -o --crlf',
+        ["+"] = osc52_paste_disabled(),
+        ["*"] = osc52_paste_disabled(),
     },
-    cache_enabled = 0,
 }
+
 
 -- 确保这一行仍然存在且有效
 vim.opt.clipboard = 'unnamedplus'
