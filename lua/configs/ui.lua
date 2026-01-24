@@ -1,16 +1,17 @@
+-- configs/ui.lua
+
 local M = {}
 local Map = require("utils.map").with_prefix("UI")
 
 function M.sunset_config()
     local onedark = require('onedark')
     require('sunset').setup({
-        latitude = 36.31,
-        longitude = 104.48,
+        latitude = 34.26111,
+        longitude = 108.94250,
         day_callback = function()
             vim.opt.background = 'light'
             vim.g.edge_style = 'aura'
             vim.cmd.colorscheme('edge')
-            -- vim.cmd.colorscheme('dawnfox')
         end,
 
         night_callback = function()

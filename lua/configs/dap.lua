@@ -1,3 +1,5 @@
+-- configs/dap.lua
+
 local M = {}
 local Map = require("utils.map").with_prefix("DAP")
 

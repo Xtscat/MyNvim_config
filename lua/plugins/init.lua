@@ -1,4 +1,5 @@
 -- plugins/init.lua
+
 local function with_config_and_keys(mod, cfg_fn, keys_fn)
     return function()
         local m = require(mod)
@@ -168,6 +169,7 @@ local ai = {
 }
 
 local md = {
+    -- markview.nvim maybe better
     {
         "MeanderingProgrammer/render-markdown.nvim",
         config = with_config_and_keys("configs.md", "render_markdown_config", nil)
@@ -179,7 +181,7 @@ local md = {
 }
 
 local tex = {
-    { "lervag/vimtex", lazy = false, config = with_config_and_keys("configs.tex", "tex_config", nil) }
+    { "lervag/vimtex", ft = { "tex", "plaintex", "bib" }, config = with_config_and_keys("configs.tex", "tex_config", nil) }
 }
 
 return join(base, edit, ui, lsp, dap, window, navigation, ai, md, tex)

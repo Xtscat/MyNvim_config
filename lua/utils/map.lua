@@ -1,4 +1,5 @@
 -- utils/map.lua
+
 local M = {}
 
 M.map = function(mode, lhs, rhs, desc, opts)

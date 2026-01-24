@@ -1,3 +1,5 @@
+-- configs/navigation.lua
+
 local M = {}
 local Map = require("utils.map").with_prefix("Navigation")
 

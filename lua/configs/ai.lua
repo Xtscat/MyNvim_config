@@ -1,3 +1,5 @@
+-- configs/ai.lua
+
 local M = {}
 local Map = require("utils.map").with_prefix("AI")
 
@@ -76,41 +78,41 @@ function M.opencode_config()
             --     ['<leader>o/'] = { 'quick_chat', mode = { 'n', 'x' } }, -- Open quick chat input with selection context in visual mode or current line context in normal mode
             -- },
             input_window = {
-                ['<cr>'] = { 'submit_input_prompt', mode = { 'n', 'i' } }, -- Submit prompt (normal mode and insert mode)
-                ['<esc>'] = false,                           -- Close UI windows
-                ['<C-c>'] = { 'cancel' },                          -- Cancel opencode request while it is running
-                ['~'] = { 'mention_file', mode = 'i' },            -- Pick a file and add to context. See File Mentions section
-                ['@'] = { 'mention', mode = 'i' },                 -- Insert mention (file/agent)
-                ['/'] = { 'slash_commands', mode = 'i' },          -- Pick a command to run in the input window
-                ['#'] = { 'context_items', mode = 'i' },           -- Manage context items (current file, selection, diagnostics, mentioned files)
-                ['<M-v>'] = { 'paste_image', mode = 'i' },         -- Paste image from clipboard as attachment
-                ['<C-i>'] = { 'focus_input', mode = { 'n', 'i' } }, -- Focus on input window and enter insert mode at the end of the input from the output window
-                ['<tab>'] = { 'toggle_pane', mode = { 'n', 'i' } }, -- Toggle between input and output panes
-                ['<up>'] = { 'prev_prompt_history', mode = { 'n', 'i' } }, -- Navigate to previous prompt in history
+                ['<cr>'] = { 'submit_input_prompt', mode = { 'n', 'i' } },   -- Submit prompt (normal mode and insert mode)
+                ['<esc>'] = false,                                           -- Close UI windows
+                ['<C-c>'] = { 'cancel' },                                    -- Cancel opencode request while it is running
+                ['~'] = { 'mention_file', mode = 'i' },                      -- Pick a file and add to context. See File Mentions section
+                ['@'] = { 'mention', mode = 'i' },                           -- Insert mention (file/agent)
+                ['/'] = { 'slash_commands', mode = 'i' },                    -- Pick a command to run in the input window
+                ['#'] = { 'context_items', mode = 'i' },                     -- Manage context items (current file, selection, diagnostics, mentioned files)
+                ['<M-v>'] = { 'paste_image', mode = 'i' },                   -- Paste image from clipboard as attachment
+                ['<C-i>'] = { 'focus_input', mode = { 'n', 'i' } },          -- Focus on input window and enter insert mode at the end of the input from the output window
+                ['<tab>'] = { 'toggle_pane', mode = { 'n', 'i' } },          -- Toggle between input and output panes
+                ['<up>'] = { 'prev_prompt_history', mode = { 'n', 'i' } },   -- Navigate to previous prompt in history
                 ['<down>'] = { 'next_prompt_history', mode = { 'n', 'i' } }, -- Navigate to next prompt in history
-                ['<M-m>'] = { 'switch_mode' },                     -- Switch between modes (build/plan)
+                ['<M-m>'] = { 'switch_mode' },                               -- Switch between modes (build/plan)
             },
             output_window = {
-                ['<esc>'] = false,                  -- Close UI windows
-                ['<C-c>'] = { 'cancel' },                 -- Cancel opencode request while it is running
-                [']]'] = { 'next_message' },              -- Navigate to next message in the conversation
-                ['[['] = { 'prev_message' },              -- Navigate to previous message in the conversation
+                ['<esc>'] = false,                                  -- Close UI windows
+                ['<C-c>'] = { 'cancel' },                           -- Cancel opencode request while it is running
+                [']]'] = { 'next_message' },                        -- Navigate to next message in the conversation
+                ['[['] = { 'prev_message' },                        -- Navigate to previous message in the conversation
                 ['<tab>'] = { 'toggle_pane', mode = { 'n', 'i' } }, -- Toggle between input and output panes
-                ['i'] = { 'focus_input', 'n' },           -- Focus on input window and enter insert mode at the end of the input from the output window
-                ['<leader>oS'] = { 'select_child_session' }, -- Select and load a child session
-                ['<leader>oD'] = { 'debug_message' },     -- Open raw message in new buffer for debugging
-                ['<leader>oO'] = { 'debug_output' },      -- Open raw output in new buffer for debugging
-                ['<leader>ods'] = { 'debug_session' },    -- Open raw session in new buffer for debugging
+                ['i'] = { 'focus_input', 'n' },                     -- Focus on input window and enter insert mode at the end of the input from the output window
+                ['<leader>oS'] = { 'select_child_session' },        -- Select and load a child session
+                ['<leader>oD'] = { 'debug_message' },               -- Open raw message in new buffer for debugging
+                ['<leader>oO'] = { 'debug_output' },                -- Open raw output in new buffer for debugging
+                ['<leader>ods'] = { 'debug_session' },              -- Open raw session in new buffer for debugging
             },
             permission = {
-                accept = 'a', -- Accept permission request once (only available when there is a pending permission request)
+                accept = 'a',     -- Accept permission request once (only available when there is a pending permission request)
                 accept_all = 'A', -- Accept all (for current tool) permission request once (only available when there is a pending permission request)
-                deny = 'd', -- Deny permission request once (only available when there is a pending permission request)
+                deny = 'd',       -- Deny permission request once (only available when there is a pending permission request)
             },
             session_picker = {
                 rename_session = { '<C-r>' }, -- Rename selected session in the session picker
                 delete_session = { '<C-d>' }, -- Delete selected session in the session picker
-                new_session = { '<C-n>' }, -- Create and switch to a new session in the session picker
+                new_session = { '<C-n>' },    -- Create and switch to a new session in the session picker
             },
             timeline_picker = {
                 undo = { '<C-u>', mode = { 'i', 'n' } }, -- Undo to selected message in timeline picker
@@ -118,31 +120,31 @@ function M.opencode_config()
             },
             history_picker = {
                 delete_entry = { '<C-d>', mode = { 'i', 'n' } }, -- Delete selected entry in the history picker
-                clear_all = { '<C-X>', mode = { 'i', 'n' } }, -- Clear all entries in the history picker
+                clear_all = { '<C-X>', mode = { 'i', 'n' } },    -- Clear all entries in the history picker
             }
         },
         ui = {
-            position = 'right',                                                -- 'right' (default), 'left' or 'current'. Position of the UI split. 'current' uses the current window for the output.
-            input_position = 'bottom',                                         -- 'bottom' (default) or 'top'. Position of the input window
-            window_width = 0.40,                                               -- Width as percentage of editor width
-            zoom_width = 0.8,                                                  -- Zoom width as percentage of editor width
-            input_height = 0.15,                                               -- Input height as percentage of window height
-            display_model = true,                                              -- Display model name on top winbar
-            display_context_size = true,                                       -- Display context size in the footer
-            display_cost = true,                                               -- Display cost in the footer
+            position = 'right',                                                        -- 'right' (default), 'left' or 'current'. Position of the UI split. 'current' uses the current window for the output.
+            input_position = 'bottom',                                                 -- 'bottom' (default) or 'top'. Position of the input window
+            window_width = 0.40,                                                       -- Width as percentage of editor width
+            zoom_width = 0.8,                                                          -- Zoom width as percentage of editor width
+            input_height = 0.15,                                                       -- Input height as percentage of window height
+            display_model = true,                                                      -- Display model name on top winbar
+            display_context_size = true,                                               -- Display context size in the footer
+            display_cost = true,                                                       -- Display cost in the footer
             window_highlight = 'Normal:OpencodeBackground,FloatBorder:OpencodeBorder', -- Highlight group for the opencode window
             icons = {
-                preset = 'nerdfonts',                                          -- 'nerdfonts' | 'text'. Choose UI icon style (default: 'nerdfonts')
-                overrides = {},                                                -- Optional per-key overrides, see section below
+                preset = 'nerdfonts',                                                  -- 'nerdfonts' | 'text'. Choose UI icon style (default: 'nerdfonts')
+                overrides = {},                                                        -- Optional per-key overrides, see section below
             },
             output = {
                 tools = {
-                    show_output = true, -- Show tools output [diffs, cmd output, etc.] (default: true)
+                    show_output = true,           -- Show tools output [diffs, cmd output, etc.] (default: true)
                     show_reasoning_output = true, -- Show reasoning/thinking steps output (default: true)
                 },
                 rendering = {
                     markdown_debounce_ms = 250, -- Debounce time for markdown rendering on new data (default: 250ms)
-                    on_data_rendered = nil, -- Called when new data is rendered; set to false to disable default RenderMarkdown/Markview behavior
+                    on_data_rendered = nil,     -- Called when new data is rendered; set to false to disable default RenderMarkdown/Markview behavior
                 },
             },
             input = {
@@ -189,15 +191,15 @@ function M.opencode_config()
             },
         },
         context = {
-            enabled = true, -- Enable automatic context capturing
+            enabled = true,        -- Enable automatic context capturing
             cursor_data = {
-                enabled = false, -- Include cursor position and line content in the context
+                enabled = false,   -- Include cursor position and line content in the context
                 context_lines = 5, -- Number of lines before and after cursor to include in context
             },
             diagnostics = {
-                info = false, -- Include diagnostics info in the context (default to false
-                warn = true, -- Include diagnostics warnings in the context
-                error = true, -- Include diagnostics errors in the context
+                info = false,         -- Include diagnostics info in the context (default to false
+                warn = true,          -- Include diagnostics warnings in the context
+                error = true,         -- Include diagnostics errors in the context
                 only_closest = false, -- If true, only diagnostics for cursor/selection
             },
             current_file = {
@@ -231,15 +233,15 @@ function M.opencode_config()
 
         -- User Hooks for custom behavior at certain events
         hooks = {
-            on_file_edited = nil,  -- Called after a file is edited by opencode.
-            on_session_loaded = nil, -- Called after a session is loaded.
-            on_done_thinking = nil, -- Called when opencode finishes thinking (all jobs complete).
+            on_file_edited = nil,          -- Called after a file is edited by opencode.
+            on_session_loaded = nil,       -- Called after a session is loaded.
+            on_done_thinking = nil,        -- Called when opencode finishes thinking (all jobs complete).
             on_permission_requested = nil, -- Called when a permission request is issued.
         },
         quick_chat = {
-            default_model = nil, -- works better with a fast model like gpt-4.1
+            default_model = nil,    -- works better with a fast model like gpt-4.1
             default_agent = 'plan', -- plan ensure no file modifications by default
-            instructions = nil, -- Use built-in instructions if nil
+            instructions = nil,     -- Use built-in instructions if nil
         },
     })
 end

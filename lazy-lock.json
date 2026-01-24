@@ -35,6 +35,7 @@
   "nvim-treesitter": { "branch": "master", "commit": "42fc28ba918343ebfd5565147a42a26580579482" },
   "nvim-web-devicons": { "branch": "master", "commit": "6788013bb9cb784e606ada44206b0e755e4323d7" },
   "nvim_winpick": { "branch": "x86_64-unknown-linux-gnu-latest", "commit": "9bedb10dd44e2038bf2ccb7b0f9036bc30ab7d50" },
+  "one-nvim": { "branch": "main", "commit": "faf6fb3f98fccbe009c3466f657a8fff84a5f956" },
   "onedark.nvim": { "branch": "master", "commit": "213c23ae45a04797572242568d5d51937181792d" },
   "opencode.nvim": { "branch": "main", "commit": "fb950fc744f606ff9a0ae442ae5831bebf25294d" },
   "outline.nvim": { "branch": "main", "commit": "1967ef50036b0b1eac4977aeede55915a741afe0" },
