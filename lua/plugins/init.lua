@@ -69,8 +69,14 @@ local ui = {
         priority = 1000,
         config = with_config_and_keys("configs.ui", "sunset_config", nil)
     },
-    { "sainnhe/edge",                        lazy = false },
-    { "navarasu/onedark.nvim",               lazy = false },
+    { "sainnhe/edge",          lazy = false },
+    { "navarasu/onedark.nvim", lazy = false },
+    { "folke/tokyonight.nvim", lazy = false },
+    {
+        "rmehri01/onenord.nvim",
+        lazy = false,
+        conig = with_config_and_keys("configs.ui", "onenord_config", nil)
+    },
     -->>> widgets
     -- 下方状态栏
     { "nvim-lualine/lualine.nvim",           config = with_config_and_keys("configs.ui", "lualine_config", nil) },
@@ -79,12 +85,13 @@ local ui = {
     -- 标签页增强
     { "romgrk/barbar.nvim",                  config = with_config_and_keys("configs.ui", "barbar_config", "barbar_keymaps") },
     -- 右侧滚动条
-    { "dstein64/nvim-scrollview",            config = with_config_and_keys("configs.ui", "nvim_scrollview_config", nil) },
+    -- { "dstein64/nvim-scrollview",            config = with_config_and_keys("configs.ui", "nvim_scrollview_config", nil) },
+    { "petertriho/nvim-scrollbar",           config = with_config_and_keys("configs.ui", "nvim_scrollbar_config", nil),     opts = {} },
     -- 缩进线
     { "lukas-reineke/indent-blankline.nvim", config = with_config_and_keys("configs.ui", "indent_blankline_config", nil) },
     -- 高亮当前行 / 列
     { "yamatsum/nvim-cursorline",            config = with_config_and_keys("configs.ui", "nvim_cursorline_config", nil) },
-    { "lewis6991/gitsigns.nvim",             opts = {} },
+    { "lewis6991/gitsigns.nvim",             config = with_config_and_keys("configs.ui", "gitsigns_config", nil) },
 }
 
 local lsp = {
@@ -171,9 +178,14 @@ local ai = {
 local md = {
     -- markview.nvim maybe better
     {
-        "MeanderingProgrammer/render-markdown.nvim",
-        config = with_config_and_keys("configs.md", "render_markdown_config", nil)
+        "OXY2DEV/markview.nvim",
+        lazy = false,
+        config = with_config_and_keys("configs.md", "markview_config", nil)
     },
+    -- {
+    --     "MeanderingProgrammer/render-markdown.nvim",
+    --     config = with_config_and_keys("configs.md", "render_markdown_config", nil)
+    -- },
     {
         "yutanagano/smark.nvim",
         config = with_config_and_keys("configs.md", "smark_config", nil)

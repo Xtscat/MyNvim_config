@@ -12,6 +12,7 @@ function M.sunset_config()
             vim.opt.background = 'light'
             vim.g.edge_style = 'aura'
             vim.cmd.colorscheme('edge')
+            -- vim.cmd.colorscheme('onenord')
         end,
 
         night_callback = function()
@@ -20,6 +21,10 @@ function M.sunset_config()
             vim.cmd.colorscheme('onedark')
         end
     })
+end
+
+function M.onenord_config()
+    require("onenord").setup()
 end
 
 function M.lualine_config()
@@ -85,6 +90,48 @@ function M.nvim_scrollview_config()
     })
 end
 
+-- function M.nvim_scrollbar_config()
+--     local colors = require("onedark.colors").setup()
+--     require('scrollbar').setup({
+--         marks = {
+--             Search = { color = colors.orange },
+--             Error = { color = colors.error },
+--             Warn = { color = colors.warning },
+--             Info = { color = colors.info },
+--             Hint = { color = colors.hint },
+--             Misc = { color = colors.purple },
+--         }
+--     })
+-- end
+
+function M.nvim_scrollbar_config()
+    local function hex(n) return n and ("#%06x"):format(n) end
+    local function H(name) return vim.api.nvim_get_hl(0, { name = name, link = false }) end
+    local function pick(...)
+        for _, v in ipairs({ ... }) do if v then return v end end
+    end
+
+    local colors = {
+        orange  = pick(hex(H("IncSearch").bg), hex(H("Search").bg), hex(H("IncSearch").fg), hex(H("Search").fg)),
+        purple  = pick(hex(H("Identifier").fg), hex(H("Function").fg)),
+        error   = hex(H("DiagnosticError").fg),
+        warning = hex(H("DiagnosticWarn").fg),
+        info    = hex(H("DiagnosticInfo").fg),
+        hint    = hex(H("DiagnosticHint").fg),
+    }
+
+    require("scrollbar").setup({
+        marks = {
+            Search = { color = colors.orange },
+            Error  = { color = colors.error },
+            Warn   = { color = colors.warning },
+            Info   = { color = colors.info },
+            Hint   = { color = colors.hint },
+            Misc   = { color = colors.purple },
+        },
+    })
+end
+
 function M.indent_blankline_config()
     require("ibl").setup({
         indent = {
@@ -114,6 +161,11 @@ function M.nvim_cursorline_config()
             },
         }
     }
+end
+
+function M.gitsigns_config()
+    require('gitsigns').setup()
+    require('scrollbar.handlers.gitsigns').setup()
 end
 
 function M.barbar_keymaps()

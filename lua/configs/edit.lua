@@ -73,7 +73,13 @@ function M.nvim_toggler_config()
 end
 
 function M.hlslens_config()
-    require("hlslens").setup({})
+    -- require("hlslens").setup({})
+    require("hlslens").setup({
+        build_position_cb = function(plist, _, _, _)
+            require("scrollbar.handlers.search").handler.show(plist.start_pos)
+        end,
+    })
+    require("scrollbar.handlers.search").setup()
 end
 
 function M.autosave_config()

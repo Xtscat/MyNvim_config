@@ -41,8 +41,9 @@ function M.lsp_config()
         },
 
         -- for python
-        ruff = {},
-        jedi_language_server = {},
+        -- ruff = {},
+        -- jedi_language_server = {},
+        ty = {},
 
         -- for bash
         bashls = {
