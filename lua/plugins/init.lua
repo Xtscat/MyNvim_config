@@ -39,13 +39,13 @@ local base = {
 }
 
 local edit = {
-    {
-        -- 括号 / 成对符号
-        "kylechui/nvim-surround",
-        version = "*",
-        event = "VeryLazy",
-        config = with_config_and_keys("configs.edit", nil, "nvim_surround_keymaps"),
-    },
+    -- {
+    --     -- 括号 / 成对符号
+    --     "kylechui/nvim-surround",
+    --     version = "*",
+    --     event = "VeryLazy",
+    --     config = with_config_and_keys("configs.edit", nil, "nvim_surround_keymaps"),
+    -- },
     { "numToStr/Comment.nvim",      config = with_config_and_keys("configs.edit", "comment_config", nil), },
     { "windwp/nvim-autopairs",      event = "InsertEnter",                                                             opts = {} },
     -- 更多的 'a'/'i' 对象
@@ -69,14 +69,14 @@ local ui = {
         priority = 1000,
         config = with_config_and_keys("configs.ui", "sunset_config", nil)
     },
-    { "sainnhe/edge",          lazy = false },
-    { "navarasu/onedark.nvim", lazy = false },
-    { "folke/tokyonight.nvim", lazy = false },
-    {
-        "rmehri01/onenord.nvim",
-        lazy = false,
-        conig = with_config_and_keys("configs.ui", "onenord_config", nil)
-    },
+    { "sainnhe/edge",                        lazy = false },
+    { "navarasu/onedark.nvim",               lazy = false },
+    { "folke/tokyonight.nvim",               lazy = false },
+    -- {
+    --     "rmehri01/onenord.nvim",
+    --     lazy = false,
+    --     config = with_config_and_keys("configs.ui", "onenord_config", nil)
+    -- },
     -->>> widgets
     -- 下方状态栏
     { "nvim-lualine/lualine.nvim",           config = with_config_and_keys("configs.ui", "lualine_config", nil) },
@@ -115,14 +115,25 @@ local lsp = {
     { "saghen/blink.cmp",            version = "1.*",                                                   config = with_config_and_keys("configs.lsp", "blink_config", nil) },
     -->>> Formatter
     { "stevearc/conform.nvim",       event = "VeryLazy",                                                config = with_config_and_keys("configs.lsp", "conform_config", "conform_keymaps") }
-
 }
 
 local dap = {
-    { "mfussenegger/nvim-dap", config = with_config_and_keys("configs.dap", "nvim_dap_config", "nvim_dap_keymaps") },
-    { "igorlfs/nvim-dap-view", config = with_config_and_keys("configs.dap", "dap_view_config", nil) },
-    { "rcarriga/nvim-dap-ui" },
-    { "nvim-neotest/nvim-nio" },
+    {
+        "mfussenegger/nvim-dap",
+        config = with_config_and_keys("configs.dap", "dap_config", "dap_keymaps")
+    },
+    {
+        "igorlfs/nvim-dap-view",
+        version = "1.*",
+        dependencies = { "mfussenegger/nvim-dap" },
+        cmd = { "DapViewOpen", "DapViewClose", "DapViewToggle", "DapViewWatch", "DapViewJump", "DapViewShow", "DapViewNavigate" },
+        config = with_config_and_keys("configs.dap", "dapview_config", nil)
+    },
+    {
+        "jay-babu/mason-nvim-dap.nvim",
+        dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
+        config = with_config_and_keys("configs.dap", "mason_nvim_dap_config", nil)
+    },
 }
 
 local window = {
@@ -175,25 +186,61 @@ local ai = {
 
 }
 
-local md = {
-    -- markview.nvim maybe better
-    {
-        "OXY2DEV/markview.nvim",
-        lazy = false,
-        config = with_config_and_keys("configs.md", "markview_config", nil)
+
+local filetype = {
+    markdown = {
+        -- markview.nvim maybe better
+        {
+            "OXY2DEV/markview.nvim",
+            lazy = false,
+            config = with_config_and_keys("configs.md", "markview_config", nil)
+        },
+        -- {
+        --     "MeanderingProgrammer/render-markdown.nvim",
+        --     config = with_config_and_keys("configs.md", "render_markdown_config", nil)
+        -- },
+        {
+            "yutanagano/smark.nvim",
+            config = with_config_and_keys("configs.md", "smark_config", nil)
+        },
     },
-    -- {
-    --     "MeanderingProgrammer/render-markdown.nvim",
-    --     config = with_config_and_keys("configs.md", "render_markdown_config", nil)
-    -- },
-    {
-        "yutanagano/smark.nvim",
-        config = with_config_and_keys("configs.md", "smark_config", nil)
+
+    latex = {
+        { "lervag/vimtex", ft = { "tex", "plaintex", "bib" }, config = with_config_and_keys("configs.tex", "tex_config", nil) }
     },
+
+    ipynb = {
+        {
+            "ajbucci/ipynb.nvim",
+            dependencies = {
+                "nvim-treesitter/nvim-treesitter",
+                "folke/snacks.nvim"
+            },
+            config = with_config_and_keys("configs.ipynb", "ipynb_config", nil)
+        }
+    },
+
+    hex = {
+        {
+            "Punity122333/hexinspector.nvim",
+            cmd = { "HexEdit", "HexInspect" },
+            lazy = false,
+            config = with_config_and_keys("configs.hex", "hex_config", "hex_keymaps")
+        },
+    }
 }
 
-local tex = {
-    { "lervag/vimtex", ft = { "tex", "plaintex", "bib" }, config = with_config_and_keys("configs.tex", "tex_config", nil) }
-}
-
-return join(base, edit, ui, lsp, dap, window, navigation, ai, md, tex)
+return join(
+    base,
+    edit,
+    ui,
+    lsp,
+    dap,
+    window,
+    navigation,
+    ai,
+    filetype.markdown,
+    filetype.latex,
+    filetype.ipynb,
+    filetype.hex
+)
