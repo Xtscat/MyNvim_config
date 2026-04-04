@@ -58,7 +58,6 @@ local edit = {
     { "kevinhwang91/nvim-hlslens",  config = with_config_and_keys("configs.edit", "hlslens_config", "hlslens_keymaps") },
     { "Pocco81/auto-save.nvim",     config = with_config_and_keys("configs.edit", "autosave_config", nil) },
     { "ethanholz/nvim-lastplace",   opts = {} },
-
 }
 
 local ui = {
@@ -72,11 +71,11 @@ local ui = {
     { "sainnhe/edge",                        lazy = false },
     { "navarasu/onedark.nvim",               lazy = false },
     { "folke/tokyonight.nvim",               lazy = false },
-    -- {
-    --     "rmehri01/onenord.nvim",
-    --     lazy = false,
-    --     config = with_config_and_keys("configs.ui", "onenord_config", nil)
-    -- },
+    {
+        "rmehri01/onenord.nvim",
+        lazy = false,
+        config = with_config_and_keys("configs.ui", "onenord_config", nil)
+    },
     -->>> widgets
     -- 下方状态栏
     { "nvim-lualine/lualine.nvim",           config = with_config_and_keys("configs.ui", "lualine_config", nil) },
@@ -115,6 +114,28 @@ local lsp = {
     { "saghen/blink.cmp",            version = "1.*",                                                   config = with_config_and_keys("configs.lsp", "blink_config", nil) },
     -->>> Formatter
     { "stevearc/conform.nvim",       event = "VeryLazy",                                                config = with_config_and_keys("configs.lsp", "conform_config", "conform_keymaps") }
+}
+
+local cmake = {
+    {
+        "Civitasv/cmake-tools.nvim",
+        lazy = false,
+        cmd = {
+            "CMakeGenerate",
+            "CMakeBuild",
+            "CMakeRun",
+            "CMakeDebug",
+            "CMakeCloseExecutor",
+            "CMakeCloseRunner",
+            "CMakeSelectBuildType",
+            "CMakeSelectBuildTarget",
+            "CMakeSelectLaunchTarget",
+            "CMakeSelectConfigurePreset",
+            "CMakeSelectBuildPreset",
+            "CMakeSelectLaunchPreset",
+        },
+        config = with_config_and_keys("configs.cmake", "cmake_tools_config", "cmake_tools_keymaps")
+    },
 }
 
 local dap = {
@@ -173,19 +194,6 @@ local navigation = {
     },
 }
 
-local ai = {
-    -- {
-    --     "NickvanDyke/opencode.nvim",
-    --     config = with_config_and_keys("configs.ai", "opencode_config", "opencode_keymaps")
-    -- },
-
-    {
-        "sudo-tee/opencode.nvim",
-        config = with_config_and_keys("configs.ai", "opencode_config", "opencode_keymaps")
-    }
-
-}
-
 
 local filetype = {
     markdown = {
@@ -235,10 +243,10 @@ return join(
     edit,
     ui,
     lsp,
+    cmake,
     dap,
     window,
     navigation,
-    ai,
     filetype.markdown,
     filetype.latex,
     filetype.ipynb,

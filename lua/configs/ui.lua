@@ -10,9 +10,9 @@ function M.sunset_config()
         longitude = 108.94250,
         day_callback = function()
             vim.opt.background = 'light'
-            vim.g.edge_style = 'aura'
-            vim.cmd.colorscheme('edge')
-            -- vim.cmd.colorscheme('onenord')
+            -- vim.g.edge_style = 'aura'
+            -- vim.cmd.colorscheme('edge')
+            vim.cmd.colorscheme('onenord')
         end,
 
         night_callback = function()
@@ -57,7 +57,6 @@ function M.lualine_config()
             },
             lualine_x = { 'encoding', 'fileformat', 'filetype' },
             lualine_y = { 'progress' },
-            lualine_z = { 'location', { require("opencode").statusline } }
         },
     })
 end
@@ -171,9 +170,9 @@ end
 function M.barbar_keymaps()
     -- 关闭与清理 (Close & Pick)
     Map.nmap("<leader>pb", [[<Cmd>BufferPickDelete<CR>]], "Pick & Close")
-    Map.nmap("<leader>cb", [[<Cmd>BufferClose<CR>]], "Close Current")
-    Map.nmap("<leader>c[", [[<Cmd>BufferCloseBuffersLeft<CR>]], "Close All to the Left")
-    Map.nmap("<leader>c]", [[<Cmd>BufferCloseBuffersRight<CR>]], "Close All to the Right")
+    Map.nmap("<leader>xb", [[<Cmd>BufferClose<CR>]], "Close Current")
+    Map.nmap("<leader>x[", [[<Cmd>BufferCloseBuffersLeft<CR>]], "Close All to the Left")
+    Map.nmap("<leader>x]", [[<Cmd>BufferCloseBuffersRight<CR>]], "Close All to the Right")
     -- 切换与移动 (Switch & Move)
     -- 注意：Lua 的 [[ ]] 字符串中，单个反斜杠不需要额外转义
     Map.nmap("\\[", "<Cmd>BufferPrevious<CR>", "Previous")

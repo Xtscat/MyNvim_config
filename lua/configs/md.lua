@@ -26,7 +26,7 @@ local Map = require("utils.map").with_prefix("Markdown")
 --         -- Only intended to be used for plugin development / debugging
 --         log_runtime = false,
 --         -- Filetypes this plugin will run on
---         file_types = { 'markdown', 'Avante' , 'opencode_output'},
+--         file_types = { 'markdown', 'Avante'},
 --         -- Out of the box language injections for known filetypes that allow markdown to be
 --         -- interpreted in specified locations, see :h treesitter-language-injections
 --         -- Set enabled to false in order to disable
