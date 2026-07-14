@@ -3,28 +3,35 @@
 local M = {}
 local Map = require("utils.map").with_prefix("Base")
 
+-- function M.treesitter_config()
+--     local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+--     parser_config.ipynb = {
+--         install_info = {
+--             -- 指向 ipynb.nvim 插件安装目录下的 tree-sitter-ipynb 文件夹
+--             -- 注意：如果你修改了 lazy 的安装路径，这里也需要相应修改
+--             url = vim.fn.stdpath("data") .. "/lazy/ipynb.nvim/tree-sitter-ipynb",
+--             files = { "src/parser.c", "src/scanner.c" },
+--             branch = "main",
+--             generate_requires_npm = false,
+--             requires_generate_from_grammar = false,
+--         },
+--         filetype = "ipynb",
+--     }
+--     require 'nvim-treesitter.configs'.setup {
+--         ensure_installed = { "c", "cpp", "python", "bash", "html", "lua", "markdown", "markdown_inline" },
+--         auto_install = true,
+--         highlight = {
+--             enable = true,
+--             additional_vim_regex_highlighting = true,
+--         },
+--     }
+-- end
+
 function M.treesitter_config()
-    local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-    parser_config.ipynb = {
-        install_info = {
-            -- 指向 ipynb.nvim 插件安装目录下的 tree-sitter-ipynb 文件夹
-            -- 注意：如果你修改了 lazy 的安装路径，这里也需要相应修改
-            url = vim.fn.stdpath("data") .. "/lazy/ipynb.nvim/tree-sitter-ipynb",
-            files = { "src/parser.c", "src/scanner.c" },
-            branch = "main",
-            generate_requires_npm = false,
-            requires_generate_from_grammar = false,
-        },
-        filetype = "ipynb",
-    }
-    require 'nvim-treesitter.configs'.setup {
+    require("tree-sitter-manager").setup({
         ensure_installed = { "c", "cpp", "python", "bash", "html", "lua", "markdown", "markdown_inline" },
-        auto_install = true,
-        highlight = {
-            enable = true,
-            additional_vim_regex_highlighting = true,
-        },
-    }
+        highlight = true
+    })
 end
 
 function M.snacks_config()

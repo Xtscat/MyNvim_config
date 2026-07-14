@@ -11,8 +11,8 @@ function M.sunset_config()
         day_callback = function()
             vim.opt.background = 'light'
             -- vim.g.edge_style = 'aura'
-            -- vim.cmd.colorscheme('edge')
-            vim.cmd.colorscheme('onenord')
+            vim.cmd.colorscheme('edge')
+            -- vim.cmd.colorscheme('onenord')
         end,
 
         night_callback = function()
@@ -21,10 +21,6 @@ function M.sunset_config()
             vim.cmd.colorscheme('onedark')
         end
     })
-end
-
-function M.onenord_config()
-    require("onenord").setup()
 end
 
 function M.lualine_config()
@@ -170,7 +166,7 @@ end
 function M.barbar_keymaps()
     -- 关闭与清理 (Close & Pick)
     Map.nmap("<leader>pb", [[<Cmd>BufferPickDelete<CR>]], "Pick & Close")
-    Map.nmap("<leader>xb", [[<Cmd>BufferClose<CR>]], "Close Current")
+    Map.nmap("<leader>cb", [[<Cmd>BufferClose<CR>]], "Close Current")
     Map.nmap("<leader>x[", [[<Cmd>BufferCloseBuffersLeft<CR>]], "Close All to the Left")
     Map.nmap("<leader>x]", [[<Cmd>BufferCloseBuffersRight<CR>]], "Close All to the Right")
     -- 切换与移动 (Switch & Move)

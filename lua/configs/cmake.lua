@@ -42,16 +42,16 @@ function M.cmake_tools_config()
 end
 
 function M.cmake_tools_keymaps()
-    Map.nmap("<leader>cc", "<cmd>CMakeClean<CR>", "CMake Clean")
-    Map.nmap("<leader>cg", "<cmd>CMakeGenerate<CR>", "CMake Generate")
-    Map.nmap("<leader>cb", "<cmd>CMakeQuickBuild<CR>", "CMake Quick Build")
-    Map.nmap("<leader>cB", "<cmd>CMakeBuild<CR>", "CMake Build")
-    Map.nmap("<leader>cr", "<cmd>CMakeRun<CR>", "CMake Run")
-    Map.nmap("<leader>cd", "<cmd>CMakeDebug<CR>", "CMake Debug")
-    Map.nmap("<leader>ct", "<cmd>CMakeSelectBuildTarget<CR>", "CMake Select Build Target")
-    Map.nmap("<leader>cT", "<cmd>CMakeSelectLaunchTarget<CR>", "CMake Select Launch Target")
-    Map.nmap("<leader>cp", "<cmd>CMakeSelectConfigurePreset<CR>", "CMake Select Configure Preset")
-    Map.nmap("<leader>cP", "<cmd>CMakeSelectBuildPreset<CR>", "CMake Select Build Preset")
+    Map.nmap("<leader>Cc", "<cmd>CMakeClean<CR>", "CMake Clean")
+    Map.nmap("<leader>Cg", "<cmd>CMakeGenerate<CR>", "CMake Generate")
+    Map.nmap("<leader>Cb", "<cmd>CMakeQuickBuild<CR>", "CMake Quick Build")
+    Map.nmap("<leader>CB", "<cmd>CMakeBuild<CR>", "CMake Build")
+    Map.nmap("<leader>Cr", "<cmd>CMakeRun<CR>", "CMake Run")
+    Map.nmap("<leader>Cd", "<cmd>CMakeDebug<CR>", "CMake Debug")
+    Map.nmap("<leader>Ct", "<cmd>CMakeSelectBuildTarget<CR>", "CMake Select Build Target")
+    Map.nmap("<leader>CT", "<cmd>CMakeSelectLaunchTarget<CR>", "CMake Select Launch Target")
+    Map.nmap("<leader>Cp", "<cmd>CMakeSelectConfigurePreset<CR>", "CMake Select Configure Preset")
+    Map.nmap("<leader>CP", "<cmd>CMakeSelectBuildPreset<CR>", "CMake Select Build Preset")
 end
 
 return M

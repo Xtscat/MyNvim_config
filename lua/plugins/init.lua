@@ -24,10 +24,14 @@ local base = {
     { "nvim-lua/plenary.nvim" },
     { "nvim-tree/nvim-web-devicons", lazy = true },
     { "folke/which-key.nvim",        opts = {} },
+    -- {
+    --     "nvim-treesitter/nvim-treesitter",
+    --     build = ":TSUpdate",
+    --     event = "VeryLazy",
+    --     config = with_config_and_keys("configs.base", "treesitter_config", nil)
+    -- },
     {
-        "nvim-treesitter/nvim-treesitter",
-        build = ":TSUpdate",
-        event = "VeryLazy",
+        "romus204/tree-sitter-manager.nvim",
         config = with_config_and_keys("configs.base", "treesitter_config", nil)
     },
     {
@@ -71,11 +75,7 @@ local ui = {
     { "sainnhe/edge",                        lazy = false },
     { "navarasu/onedark.nvim",               lazy = false },
     { "folke/tokyonight.nvim",               lazy = false },
-    {
-        "rmehri01/onenord.nvim",
-        lazy = false,
-        config = with_config_and_keys("configs.ui", "onenord_config", nil)
-    },
+    { "rmehri01/onenord.nvim",               lazy = false },
     -->>> widgets
     -- 下方状态栏
     { "nvim-lualine/lualine.nvim",           config = with_config_and_keys("configs.ui", "lualine_config", nil) },
@@ -138,24 +138,24 @@ local cmake = {
     },
 }
 
-local dap = {
-    {
-        "mfussenegger/nvim-dap",
-        config = with_config_and_keys("configs.dap", "dap_config", "dap_keymaps")
-    },
-    {
-        "igorlfs/nvim-dap-view",
-        version = "1.*",
-        dependencies = { "mfussenegger/nvim-dap" },
-        cmd = { "DapViewOpen", "DapViewClose", "DapViewToggle", "DapViewWatch", "DapViewJump", "DapViewShow", "DapViewNavigate" },
-        config = with_config_and_keys("configs.dap", "dapview_config", nil)
-    },
-    {
-        "jay-babu/mason-nvim-dap.nvim",
-        dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
-        config = with_config_and_keys("configs.dap", "mason_nvim_dap_config", nil)
-    },
-}
+-- local dap = {
+--     {
+--         "mfussenegger/nvim-dap",
+--         config = with_config_and_keys("configs.dap", "dap_config", "dap_keymaps")
+--     },
+--     {
+--         "igorlfs/nvim-dap-view",
+--         version = "1.*",
+--         dependencies = { "mfussenegger/nvim-dap" },
+--         cmd = { "DapViewOpen", "DapViewClose", "DapViewToggle", "DapViewWatch", "DapViewJump", "DapViewShow", "DapViewNavigate" },
+--         config = with_config_and_keys("configs.dap", "dapview_config", nil)
+--     },
+--     {
+--         "jay-babu/mason-nvim-dap.nvim",
+--         dependencies = { "williamboman/mason.nvim", "mfussenegger/nvim-dap" },
+--         config = with_config_and_keys("configs.dap", "mason_nvim_dap_config", nil)
+--     },
+-- }
 
 local window = {
     {
@@ -217,16 +217,16 @@ local filetype = {
         { "lervag/vimtex", ft = { "tex", "plaintex", "bib" }, config = with_config_and_keys("configs.tex", "tex_config", nil) }
     },
 
-    ipynb = {
-        {
-            "ajbucci/ipynb.nvim",
-            dependencies = {
-                "nvim-treesitter/nvim-treesitter",
-                "folke/snacks.nvim"
-            },
-            config = with_config_and_keys("configs.ipynb", "ipynb_config", nil)
-        }
-    },
+    -- ipynb = {
+    --     {
+    --         "ajbucci/ipynb.nvim",
+    --         dependencies = {
+    --             -- "nvim-treesitter/nvim-treesitter",
+    --             "folke/snacks.nvim"
+    --         },
+    --         config = with_config_and_keys("configs.ipynb", "ipynb_config", nil)
+    --     }
+    -- },
 
     hex = {
         {
@@ -244,7 +244,7 @@ return join(
     ui,
     lsp,
     cmake,
-    dap,
+    -- dap,
     window,
     navigation,
     filetype.markdown,
