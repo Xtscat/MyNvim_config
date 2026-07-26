@@ -121,6 +121,7 @@ function M.blink_config()
         cmdline = {
             completion = {
                 menu = { auto_show = true },
+                list = { selection = { preselect = false, auto_insert = true } },
             },
         },
         fuzzy = { implementation = "prefer_rust_with_warning" },
