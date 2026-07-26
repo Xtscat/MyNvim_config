@@ -130,6 +130,59 @@ function M.snacks_keymaps()
     Map.nmap('<leader>lg', function() Snacks.lazygit.open() end, '[L]azy[G]it')
     -- file explorer
     Map.nmap('tt', function() Snacks.explorer({ focus = true }) end, 'File explorer')
+
+    -- :Vsp / :Hsp —— 从 buffer 或同目录文件选一个 split 打开
+    -- 补全：已打开 buffer 名 + 当前目录文件名
+    local function complete(arg_lead)
+        local seen, items = {}, {}
+        for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+            local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t")
+            if name ~= "" and not seen[name] and vim.startswith(name, arg_lead) then
+                seen[name] = true
+                items[#items + 1] = name
+            end
+        end
+        local dir = vim.fn.expand("%:p:h")
+        if dir ~= "" then
+            for _, f in ipairs(vim.fn.readdir(dir)) do
+                if not seen[f] and vim.startswith(f, arg_lead) then
+                    seen[f] = true
+                    items[#items + 1] = f
+                end
+            end
+        end
+        return items
+    end
+
+    local function make_split_cmd(name, split_cmd)
+        vim.api.nvim_create_user_command(name, function(opts)
+            local arg = vim.trim(opts.args)
+            if arg == "" then
+                Snacks.picker.buffers({
+                    actions = {
+                        confirm = function(picker, item)
+                            picker:close()
+                            vim.cmd(split_cmd .. item.bufnr)
+                        end,
+                    },
+                })
+            else
+                local ok, _ = pcall(vim.cmd, split_cmd .. arg)
+                if not ok then
+                    local file_cmd = split_cmd == "vert sb " and "vsplit " or "split "
+                    vim.cmd(file_cmd .. arg)
+                end
+            end
+        end, { nargs = "?", complete = complete })
+    end
+
+    make_split_cmd("Vsp", "vert sb ")
+    make_split_cmd("Hsp", "sb ")
+
+    vim.cmd([[
+        cnoreabbrev <expr> vsp getcmdtype() == ':' && getcmdline() == 'vsp' ? 'Vsp' : 'vsp'
+        cnoreabbrev <expr> hsp getcmdtype() == ':' && getcmdline() == 'hsp' ? 'Hsp' : 'hsp'
+    ]])
 end
 
 return M
