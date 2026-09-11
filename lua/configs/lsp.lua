@@ -30,14 +30,43 @@ function M.lsp_config()
         },
 
         -- for c&cpp
-        clangd = {
+        -- clangd = {
+        --     cmd = {
+        --         "clangd",
+        --         "--background-index",
+        --         "--completion-style=detailed",
+        --         "--all-scopes-completion",
+        --         "--header-insertion=iwyu",
+        --     }
+        -- },
+
+        clice = {
             cmd = {
-                "clangd",
-                "--background-index",
-                "--completion-style=detailed",
-                "--all-scopes-completion",
-                "--header-insertion=iwyu",
-            }
+                "clice",
+                "serve",
+            },
+            filetype = {
+                "c",
+                "cpp"
+            },
+            root_markers = {
+                ".git/",
+                "clide.toml",
+                ".clang-tidy",
+                ".clang-format",
+                "compile_commands.json",
+                "compile_flags.txt",
+                "configure.ac",
+            },
+
+            capabilities = {
+                textDocument = {
+                    completion = {
+                        editsNearCursor = true,
+                    },
+                },
+                offsetEncoding = {"utf-8"},
+            },
         },
 
         -- for python
@@ -169,7 +198,7 @@ function M.conform_config()
                         BinPackArguments: false,
                         BinPackParameters: false,
                         ColumnLimit: 160,
-                        IndentWidth: 4,
+                        IndentWidth: 2,
                         IndentAccessModifiers: false,
                         PenaltyBreakBeforeFirstCallParameter: 0,
                         PointerAlignment: Left,

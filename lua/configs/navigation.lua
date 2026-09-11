@@ -22,8 +22,8 @@ function M.neotree_config()
                 hide_gitignored = false
             },
             follow_current_file = {
-                enable = true,
-                leave_dits_open = true
+                enabled = true,
+                leave_dirs_open = true
             }
         }
     })
@@ -37,6 +37,7 @@ function M.neotree_keymaps()
     -- for neotree
     return {
         Map.nmap("tt", "<cmd>Neotree toggle<CR>", "Toggle Neotree Window"),
+        Map.nmap("<leader>e", "<cmd>Neotree reveal<CR>", "Reveal Current File in Tree"),
         window = {
             mappings = {
                 ["<cr>"] = "open",

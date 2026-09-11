@@ -4,7 +4,16 @@ local Map = require("utils.map").with_prefix("Core")
 
 Map.map("t", "<Esc>", [[<C-\><C-n>]], "Terminal: Exit Insert Mode")
 
-Map.nmap("<leader>l", "<cmd>echo expand('%:p')<cr>", "System: Show Full Path")
+-- 显示当前缓冲区绝对路径，并复制到系统剪切板（走 g:clipboard / win32yank.exe）
+Map.nmap("<leader>l", function()
+    local path = vim.fn.expand("%:p")
+    if path == "" then
+        vim.notify("No file name for current buffer", vim.log.levels.WARN)
+        return
+    end
+    vim.fn.setreg("+", path)
+    vim.notify(path .. "  (copied to clipboard)", vim.log.levels.INFO)
+end, "System: Copy Full Path to Clipboard")
 
 
 Map.nmap("ah", "<C-w>h", "Window: Focus Left")

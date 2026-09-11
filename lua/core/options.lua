@@ -18,6 +18,7 @@ opt.shiftround = true                                       -- round indent to m
 opt.autoindent = true                                       -- copy indent from current line when starting a new one
 opt.smartindent = true                                      -- extra autoindent heuristics (best for code-like files)
 
+
 -- UI
 opt.number = true                                           -- show absolute line numbers
 opt.relativenumber = true                                   -- show relative line numbers (for easier motions)
