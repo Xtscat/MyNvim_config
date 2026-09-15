@@ -1,0 +1,8 @@
+indent_type = "Spaces"
+indent_width = 4
+column_width = 120
+quote_style = "AutoPreferDouble"
+call_parentheses = "Always"
+# 保持单语句函数为单行, 例如 function() require("x").y() end
+# 可选: Never(默认) | FunctionOnly | ConditionalOnly | Always
+collapse_simple_statement = "FunctionOnly"
