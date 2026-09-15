@@ -4,22 +4,22 @@ local M = {}
 local Map = require("utils.map").with_prefix("UI")
 
 function M.sunset_config()
-    local onedark = require('onedark')
-    require('sunset').setup({
+    local onedark = require("onedark")
+    require("sunset").setup({
         latitude = 34.26111,
         longitude = 108.94250,
         day_callback = function()
-            vim.opt.background = 'light'
+            vim.opt.background = "light"
             -- vim.g.edge_style = 'aura'
-            vim.cmd.colorscheme('edge')
+            vim.cmd.colorscheme("edge")
             -- vim.cmd.colorscheme('onenord')
         end,
 
         night_callback = function()
-            vim.opt.background = 'dark'
-            onedark.style = 'warmer'
-            vim.cmd.colorscheme('onedark')
-        end
+            vim.opt.background = "dark"
+            onedark.style = "warmer"
+            vim.cmd.colorscheme("onedark")
+        end,
     })
 end
 
@@ -31,35 +31,33 @@ function M.lualine_config()
         return (client and client.name) or msg
     end
 
-    require('lualine').setup({
+    require("lualine").setup({
         options = {
             globalstatus = true,
-            component_separators = '', -- 去掉组件之间的分隔符
-            section_separators = '',   -- 去掉 section 之间的分隔符
+            component_separators = "", -- 去掉组件之间的分隔符
+            section_separators = "", -- 去掉 section 之间的分隔符
         },
         sections = {
             --[[
             --  lualine_a: 左侧最左; lualine_b: 左边中间; lualine_c: 左边靠右
             --  lualine_x: 右边靠左; lualine_y: 右边中间; lualine_z: 右边靠右
             --]]
-            lualine_a = { 'mode' },
-            lualine_b = { 'filename', 'branch', 'diff' },
+            lualine_a = { "mode" },
+            lualine_b = { "filename", "branch", "diff" },
             lualine_c = {
                 -- 'filename',
                 -- { symbols.get, cond = symbols.has },
                 { function() return "%=" end },
                 { lsp_name, icon = " LSP:" },
-                { 'diagnostics', sources = { 'nvim_diagnostic' } },
+                { "diagnostics", sources = { "nvim_diagnostic" } },
             },
-            lualine_x = { 'encoding', 'fileformat', 'filetype' },
-            lualine_y = { 'progress' },
+            lualine_x = { "encoding", "fileformat", "filetype" },
+            lualine_y = { "progress" },
         },
     })
 end
 
-function M.dropbar_config()
-    require("dropbar").setup()
-end
+function M.dropbar_config() require("dropbar").setup() end
 
 function M.barbar_config()
     require("barbar").setup({
@@ -71,17 +69,17 @@ function M.barbar_config()
 end
 
 function M.nvim_scrollview_config()
-    require('scrollview').setup({
-        excluded_filetypes = { 'neotree' },
+    require("scrollview").setup({
+        excluded_filetypes = { "neotree" },
         current_only = true,
         -- base = 'buffer',
         -- column = 80,
-        signs_on_startup = { 'all' },
-        scrollview_base = 'right',
-        scrollview_signs_overflow = 'right',
-        scrollview_folds_symbol = { 'right' },
-        scrollview_textwidth_symbol = { 'right' },
-        diagnostics_severities = { vim.diagnostic.severity.ERROR }
+        signs_on_startup = { "all" },
+        scrollview_base = "right",
+        scrollview_signs_overflow = "right",
+        scrollview_folds_symbol = { "right" },
+        scrollview_textwidth_symbol = { "right" },
+        diagnostics_severities = { vim.diagnostic.severity.ERROR },
     })
 end
 
@@ -103,26 +101,30 @@ function M.nvim_scrollbar_config()
     local function hex(n) return n and ("#%06x"):format(n) end
     local function H(name) return vim.api.nvim_get_hl(0, { name = name, link = false }) end
     local function pick(...)
-        for _, v in ipairs({ ... }) do if v then return v end end
+        for _, v in ipairs({ ... }) do
+            if v then
+                return v
+            end
+        end
     end
 
     local colors = {
-        orange  = pick(hex(H("IncSearch").bg), hex(H("Search").bg), hex(H("IncSearch").fg), hex(H("Search").fg)),
-        purple  = pick(hex(H("Identifier").fg), hex(H("Function").fg)),
-        error   = hex(H("DiagnosticError").fg),
+        orange = pick(hex(H("IncSearch").bg), hex(H("Search").bg), hex(H("IncSearch").fg), hex(H("Search").fg)),
+        purple = pick(hex(H("Identifier").fg), hex(H("Function").fg)),
+        error = hex(H("DiagnosticError").fg),
         warning = hex(H("DiagnosticWarn").fg),
-        info    = hex(H("DiagnosticInfo").fg),
-        hint    = hex(H("DiagnosticHint").fg),
+        info = hex(H("DiagnosticInfo").fg),
+        hint = hex(H("DiagnosticHint").fg),
     }
 
     require("scrollbar").setup({
         marks = {
             Search = { color = colors.orange },
-            Error  = { color = colors.error },
-            Warn   = { color = colors.warning },
-            Info   = { color = colors.info },
-            Hint   = { color = colors.hint },
-            Misc   = { color = colors.purple },
+            Error = { color = colors.error },
+            Warn = { color = colors.warning },
+            Info = { color = colors.info },
+            Hint = { color = colors.hint },
+            Misc = { color = colors.purple },
         },
     })
 end
@@ -130,19 +132,19 @@ end
 function M.indent_blankline_config()
     require("ibl").setup({
         indent = {
-            char = { '╎' },
+            char = { "╎" },
             smart_indent_cap = true,
         },
         scope = {
             show_start = false,
             show_end = false,
-            highlight = { "Function", "Label" }
-        }
+            highlight = { "Function", "Label" },
+        },
     })
 end
 
 function M.nvim_cursorline_config()
-    require('nvim-cursorline').setup {
+    require("nvim-cursorline").setup({
         cursorline = {
             enable = false,
             timeout = 50,
@@ -152,15 +154,28 @@ function M.nvim_cursorline_config()
             enable = true,
             min_length = 3,
             hl = {
-                underline = true
+                underline = true,
             },
-        }
-    }
+        },
+    })
 end
 
 function M.gitsigns_config()
-    require('gitsigns').setup()
-    require('scrollbar.handlers.gitsigns').setup()
+    require("gitsigns").setup()
+    require("scrollbar.handlers.gitsigns").setup()
+end
+
+function M.git_conflict_config()
+    require("git-conflict").setup({
+        default_mappings = false, -- disable buffer local mapping created by this plugin
+        default_commands = false, -- disable commands created by this plugin
+        disable_diagnostics = false, -- This will disable the diagnostics in a buffer whilst it is conflicted
+        list_opener = "copen", -- command or function to open the conflicts list
+        highlights = { -- They must have background color, otherwise the default color will be used
+            incoming = "DiffAdd",
+            current = "DiffText",
+        },
+    })
 end
 
 function M.barbar_keymaps()
@@ -186,6 +201,15 @@ function M.barbar_keymaps()
     Map.nmap("<leader>8", [[<Cmd>BufferGoto 8<CR>]], "Go to Buffer 8")
     Map.nmap("<leader>9", [[<Cmd>BufferGoto 9<CR>]], "Go to Buffer 9")
     Map.nmap("<leader>0", [[<Cmd>BufferLast<CR>]], "Go to Last Buffer")
+end
+
+function M.git_conflict_keymaps()
+    Map.nmap("<leader>gn", function() require("git-conflict").find_next() end, "Go to Next Conflict")
+    Map.nmap("<leader>gN", function() require("git-conflict").find_prev() end, "Go to Prev Conflict")
+    Map.nmap("<leader>go", function() require("git-conflict").choose("ours") end, "Select Ours Changes")
+    Map.nmap("<leader>gt", function() require("git-conflict").choose("theirs") end, "Select Theirs Changes")
+    Map.nmap("<leader>gb", function() require("git-conflict").choose("both") end, "Select Both Changes")
+    Map.nmap("<leader>gx", function() require("git-conflict").choose("none") end, "Select None Changes")
 end
 
 return M
