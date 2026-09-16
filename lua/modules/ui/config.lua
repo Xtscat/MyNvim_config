@@ -1,0 +1,196 @@
+-- modules/ui/config.lua
+--
+-- Setup for the look-and-layout plugins: colorscheme, bars, scrollbar,
+-- indent guides, cursorline, window layout (edgy) and terminal.
+
+local M = {}
+
+-- Day/night colorscheme switching. sunset calls day_callback/night_callback
+-- based on sunrise/sunset at the given coordinates.
+function M.sunset()
+    local onedark = require("onedark")
+    require("sunset").setup({
+        latitude = 34.26111,
+        longitude = 108.94250,
+        day_callback = function()
+            vim.opt.background = "light"
+            vim.cmd.colorscheme("edge")
+        end,
+        night_callback = function()
+            vim.opt.background = "dark"
+            onedark.style = "warmer"
+            vim.cmd.colorscheme("onedark")
+        end,
+    })
+end
+
+-- Bottom statusline (global, because laststatus=3).
+function M.lualine()
+    -- small helper component: show the first attached LSP client's name
+    local function lsp_name()
+        local clients = vim.lsp.get_clients({ bufnr = 0 })
+        local client = clients and clients[1]
+        return (client and client.name) or "No Active LSP"
+    end
+
+    require("lualine").setup({
+        options = {
+            globalstatus = true,
+            component_separators = "",
+            section_separators = "",
+        },
+        sections = {
+            -- lualine_a/b/c = left side; lualine_x/y/z = right side
+            lualine_a = { "mode" },
+            lualine_b = { "filename", "branch", "diff" },
+            lualine_c = {
+                { function() return "%=" end }, -- spacer pushing the rest right
+                { lsp_name, icon = " LSP:" },
+                { "diagnostics", sources = { "nvim_diagnostic" } },
+            },
+            lualine_x = { "encoding", "fileformat", "filetype" },
+            lualine_y = { "progress" },
+        },
+    })
+end
+
+-- Breadcrumb bar at the top of each window.
+function M.dropbar() require("dropbar").setup({}) end
+
+-- Top buffer-tab bar.
+function M.barbar()
+    require("barbar").setup({
+        icons = {
+            buffer_index = true,
+            buffer_numbers = true,
+        },
+    })
+end
+
+-- Vertical scrollbar on the right. Colors are derived from the current
+-- colorscheme's highlight groups so it adapts to edge/onedark.
+function M.scrollbar()
+    local function hex(n) return n and ("#%06x"):format(n) end
+    local function H(name) return vim.api.nvim_get_hl(0, { name = name, link = false }) end
+    local function pick(...)
+        for _, v in ipairs({ ... }) do
+            if v then
+                return v
+            end
+        end
+    end
+
+    local colors = {
+        orange = pick(hex(H("IncSearch").bg), hex(H("Search").bg), hex(H("IncSearch").fg), hex(H("Search").fg)),
+        purple = pick(hex(H("Identifier").fg), hex(H("Function").fg)),
+        error = hex(H("DiagnosticError").fg),
+        warning = hex(H("DiagnosticWarn").fg),
+        info = hex(H("DiagnosticInfo").fg),
+        hint = hex(H("DiagnosticHint").fg),
+    }
+
+    require("scrollbar").setup({
+        marks = {
+            Search = { color = colors.orange },
+            Error = { color = colors.error },
+            Warn = { color = colors.warning },
+            Info = { color = colors.info },
+            Hint = { color = colors.hint },
+            Misc = { color = colors.purple },
+        },
+    })
+end
+
+-- Indent guides + scope highlight.
+function M.indent_blankline()
+    require("ibl").setup({
+        indent = {
+            char = { "╎" },
+            smart_indent_cap = true,
+        },
+        scope = {
+            show_start = false,
+            show_end = false,
+            highlight = { "Function", "Label" },
+        },
+    })
+end
+
+-- Highlight of the current line / word.
+function M.cursorline()
+    require("nvim-cursorline").setup({
+        -- Delayed current-line highlight: off while moving, lit after `timeout`
+        -- ms of no movement (keeps the screen calm).
+        cursorline = {
+            enable = true,
+            timeout = 50,
+            number = true,
+        },
+        -- Underlining every occurrence of the word under the cursor was too
+        -- noisy for reading code. Re-enable with a subtler `hl` if wanted.
+        cursorword = {
+            enable = false,
+            min_length = 3,
+            hl = { underline = true },
+        },
+    })
+end
+
+-- edgy: turn side panels into fixed "docks" that do not get replaced when you
+-- open files. left = file tree + outline, bottom = terminal, right = trouble.
+function M.edgy()
+    vim.opt.laststatus = 3
+    vim.opt.splitkeep = "screen" -- keep the view stable when opening splits
+    require("edgy").setup({
+        animate = { enabled = false },
+        close_when_all_hidden = true,
+        exit_when_last = true,
+        wo = { winbar = false },
+        left = {
+            {
+                ft = "neo-tree",
+                pinned = true,
+                collapsed = false,
+                size = { height = 0.5, width = 0.12 },
+                open = "Neotree show", -- command run when the dock is first shown
+            },
+            {
+                ft = "Outline",
+                pinned = true,
+                collapsed = false,
+                size = { height = 0.5, width = 0.12 },
+                open = "Outline",
+            },
+        },
+        bottom = {
+            {
+                ft = "toggleterm",
+                pinned = true,
+                collapsed = false,
+                size = { height = 0.3 },
+                -- only dock the horizontal (non-floating) toggleterm
+                filter = function(_, win)
+                    local cfg = vim.api.nvim_win_get_config(win)
+                    local term = require("toggleterm.terminal").get(1)
+                    return cfg.relative == "" and term.direction == "horizontal"
+                end,
+            },
+        },
+        right = {
+            {
+                ft = "trouble",
+                pinned = false,
+                collapsed = false,
+                size = { width = 0.3 },
+                open = "Trouble diagnostics toggle",
+            },
+        },
+    })
+end
+
+-- Terminal (bottom docks / floating).
+function M.toggleterm()
+    require("toggleterm").setup()
+end
+
+return M
