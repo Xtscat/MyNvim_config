@@ -3,7 +3,8 @@
 Neovim 配置重构记录。本文档记录 2026-09 这次重构的**目标、架构、分类决策、UI 细节、性能数据、离线部署方案和待办**，供以后（人或 AI）接手时理解"为什么是这样"。
 
 - 新配置：`~/.config/nvim`（本目录）
-- 旧配置：`~/.config/nvim-old`（git 仓库与 remote `Xtscat/MyNvim_config` 仍完整保留，工作区干净）
+- 仓库：remote `git@github.com:Xtscat/MyNvim_config.git`；本次重构提交在**新分支 `remake`**（基于 `origin/master` 的历史），`master` 未覆盖
+- 旧配置：`~/.config/nvim-old`（独立副本，未改动）
 - 参考的另一份精简配置：`~/.config/nvim-bare`（基于 Neovim 0.12 内置 `vim.pack`，未纳入本次重构）
 
 ---
@@ -273,7 +274,7 @@ require("tree-sitter-manager").setup({
 
 ## 10. 待办 / 备忘
 
-- [ ] **git 未接到新配置**。`~/.config/nvim` 目前不是 git 仓库；旧仓库在 `~/.config/nvim-old`（remote `Xtscat/MyNvim_config`）。建议 `mv nvim-old/.git nvim/.git` 保留历史，把这次重构作为一次大 commit；或 `git init` + 重设 remote。
+- [x] **git 已接好**。见开头“仓库”说明：重构提交在 `remake` 分支，`master` 保留未动。
 - [ ] **treesitter 离线门**（§8.4）。
 - [ ] **`Lazy clean`** 清掉遗留的 LuaSnip 目录（已从 spec 移除）。
 - [ ] （可选）picker 是否改用 mini.pick —— 需先接受 `haunt.nvim` 的 picker 集成失效。
