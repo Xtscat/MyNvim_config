@@ -71,20 +71,21 @@ opt.undodir = vim.fn.expand("$HOME/.local/share/nvim/undo") -- where undo files 
 opt.exrc = true   -- allow per-directory .nvimrc/.exrc
 opt.secure = true -- restrict unsafe commands in local rc files
 
--- ===================================================================
---  WSL <-> Windows shared clipboard (via win32yank.exe)
--- ===================================================================
-vim.g.clipboard = {
-    name = "win32yank-wsl",
-    copy = {
-        ["+"] = "win32yank.exe -i --crlf",
-        ["*"] = "win32yank.exe -i --crlf",
-    },
-    paste = {
-        ["+"] = "win32yank.exe -o --lf",
-        ["*"] = "win32yank.exe -o --lf",
-    },
-    cache_enabled = 0,
-}
-
-vim.opt.clipboard = "unnamedplus"
+-- Clipboard
+-- The WSL (win32yank.exe) and local-desktop (wl-copy / xclip / xsel) cases need
+-- no configuration: Neovim's built-in detection already picks those tools. Only
+-- a remote ssh session needs help -- OSC 52 carries the yank back through ssh to
+-- the terminal on the user's desk. It is copy-only, because many terminals
+-- refuse to let programs read the clipboard; paste with the terminal's own paste
+-- key, or set vim.g.clipboard_osc52_paste = true to enable "+p.
+opt.clipboard = "unnamedplus"
+if vim.env.SSH_CONNECTION or vim.env.SSH_CLIENT or vim.env.SSH_TTY then
+    local osc52 = require("vim.ui.clipboard.osc52")
+    local no_paste = function() return {} end
+    g.clipboard = {
+        name = "OSC 52",
+        copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
+        paste = { ["+"] = no_paste, ["*"] = no_paste },
+        cache_enabled = 0,
+    }
+end

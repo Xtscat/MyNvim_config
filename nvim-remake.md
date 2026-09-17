@@ -36,7 +36,7 @@ lua/configs/<桶>.lua   -- 同名的 setup + keymaps
 init.lua                       -- options -> commands -> keymaps -> autocmds -> lazy
 lua/
   core/
-    options.lua                -- vim.opt / vim.g
+    options.lua                -- vim.opt / vim.g（含剪切板）
     commands.lua               -- :Vsp / :Hsp 等通用命令
     keymaps.lua                -- 全局键位（不属于任何插件的）
     autocmds.lua               -- 全局 autocmd
@@ -111,6 +111,28 @@ order = {
 | `<leader>C*` | CMake |
 
 命令：`:Vsp` / `:Hsp`（从 buffer 或同目录文件选一个 split 打开）、`:Format`。
+
+### 2.5 剪切板（WSL / SSH / 本地）
+
+设置就在 `core/options.lua` 末尾，**没有单独文件**。思路是尽量不配置：
+
+- **WSL / 本地 Linux 桌面**：不写任何东西。Neovim 内置探测本来就按 `win32yank.exe`（WSL）→ `wl-copy` / `xclip` / `xsel`（本地）的顺序找工具（连 win32yank 的软链都自己 resolve），旧配置里手写的那段 win32yank 字典纯属多余，已删。
+- **SSH 远程**：唯一需要帮忙的情况。设 `g:clipboard` 为 OSC 52 —— 服务器上 yank 时把内容编码进转义序列，经 ssh 回到**本地**终端再写进本地剪切板。只要环境变量里有 `SSH_CONNECTION` / `SSH_CLIENT` / `SSH_TTY` 就启用。
+- `'clipboard'` 固定 `unnamedplus`。
+
+OSC 52 默认**只写不读**：很多终端允许程序写剪切板但拒绝读（安全考虑），Neovim 内置的 OSC 52 paste 会阻塞等待终端响应，所以 `"+p` 默认不可用 —— 粘贴用终端自身的按键（Ctrl+Shift+V / 中键）；真想要就设 `vim.g.clipboard_osc52_paste = true`。实测一次 `yy` 只发一条 OSC 52 序列（`52;c;`），payload 正确。
+
+> 远程 + tmux：需要在 tmux 里 `set -g set-clipboard on`，OSC 52 才能透传到本地终端。
+
+**已知坑：WSL interop 掉了 → 所有 `.exe` 不能执行。** Windows 的 `.exe` 在 WSL 里靠 `binfmt_misc` 的 `WSLInterop` 记录执行；这条记录一旦没有，`win32yank.exe`（以及 `clip.exe`、`cmd.exe`…）全部报 `cannot execute binary file`，跟文件在不在、是否可执行、用不用绝对路径都无关。在 systemd 发行版（Arch）上，systemd 挂载 `binfmt_misc` 会清掉 WSL 启动时注册的那条记录，而 `systemd-binfmt.service` 又因 `binfmt.d` 目录全空被条件跳过。永久修法（借 WSL 自己生成的 override）：
+
+```sh
+sudo mkdir -p /etc/binfmt.d
+printf ':WSLInterop:M::MZ::/init:P\n' | sudo tee /etc/binfmt.d/wsl-interop.conf
+sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sysinit 自动执行
+```
+
+临时修法：`sudo sh -c 'echo ":WSLInterop:M::MZ::/init:P" > /proc/sys/fs/binfmt_misc/register'`，或在 Windows 侧 `wsl --shutdown` 重启实例。配置层不再为这个坑兜底 —— 修好系统后 Neovim 自动探测即可。
 
 ---
 
