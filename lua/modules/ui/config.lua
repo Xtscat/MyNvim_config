@@ -67,39 +67,10 @@ function M.barbar()
     })
 end
 
--- Vertical scrollbar on the right. Colors are derived from the current
--- colorscheme's highlight groups so it adapts to edge/onedark.
-function M.scrollbar()
-    local function hex(n) return n and ("#%06x"):format(n) end
-    local function H(name) return vim.api.nvim_get_hl(0, { name = name, link = false }) end
-    local function pick(...)
-        for _, v in ipairs({ ... }) do
-            if v then
-                return v
-            end
-        end
-    end
-
-    local colors = {
-        orange = pick(hex(H("IncSearch").bg), hex(H("Search").bg), hex(H("IncSearch").fg), hex(H("Search").fg)),
-        purple = pick(hex(H("Identifier").fg), hex(H("Function").fg)),
-        error = hex(H("DiagnosticError").fg),
-        warning = hex(H("DiagnosticWarn").fg),
-        info = hex(H("DiagnosticInfo").fg),
-        hint = hex(H("DiagnosticHint").fg),
-    }
-
-    require("scrollbar").setup({
-        marks = {
-            Search = { color = colors.orange },
-            Error = { color = colors.error },
-            Warn = { color = colors.warning },
-            Info = { color = colors.info },
-            Hint = { color = colors.hint },
-            Misc = { color = colors.purple },
-        },
-    })
-end
+-- Vertical scrollbar on the right. No custom colors: nvim-scrollbar's own
+-- defaults (Search, Diagnostic*, Normal) follow the colorscheme and the plugin
+-- re-applies them on ColorScheme itself, so edge/onedark both work.
+function M.scrollbar() require("scrollbar").setup() end
 
 -- Indent guides + scope highlight.
 function M.indent_blankline()
@@ -118,6 +89,7 @@ end
 
 -- Highlight of the current line / word.
 function M.cursorline()
+    local cursorword_hl = { underline = true }
     require("nvim-cursorline").setup({
         -- Delayed current-line highlight: off while moving, lit after `timeout`
         -- ms of no movement (keeps the screen calm).
@@ -126,13 +98,21 @@ function M.cursorline()
             timeout = 50,
             number = true,
         },
-        -- Underlining every occurrence of the word under the cursor was too
-        -- noisy for reading code. Re-enable with a subtler `hl` if wanted.
+        -- Underline every occurrence of the word under the cursor.
         cursorword = {
-            enable = false,
+            enable = true,
             min_length = 3,
-            hl = { underline = true },
+            hl = cursorword_hl,
         },
+    })
+    -- nvim-cursorline only defines the CursorWord group once, at VimEnter.
+    -- Every colorscheme here starts with `hi clear` (edge.vim and onedark's
+    -- init both do), and sunset applies them from a timer *after* VimEnter,
+    -- so the group loses its attributes and the underline silently disappears
+    -- on every day/night switch. The group id survives `hi clear`, so simply
+    -- re-applying the attributes makes the existing matchadd() work again.
+    vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = function() vim.api.nvim_set_hl(0, "CursorWord", cursorword_hl) end,
     })
 end
 

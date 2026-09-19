@@ -7,11 +7,6 @@
 local M = {}
 
 function M.setup()
-    -- A few extra highlight groups snacks looks up by name.
-    vim.api.nvim_set_hl(0, "SnacksIndentGray", { fg = "#31353F" })
-    vim.api.nvim_set_hl(0, "SnacksPickerCursorline", { bg = "#2a2e38" })
-    vim.api.nvim_set_hl(0, "SnacksPickerBorder", { link = "FloatBorder" })
-
     require("snacks").setup({
         -- input: replaces vim.ui.input (used by :Vsp/:Hsp, LSP rename, ...).
         -- border must be "none" explicitly: snacks' default is `true`, which
