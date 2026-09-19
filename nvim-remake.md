@@ -56,7 +56,7 @@ lua/
       completion/              spec config        -- blink.cmp / friendly-snippets
       format/                  spec config keys   -- conform
     ft/
-      markdown/                spec config keys   -- markview / smark
+      markdown/                spec config keys   -- render-markdown / smark
     build/                     spec config keys   -- cmake-tools
 after/ftplugin/{c,cpp,cuda}.lua                    -- 纯 buffer-local 选项（2 空格缩进）
 formatters/                                        -- 从 $HOME 抄来的全局格式化配置（打包用）

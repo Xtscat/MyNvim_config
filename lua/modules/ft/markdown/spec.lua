@@ -9,6 +9,7 @@ local function cfg(fn)
 end
 
 return {
-    { "OXY2DEV/markview.nvim", lazy = false, config = cfg("markview") },
+    -- Renderer only; list *editing* is smark's job (see keys.lua).
+    { "MeanderingProgrammer/render-markdown.nvim", lazy = false, config = cfg("render_markdown") },
     { "yutanagano/smark.nvim", config = cfg("smark") },
 }
