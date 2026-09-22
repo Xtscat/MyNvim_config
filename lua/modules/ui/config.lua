@@ -8,22 +8,19 @@ local M = {}
 -- Day/night colorscheme switching. sunset calls day_callback/night_callback
 -- based on sunrise/sunset at the given coordinates.
 function M.sunset()
-    -- Both themes come from onedark.nvim: "light" for the day, "warmer" for
-    -- the night. The style must go through setup() -- onedark reads it from
-    -- vim.g.onedark_config, and assigning require("onedark").style does
-    -- nothing (no __newindex). Note that M.colorscheme() force-keeps
-    -- style = "light" as long as it is set, so the night callback has to
-    -- write the dark style back explicitly, not just set 'background'.
-    local function use(style, background)
-        vim.opt.background = background
-        require("onedark").setup({ style = style })
-        vim.cmd.colorscheme("onedark")
-    end
+    local onedark = require("onedark")
     require("sunset").setup({
         latitude = 34.26111,
         longitude = 108.94250,
-        day_callback = function() use("light", "light") end,
-        night_callback = function() use("warmer", "dark") end,
+        day_callback = function()
+            vim.opt.background = "light"
+            vim.cmd.colorscheme("edge")
+        end,
+        night_callback = function()
+            vim.opt.background = "dark"
+            onedark.style = "warmer"
+            vim.cmd.colorscheme("onedark")
+        end,
     })
 end
 
