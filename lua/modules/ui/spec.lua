@@ -12,7 +12,10 @@ end
 return {
     -- colorscheme (day/night switch)
     { "JManch/sunset.nvim", lazy = false, priority = 1000, config = cfg("sunset") },
-    { "sainnhe/edge", lazy = false },
+    -- day: One Half Light -- sonph's VSCode palette, ported to Lua with
+    -- lualine/gitsigns/blink/treesitter integrations. night: navarasu onedark.
+    -- (Was: sainnhe/edge for the day; dropped 2026-09-22.)
+    { "ClearAspect/onehalf", lazy = false },
     { "navarasu/onedark.nvim", lazy = false },
 
     -- widgets

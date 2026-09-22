@@ -5,23 +5,75 @@
 
 local M = {}
 
+-- One Half Light (sonph) palette, for the highlight groups the colorscheme port
+-- does not set itself.
+local DAY = {
+    fg = "#383a42",
+    dimmed = "#9d9d9f",
+    bg = "#fafafa",
+    yellow = "#c18401",
+    purple = "#a626a4",
+}
+
+-- Filled in after the day colorscheme runs. barbar only links BufferCurrent /
+-- BufferVisible / ... to its own defaults once, at module load, and `hi clear`
+-- drops those links -- navarasu/onedark spells out the flavoured ones, so the
+-- day theme has to do the same (same structure as onedark's, with One Half
+-- colours).
+local day_extras = {
+    BufferCurrent = { bold = true },
+    BufferCurrentMod = { fg = DAY.yellow, bold = true, italic = true },
+    BufferCurrentSign = { fg = DAY.purple },
+    BufferVisible = { fg = DAY.dimmed, bg = DAY.bg },
+    BufferVisibleMod = { fg = DAY.yellow, bg = DAY.bg, italic = true },
+    BufferVisibleIndex = { fg = DAY.dimmed, bg = DAY.bg },
+    BufferVisibleSign = { fg = DAY.dimmed, bg = DAY.bg },
+    BufferInactiveMod = { fg = DAY.dimmed, bg = DAY.bg, italic = true },
+}
+
+local function apply_day_extras()
+    if vim.g.colors_name ~= "onehalflight" then return end
+    for group, hl in pairs(day_extras) do
+        vim.api.nvim_set_hl(0, group, hl)
+    end
+end
+
 -- Day/night colorscheme switching. sunset calls day_callback/night_callback
--- based on sunrise/sunset at the given coordinates.
+-- based on sunrise/sunset at the given coordinates. The two callbacks are
+-- public (M.theme_day / M.theme_night) so they can be flipped by hand:
+--   :lua require("modules.ui.config").theme_day()
 function M.sunset()
-    local onedark = require("onedark")
+    -- Keeps the day theme patched up on manual `:colorscheme onehalflight` too.
+    vim.api.nvim_create_autocmd("ColorScheme", { callback = apply_day_extras })
     require("sunset").setup({
         latitude = 34.26111,
         longitude = 108.94250,
-        day_callback = function()
-            vim.opt.background = "light"
-            vim.cmd.colorscheme("edge")
-        end,
-        night_callback = function()
-            vim.opt.background = "dark"
-            onedark.style = "warmer"
-            vim.cmd.colorscheme("onedark")
-        end,
+        day_callback = M.theme_day,
+        night_callback = M.theme_night,
     })
+end
+
+-- One Half Light -- the palette of sonph's VSCode theme, which is what the day
+-- theme is supposed to look like. `colors_name` is cleared first on purpose:
+-- changing 'background' makes Neovim re-source the active colorscheme, and the
+-- day theme's file hardcodes light, so it would immediately undo the switch
+-- (ending in a light palette applied on top of 'background' = dark).
+function M.theme_day()
+    vim.g.colors_name = nil
+    vim.opt.background = "light"
+    vim.cmd.colorscheme("onehalflight")
+    apply_day_extras()
+end
+
+-- navarasu/onedark, the dark theme this config has always used. The `style`
+-- option has to be written through setup(): it lives in vim.g.onedark_config, so
+-- `require("onedark").style = "dark"` is a silent no-op, and onedark pins
+-- itself to "light" for as long as that option says "light".
+function M.theme_night()
+    vim.g.colors_name = nil
+    vim.opt.background = "dark"
+    require("onedark").setup({ style = "dark" })
+    vim.cmd.colorscheme("onedark")
 end
 
 -- Bottom statusline (global, because laststatus=3).

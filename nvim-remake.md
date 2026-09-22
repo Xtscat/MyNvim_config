@@ -157,7 +157,7 @@ sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sys
 | **删除** lazygit | 花里胡哨，用不上 |
 | **删除** snacks.terminal | 终端走 toggleterm，冗余 |
 | **删除** mason-lspconfig.nvim | 声明了但从未 `setup()`，纯死插件 |
-| **删除** tokyonight / onenord | 主题只用 edge / onedark |
+| **删除** tokyonight / onenord | 主题只用 onehalf（白天）+ onedark（夜晚）；edge 于 2026-09-22 移除 |
 | **ui + window 合并** | 窗口布局是 UI 的一部分 |
 | **git 独立成模块** | 从 `ui` 里拆出 gitsigns / git-conflict |
 | **editor 定义** | "和 LSP 无关、和 UI 无关的编辑优化"；因此 hlslens（检索）移到 `nav` |
@@ -189,7 +189,7 @@ sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sys
 
 | 项 | 决定 |
 |---|---|
-| 主题 | `sunset.nvim` 按时间切换：白天 `edge`，夜晚 `onedark`（warmer） |
+| 主题 | `sunset.nvim` 按时间切换：白天 `ClearAspect/onehalf` 的 `onehalflight`（= sonph 的 One Half Light 调色板，插件自带 lualine/gitsigns/blink/treesitter 适配），夜晚 `navarasu/onedark`（默认 `dark` 风格，不是 `warmer`）。切换要点见下。 |
 | 状态栏 | `lualine`（底部，`laststatus=3` 全局） |
 | tabline | `barbar`（顶部，buffer 标签） |
 | winbar | `dropbar`（每个窗口顶部的面包屑） |
@@ -214,7 +214,13 @@ sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sys
 主要优化：
 
 - **cmake-tools 改为 `cmd` 懒加载**（原本 `lazy=false` 却带了 `cmd` 列表，`cmd` 完全失效），省下最大一块。
-- **删除 tokyonight / onenord**（`:colorscheme` 仍可用 edge/onedark）。
+- **删除 tokyonight / onenord**（`:colorscheme` 仍可用 onehalflight/onedark）。
+
+关于主题切换（`modules/ui/config.lua` 的 `M.theme_day` / `M.theme_night`，两个都是公开函数，可手动调）：
+
+- **换主题前必须先 `vim.g.colors_name = nil`**。改 `'background'` 会让 Neovim 重新 source 当前 colorscheme，而 `onehalflight` 的 colors 文件里硬写了 light，所以先设 `background` 会被它改回去，最后变成“浅色调色板 + background=dark”。
+- **onedark 的 `style` 只能通过 `setup({ style = ... })` 写**（它存在 `vim.g.onedark_config`，直接 `require("onedark").style = x` 是空操作）；而且只要那个 style 还是 `light`，`colorscheme onedark` 会一直保持浅色。夜晚因此显式写 `style = "dark"`。
+- **有几个高亮组插件不帮忙，得自己补**：barbar 的 `BufferCurrent`/`BufferVisible`/… 只在模块加载时 link 一次，`hi clear` 之后就没了（onedark 靠主题重写这些组，所以夜晚正常）。白天用 `day_extras` 补上（颜色取自 One Half Light 调色板），挂在 `ColorScheme` autocmd 上，所以手动 `:colorscheme onehalflight` 也一样。
 - **删除 LuaSnip**。查证 blink.cmp 的 `snippets` **default** preset 会直接从 runtimepath 读取 `friendly-snippets` 并用内置 `vim.snippet` 展开，LuaSnip 纯冗余。删掉后片段照常工作（lua 24 / c 73 / cpp 42 / python 67 / markdown 71 条），并**去掉 `make install_jsregexp` 这个需要 make + C 编译器的构建步骤**。
 - 当前：**42 个插件，0 错误**。
 
