@@ -14,7 +14,7 @@ Map.nmap("<leader>l", function()
         vim.notify("No file name for current buffer", vim.log.levels.WARN)
         return
     end
-    vim.fn.setreg("+", path)
+    require("utils.clipboard").yank(path)
     vim.notify(path .. "  (copied to clipboard)", vim.log.levels.INFO)
 end, "Copy Full Path to Clipboard")
 

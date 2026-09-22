@@ -114,10 +114,11 @@ order = {
 
 ### 2.5 剪切板（WSL / SSH / 本地）
 
-设置就在 `core/options.lua` 末尾，**没有单独文件**。思路是尽量不配置：
+设置入口在 `core/options.lua` 末尾；copy 的公共逻辑抽象在 `lua/utils/clipboard.lua`（`is_ssh` / `osc52` / `yank`），所有 copy 路径都该走它。思路是尽量不配置：
 
 - **WSL / 本地 Linux 桌面**：不写任何东西。Neovim 内置探测本来就按 `win32yank.exe`（WSL）→ `wl-copy` / `xclip` / `xsel`（本地）的顺序找工具（连 win32yank 的软链都自己 resolve），旧配置里手写的那段 win32yank 字典纯属多余，已删。
-- **SSH 远程**：唯一需要帮忙的情况。设 `g:clipboard` 为 OSC 52 —— 服务器上 yank 时把内容编码进转义序列，经 ssh 回到**本地**终端再写进本地剪切板。只要环境变量里有 `SSH_CONNECTION` / `SSH_CLIENT` / `SSH_TTY` 就启用。
+- **SSH 远程**：唯一需要帮忙的情况。不用 `g:clipboard` 字典，而是挂一个 `TextYankPost` autocmd 把 yank 的内容编码成 OSC 52 序列，经 ssh 回到**本地**终端再写进本地剪切板。只要环境变量里有 `SSH_CONNECTION` / `SSH_CLIENT` / `SSH_TTY` 就启用。
+  - `TextYankPost` 只覆盖操作符 yank（`y`/`d`/`x`/…）；用 `vim.fn.setreg()` 直接写寄存器的路径不会触发它，必须自己调 `require("utils.clipboard").yank()`（例如 `<leader>l` 复制完整路径）。
 - `'clipboard'` 固定 `unnamedplus`。
 
 OSC 52 默认**只写不读**：很多终端允许程序写剪切板但拒绝读（安全考虑），Neovim 内置的 OSC 52 paste 会阻塞等待终端响应，所以 `"+p` 默认不可用 —— 粘贴用终端自身的按键（Ctrl+Shift+V / 中键）；真想要就设 `vim.g.clipboard_osc52_paste = true`。实测一次 `yy` 只发一条 OSC 52 序列（`52;c;`），payload 正确。

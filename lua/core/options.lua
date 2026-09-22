@@ -79,13 +79,21 @@ opt.secure = true -- restrict unsafe commands in local rc files
 -- refuse to let programs read the clipboard; paste with the terminal's own paste
 -- key, or set vim.g.clipboard_osc52_paste = true to enable "+p.
 opt.clipboard = "unnamedplus"
-if vim.env.SSH_CONNECTION or vim.env.SSH_CLIENT or vim.env.SSH_TTY then
-    local osc52 = require("vim.ui.clipboard.osc52")
-    local no_paste = function() return {} end
-    g.clipboard = {
-        name = "OSC 52",
-        copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
-        paste = { ["+"] = no_paste, ["*"] = no_paste },
-        cache_enabled = 0,
-    }
+if require("utils.clipboard").is_ssh then
+    local cb = require("utils.clipboard")
+    -- Note: TextYankPost covers operator yanks (y/d/x/...). Register writes
+    -- done with vim.fn.setreg() do NOT fire it -- those must call
+    -- utils.clipboard.yank() themselves (e.g. the <leader>l path mapping).
+    vim.api.nvim_create_autocmd("TextYankPost", {
+        callback = function()
+            cb.osc52(vim.v.event.regcontents)
+        end,
+    })
+    -- local no_paste = function() return {} end
+    -- g.clipboard = {
+    --     name = "OSC 52",
+    --     copy = { ["+"] = osc52.copy("+"), ["*"] = osc52.copy("*") },
+    --     paste = { ["+"] = no_paste, ["*"] = no_paste },
+    --     cache_enabled = 0,
+    -- }
 end
