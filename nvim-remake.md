@@ -189,7 +189,7 @@ sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sys
 
 | 项 | 决定 |
 |---|---|
-| 主题 | `sunset.nvim` 按时间切换：白天 `sainnhe/edge`（light），夜晚 `navarasu/onedark`（默认 `dark` 风格，不是 `warmer`）。切换要点见下。 |
+| 主题 | `sunset.nvim` 按时间切换：白天 = `catppuccin/nvim` 引擎 + 我们自己的 One Half Light 调色板（`modules/ui/themes/onehalf_latte.lua`，为了不刺眼调过底色/对比度/步进），夜晚 = `navarasu/onedark`（默认 `dark` 风格）。`edge` 保留为备用白天主题（`M.theme_day_edge`）。切换要点见下。 |
 | 状态栏 | `lualine`（底部，`laststatus=3` 全局） |
 | tabline | `barbar`（顶部，buffer 标签） |
 | winbar | `dropbar`（每个窗口顶部的面包屑） |
@@ -222,7 +222,9 @@ sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sys
 
 - **换主题前必须 `vim.g.colors_name = nil`**。改 `'background'` 会让 Neovim 重新 source 当前 colorscheme；不先清掉就会白白把旧主题重跑一遍（旧主题的 colors 文件里硬写了各自的变体，还可能反过来把 `background` 改回去，最后变成“浅色调色板 + background=dark”）。
 - **onedark 的 `style` 只能通过 `setup({ style = ... })` 写**（它存在 `vim.g.onedark_config`，直接 `require("onedark").style = x` 是空操作）；而且只要那个 style 还是 `light`，`colorscheme onedark` 会一直保持浅色。夜晚因此显式写 `style = "dark"`（和以前那行空操作实际效果一致，只是现在真的写进去了）。
-- **浅色主题都试过一轮**：onedark 自带 light（太丑）、`ClearAspect/onehalf`、`sonph/onehalf` 原版（白得刺眼）都被否了，最后回到 `edge`。“适配的东西少”是 edge 的老问题（它不写 `SnacksPicker*` 之外的很多插件组），但比底色难看的代价小。
+- **浅色走过的路**：onedark 自带 light（太丑）→ `ClearAspect/onehalf`（灰块）→ `sonph/onehalf` 原版（白得刺眼）→ 回到 `edge` → 最后选中「**catppuccin 当引擎 + One Half Light 的色相**」。为什么不是直接用一个现成的 one half：原版只有 2016 年的覆盖范围（自己动手的组 31 个、treesitter/LSP 插件全是 0）、移植版只有 76 个且作者自述只在自有配置测过；catppuccin 是三者里唯一同时具备 ① 三层覆盖（含 Neovim 0.12 新组 PmenuKind/PmenuBorder/OkMsg/Dimmed）② ~70 张插件方言表 ③ 调色一等公民（`color_overrides`/`highlight_overrides`）的。
+- **调色板文件 `modules/ui/themes/onehalf_latte.lua`**：色相取自 One Half Light 自己的定义（VSCode 的 `OneHalfLight.tmTheme` + `vim/colors/onehalflight.vim`），刺眼的那三项按实测调过：底色 `#fafafa`→`#f1f2f4`（发光量 −6.3%）、正文对比 10.1:1→7.45:1、面板/边框步进 0%→4.4%/7.0%、强调色饱和度 ×0.85；搜索高亮从原版“白底士黄块”改成 25/40/60% 的淡黄。catppuccin 有 26 个色槽而 One Half 只有 6 个色相，所以色相复用是故意的（变量/标签/property 红、函数蓝、关键字紫、类型与数字琥珀、字符串绿、转义青、注释 `#a0a1a7` 斜体、参数与运算符=正文色、选区 `#bfceff`）。
+- **实测覆盖（139 个我们实际用到的组，headless 查“解析不到颜色”的数量）**：latte 17、edge 18、onedark 25。也就是在我们这套栈上两者持平，差别在各自缺的组（catppuccin 有 Outline*/Fidget*/DropBar*，edge 有 SnacksIndent*）；catppuccin 的真正优势是“以后新插件/新 Neovim 组会持续跟上”和“颜色可控”。
 
 > 注意：旧配置的 `snippets.expand` 指向 LuaSnip，而 `active`/`jump` 仍是 `vim.snippet`（不一致）；现在统一为内置实现。补全**列表项内容不变**（两边都是 default provider）。
 

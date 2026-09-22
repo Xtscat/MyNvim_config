@@ -12,9 +12,12 @@ end
 return {
     -- colorscheme (day/night switch)
     { "JManch/sunset.nvim", lazy = false, priority = 1000, config = cfg("sunset") },
-    -- day: sainnhe/edge (light). night: navarasu/onedark. Both were tried
-    -- against alternative light themes on 2026-09-22 (onedark's own light
-    -- variant, ClearAspect/onehalf, sonph/onehalf) and edge won.
+    -- day: catppuccin's engine carrying a One Half Light palette (see
+    -- modules/ui/themes/onehalf_latte.lua) -- catppuccin has by far the widest
+    -- plugin/treesitter/LSP coverage, the colours are ours. `edge` stays
+    -- installed as the fallback day theme (M.theme_day_edge). night:
+    -- navarasu/onedark.
+    { "catppuccin/nvim", name = "catppuccin", lazy = false, config = cfg("catppuccin") },
     { "sainnhe/edge", lazy = false },
     { "navarasu/onedark.nvim", lazy = false },
 

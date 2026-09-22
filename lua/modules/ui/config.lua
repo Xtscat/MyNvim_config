@@ -18,10 +18,30 @@ function M.sunset()
     })
 end
 
--- sainnhe/edge, light variant. `colors_name` is cleared first on purpose:
--- changing 'background' makes Neovim re-source the active colorscheme, so the
--- old theme would be re-applied once for nothing before the switch.
+-- catppuccin is only the engine for the day theme: it brings the coverage
+-- (core UI groups, treesitter/LSP, ~70 per-plugin tables) and modules/ui/themes/
+-- onehalf_latte.lua brings One Half Light's colours, with the grey ramp and
+-- body contrast adjusted so it is not glaring (see that file for the numbers).
+function M.catppuccin()
+    local theme = require("modules.ui.themes.onehalf_latte")
+    require("catppuccin").setup({
+        flavour = "latte",
+        color_overrides = { latte = theme.palette },
+        highlight_overrides = { latte = theme.highlights },
+    })
+end
+
+-- One Half Light on catppuccin's engine. `colors_name` is cleared first on
+-- purpose: changing 'background' makes Neovim re-source the active colorscheme,
+-- so the old theme would be re-applied for nothing before the switch.
 function M.theme_day()
+    vim.g.colors_name = nil
+    vim.opt.background = "light"
+    vim.cmd.colorscheme("catppuccin-latte")
+end
+
+-- The previous day theme, kept for A/B while the engine swap settles.
+function M.theme_day_edge()
     vim.g.colors_name = nil
     vim.opt.background = "light"
     vim.cmd.colorscheme("edge")

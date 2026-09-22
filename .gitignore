@@ -1,0 +1,4 @@
+# Neovim 0.12's vim.pack writes this on every start: it tracks the two leftover
+# plugins in ~/.local/share/nvim/site/pack/core/opt (gitsigns.nvim,
+# tokyonight.nvim), which this config does not use -- lazy.nvim manages plugins.
+nvim-pack-lock.json
