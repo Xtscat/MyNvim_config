@@ -185,8 +185,10 @@ function M.edgy()
                 -- only dock the horizontal (non-floating) toggleterm
                 filter = function(_, win)
                     local cfg = vim.api.nvim_win_get_config(win)
+                    -- terminal 1 may not exist yet (`:ToggleTerm 2`), and this
+                    -- runs from edgy's WinResized autocmd -> guard the lookup.
                     local term = require("toggleterm.terminal").get(1)
-                    return cfg.relative == "" and term.direction == "horizontal"
+                    return cfg.relative == "" and term ~= nil and term.direction == "horizontal"
                 end,
             },
         },
