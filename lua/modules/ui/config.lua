@@ -38,6 +38,20 @@ function M.theme_day()
     vim.g.colors_name = nil
     vim.opt.background = "light"
     vim.cmd.colorscheme("catppuccin-latte")
+    fix_lsp_groups()
+end
+
+-- The dark theme defines the @lsp.* semantic-token groups explicitly (navarasu
+-- colours `property` cyan and friends); nothing here overrides them, so they
+-- would keep those colours in the light theme -- e.g. table keys in a Lua file
+-- rendering pale cyan. Neovim already links every @lsp.type.X to its @X capture
+-- by default, so dropping the leftovers puts the theme back in charge.
+function fix_lsp_groups()
+    for _, group in ipairs(vim.fn.getcompletion("", "highlight")) do
+        if group:match("^@lsp%.") then
+            pcall(vim.cmd, "hi clear " .. group)
+        end
+    end
 end
 
 -- The previous day theme, kept for A/B while the engine swap settles.

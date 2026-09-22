@@ -170,6 +170,85 @@ M.highlights = {
 
     -- gitsigns' staged-diff preview (same stale-group story).
     GitSignsDiffStaged = { link = "DiffChange" },
+
+    -- -- 以下是一整类问题的收尾：某个组被 *前一个主题* 显式定义过，而当前主题
+    -- （catppuccin）的适配表里没有它，于是它带着深色主题的颜色活下来。上面
+    -- neo-tree / outline / git-conflict / Terminal / @lsp.* 都是这一类。
+    -- 能 link 的就 link 到本主题里语义相同的组。
+
+    -- 标准 diff 组
+    Added = { link = "DiffAdd" },
+    Changed = { link = "DiffChange" },
+    Removed = { link = "DiffDelete" },
+
+    -- markdown 标题（treesitter 捕作），原版是 onedark 的红/紫/橙轮换
+    ["@markup.heading.1"] = { link = "@markup.heading" },
+    ["@markup.heading.2"] = { link = "@markup.heading" },
+    ["@markup.heading.3"] = { link = "@markup.heading" },
+    ["@markup.heading.4"] = { link = "@markup.heading" },
+    ["@markup.heading.5"] = { link = "@markup.heading" },
+    ["@markup.heading.6"] = { link = "@markup.heading" },
+    ["@markup.raw.block"] = { link = "@markup.raw" },
+    ["@module.builtin"] = { link = "@module" },
+    ["@variable.parameter.builtin"] = { link = "@variable.parameter" },
+    ["@attribute.builtin"] = { link = "@attribute" },
+    ["@conceal"] = { link = "Conceal" },
+    ["@none"] = {}, -- 语义上就是“不作高亮”
+
+    -- neo-tree 的淡化文字（dotfile 等）
+    NeoTreeDotfile = { link = "NeoTreeDimText" },
+    NeoTreeFadeText1 = { link = "NeoTreeDimText" },
+    NeoTreeFadeText2 = { link = "NeoTreeDimText" },
+    NeoTreeFileStats = { link = "NeoTreeDimText" },
+    NeoTreeFileStatsHeader = { link = "NeoTreeDimText" },
+    NeoTreeMessage = { link = "NeoTreeDimText" },
+
+    -- picker 标题
+    SnacksPickerTitle = { link = "Title" },
+
+    -- gitsigns: 行/行号变体，以及一整套 staged 变体
+    GitSignsAddLn = { link = "GitSignsAdd" },
+    GitSignsAddNr = { link = "GitSignsAdd" },
+    GitSignsChangeLn = { link = "GitSignsChange" },
+    GitSignsChangeNr = { link = "GitSignsChange" },
+    GitSignsDeleteLn = { link = "GitSignsDelete" },
+    GitSignsDeleteNr = { link = "GitSignsDelete" },
+
+    -- ibl 的旧名称 / whitespace 字符
+    IblWhitespace = { link = "IblIndent" },
+    IndentBlanklineChar = { link = "IblIndent" },
+    IndentBlanklineContextChar = { link = "IblScope" },
+
+    -- 旧版诊断组
+    DiagnosticDeprecated = { link = "DiagnosticWarn" },
+    DiagnosticUnnecessary = { link = "DiagnosticHint" },
+    DiagnosticVirtualTextDeprecated = { link = "DiagnosticVirtualTextWarn" },
+    DiagnosticVirtualTextUnnecessary = { link = "DiagnosticVirtualTextHint" },
+
+    -- Vim 自带 c/cpp 语法（未接 treesitter 的 buffer）
+    cInclude = { link = "Include" },
+    cDefine = { link = "Define" },
+    cStorageClass = { link = "StorageClass" },
+    cppStatement = { link = "Statement" },
 }
+
+-- gitsigns 的 staged 变体（*StagedAdd*、*StagedChangedelete* …）全部 link 回
+-- 对应的普通组；前缀短的先匹配会误伤（Changedelete 含 Change），所以按长度排。
+do
+    local families = {
+        "Changedelete",
+        "Topdelete",
+        "Untracked",
+        "Add",
+        "Change",
+        "Delete",
+    }
+    local suffixes = { "", "Cul", "Ln", "Nr" }
+    for _, family in ipairs(families) do
+        for _, suffix in ipairs(suffixes) do
+            M.highlights["GitSignsStaged" .. family .. suffix] = { link = "GitSigns" .. family }
+        end
+    end
+end
 
 return M
