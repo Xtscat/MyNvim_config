@@ -5,37 +5,19 @@
 
 local M = {}
 
--- One Half Light (sonph) palette, for the highlight groups the colorscheme port
--- does not set itself.
-local DAY = {
-    fg = "#383a42",
-    dimmed = "#9d9d9f",
-    bg = "#fafafa",
-    yellow = "#c18401",
-    purple = "#a626a4",
-}
-
--- Filled in after the day colorscheme runs. barbar only links BufferCurrent /
--- BufferVisible / ... to its own defaults once, at module load, and `hi clear`
--- drops those links -- navarasu/onedark spells out the flavoured ones, so the
--- day theme has to do the same (same structure as onedark's, with One Half
--- colours).
-local day_extras = {
-    BufferCurrent = { bold = true },
-    BufferCurrentMod = { fg = DAY.yellow, bold = true, italic = true },
-    BufferCurrentSign = { fg = DAY.purple },
-    BufferVisible = { fg = DAY.dimmed, bg = DAY.bg },
-    BufferVisibleMod = { fg = DAY.yellow, bg = DAY.bg, italic = true },
-    BufferVisibleIndex = { fg = DAY.dimmed, bg = DAY.bg },
-    BufferVisibleSign = { fg = DAY.dimmed, bg = DAY.bg },
-    BufferInactiveMod = { fg = DAY.dimmed, bg = DAY.bg, italic = true },
-}
-
-local function apply_day_extras()
+-- sonph's onehalflight.vim is a 2016-era Vim theme: it knows nothing about
+-- floats or NormalNC, and Neovim 0.11 draws window separators with WinSeparator
+-- instead of the VertSplit it sets. Without this, edgy's docks and trouble
+-- inherit the builtin NormalFloat (#eef1f8) and neo-tree's unfocused window
+-- resolves NormalNC to nothing -- that is the grey look, next to a #fafafa
+-- editor. Values are the theme's own: its VSCode version paints sideBar /
+-- panel / statusBar with editor.background (#fafafa), and VertSplit is #f0f0f0.
+local function fix_onehalflight()
     if vim.g.colors_name ~= "onehalflight" then return end
-    for group, hl in pairs(day_extras) do
-        vim.api.nvim_set_hl(0, group, hl)
-    end
+    vim.api.nvim_set_hl(0, "NormalNC", { fg = "#383a42", bg = "#fafafa" })
+    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#fafafa" })
+    vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#d4d4d4", bg = "#fafafa" })
+    vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#f0f0f0", bg = "#fafafa" })
 end
 
 -- Day/night colorscheme switching. sunset calls day_callback/night_callback
@@ -43,8 +25,8 @@ end
 -- public (M.theme_day / M.theme_night) so they can be flipped by hand:
 --   :lua require("modules.ui.config").theme_day()
 function M.sunset()
-    -- Keeps the day theme patched up on manual `:colorscheme onehalflight` too.
-    vim.api.nvim_create_autocmd("ColorScheme", { callback = apply_day_extras })
+    -- So a manual `:colorscheme onehalflight` looks like sunset's day switch.
+    vim.api.nvim_create_autocmd("ColorScheme", { callback = fix_onehalflight })
     require("sunset").setup({
         latitude = 34.26111,
         longitude = 108.94250,
@@ -53,16 +35,16 @@ function M.sunset()
     })
 end
 
--- One Half Light -- the palette of sonph's VSCode theme, which is what the day
--- theme is supposed to look like. `colors_name` is cleared first on purpose:
--- changing 'background' makes Neovim re-source the active colorscheme, and the
--- day theme's file hardcodes light, so it would immediately undo the switch
--- (ending in a light palette applied on top of 'background' = dark).
+-- One Half Light (sonph/onehalf, the original; see the spec for how the repo's
+-- vim/ subtree gets onto 'runtimepath'). `colors_name` is cleared first on
+-- purpose: changing 'background' makes Neovim re-source the active colorscheme,
+-- and both colors files here hardcode their variant, so the switch would be
+-- undone and end up as a light palette on top of 'background' = dark.
 function M.theme_day()
     vim.g.colors_name = nil
     vim.opt.background = "light"
     vim.cmd.colorscheme("onehalflight")
-    apply_day_extras()
+    fix_onehalflight()
 end
 
 -- navarasu/onedark, the dark theme this config has always used. The `style`

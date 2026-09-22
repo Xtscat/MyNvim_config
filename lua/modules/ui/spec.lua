@@ -12,10 +12,20 @@ end
 return {
     -- colorscheme (day/night switch)
     { "JManch/sunset.nvim", lazy = false, priority = 1000, config = cfg("sunset") },
-    -- day: One Half Light -- sonph's VSCode palette, ported to Lua with
-    -- lualine/gitsigns/blink/treesitter integrations. night: navarasu onedark.
-    -- (Was: sainnhe/edge for the day; dropped 2026-09-22.)
-    { "ClearAspect/onehalf", lazy = false },
+    -- day: sonph/onehalf's One Half Light -- the original VSCode palette.
+    -- night: navarasu onedark. (2026-09-22: tried and rejected onedark's own
+    -- light variant, sainnhe/edge, and the ClearAspect/onehalf Lua port.)
+    {
+        "sonph/onehalf",
+        lazy = false,
+        -- The repo keeps the Vim colorschemes (plus iTerm/Sublime variants) under
+        -- vim/, so that subtree has to be on 'runtimepath' for
+        -- `:colorscheme onehalflight` to resolve.
+        config = function()
+            local root = require("lazy.core.config").options.root
+            vim.opt.runtimepath:append(root .. "/onehalf/vim")
+        end,
+    },
     { "navarasu/onedark.nvim", lazy = false },
 
     -- widgets
