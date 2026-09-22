@@ -157,7 +157,7 @@ sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sys
 | **删除** lazygit | 花里胡哨，用不上 |
 | **删除** snacks.terminal | 终端走 toggleterm，冗余 |
 | **删除** mason-lspconfig.nvim | 声明了但从未 `setup()`，纯死插件 |
-| **删除** tokyonight / onenord | 主题只用 onehalf（白天）+ onedark（夜晚）；edge 于 2026-09-22 移除 |
+| **删除** tokyonight / onenord | 主题只用 edge（白天）+ onedark（夜晚） |
 | **ui + window 合并** | 窗口布局是 UI 的一部分 |
 | **git 独立成模块** | 从 `ui` 里拆出 gitsigns / git-conflict |
 | **editor 定义** | "和 LSP 无关、和 UI 无关的编辑优化"；因此 hlslens（检索）移到 `nav` |
@@ -189,7 +189,7 @@ sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sys
 
 | 项 | 决定 |
 |---|---|
-| 主题 | `sunset.nvim` 按时间切换：白天 `sonph/onehalf` 的 `onehalflight`（原版 One Half Light，VSCode 那个主题的作者本人写的），夜晚 `navarasu/onedark`（默认 `dark` 风格，不是 `warmer`）。切换要点见下。 |
+| 主题 | `sunset.nvim` 按时间切换：白天 `sainnhe/edge`（light），夜晚 `navarasu/onedark`（默认 `dark` 风格，不是 `warmer`）。切换要点见下。 |
 | 状态栏 | `lualine`（底部，`laststatus=3` 全局） |
 | tabline | `barbar`（顶部，buffer 标签） |
 | winbar | `dropbar`（每个窗口顶部的面包屑） |
@@ -214,16 +214,15 @@ sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sys
 主要优化：
 
 - **cmake-tools 改为 `cmd` 懒加载**（原本 `lazy=false` 却带了 `cmd` 列表，`cmd` 完全失效），省下最大一块。
-- **删除 tokyonight / onenord**（`:colorscheme` 仍可用 onehalflight/onedark）。
+- **删除 tokyonight / onenord**（`:colorscheme` 仍可用 edge/onedark）。
 - **删除 LuaSnip**。查证 blink.cmp 的 `snippets` **default** preset 会直接从 runtimepath 读取 `friendly-snippets` 并用内置 `vim.snippet` 展开，LuaSnip 纯冗余。删掉后片段照常工作（lua 24 / c 73 / cpp 42 / python 67 / markdown 71 条），并**去掉 `make install_jsregexp` 这个需要 make + C 编译器的构建步骤**。
 - 当前：**41 个插件，0 错误**。
 
 关于主题切换（`modules/ui/config.lua` 的 `M.theme_day` / `M.theme_night`，两个都是公开函数，可手动调）：
 
-- **换主题前必须先 `vim.g.colors_name = nil`**。改 `'background'` 会让 Neovim 重新 source 当前 colorscheme，而 `onehalflight` 的 colors 文件里硬写了 light，所以先设 `background` 会被它改回去，最后变成“浅色调色板 + background=dark”。
-- **onedark 的 `style` 只能通过 `setup({ style = ... })` 写**（它存在 `vim.g.onedark_config`，直接 `require("onedark").style = x` 是空操作）；而且只要那个 style 还是 `light`，`colorscheme onedark` 会一直保持浅色。夜晚因此显式写 `style = "dark"`。
-- **白天主题要补三个组**：sonph 的 `onehalflight.vim` 是 2016 年左右的 Vim 主题，`NormalNC`/`NormalFloat` 完全不提，`VertSplit` 也早已被 Neovim 的 `WinSeparator` 取代 → 于是 edgy 的 dock、trouble 浮窗继承内置 `NormalFloat`（#eef1f8，看着就是灰块），neo-tree 未聚焦时 `NormalNC` 链到底什么都没有。`fix_onehalflight()` 按主题自己的 VSCode 版本（`vscode/onehalf-light` 里 `sideBar`/`panel`/`statusBar` = `editor.background` #fafafa，`VertSplit` #f0f0f0）补上，并挂在 `ColorScheme` 上，所以手动 `:colorscheme onehalflight` 也一样。
-- **注意**：原版主题没有任何插件适配（barbar / blink / which-key / snacks / gitsigns 都没有），所以在白天 barbar 的 `BufferCurrent`/`BufferVisible`/… 是空的（`onedark` 自己写了一套，所以夜里正常）—— tabline 的“当前 buffer 加粗 / 修改标记变色”白天会没有。要补就是 8 行（2026-09-22 的 `day_extras` 在 git 历史里），或者换带适配的 Lua 移植版（`ClearAspect/onehalf`）。
+- **换主题前必须 `vim.g.colors_name = nil`**。改 `'background'` 会让 Neovim 重新 source 当前 colorscheme；不先清掉就会白白把旧主题重跑一遍（旧主题的 colors 文件里硬写了各自的变体，还可能反过来把 `background` 改回去，最后变成“浅色调色板 + background=dark”）。
+- **onedark 的 `style` 只能通过 `setup({ style = ... })` 写**（它存在 `vim.g.onedark_config`，直接 `require("onedark").style = x` 是空操作）；而且只要那个 style 还是 `light`，`colorscheme onedark` 会一直保持浅色。夜晚因此显式写 `style = "dark"`（和以前那行空操作实际效果一致，只是现在真的写进去了）。
+- **浅色主题都试过一轮**：onedark 自带 light（太丑）、`ClearAspect/onehalf`、`sonph/onehalf` 原版（白得刺眼）都被否了，最后回到 `edge`。“适配的东西少”是 edge 的老问题（它不写 `SnacksPicker*` 之外的很多插件组），但比底色难看的代价小。
 
 > 注意：旧配置的 `snippets.expand` 指向 LuaSnip，而 `active`/`jump` 仍是 `vim.snippet`（不一致）；现在统一为内置实现。补全**列表项内容不变**（两边都是 default provider）。
 

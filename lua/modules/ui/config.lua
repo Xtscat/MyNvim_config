@@ -5,28 +5,11 @@
 
 local M = {}
 
--- sonph's onehalflight.vim is a 2016-era Vim theme: it knows nothing about
--- floats or NormalNC, and Neovim 0.11 draws window separators with WinSeparator
--- instead of the VertSplit it sets. Without this, edgy's docks and trouble
--- inherit the builtin NormalFloat (#eef1f8) and neo-tree's unfocused window
--- resolves NormalNC to nothing -- that is the grey look, next to a #fafafa
--- editor. Values are the theme's own: its VSCode version paints sideBar /
--- panel / statusBar with editor.background (#fafafa), and VertSplit is #f0f0f0.
-local function fix_onehalflight()
-    if vim.g.colors_name ~= "onehalflight" then return end
-    vim.api.nvim_set_hl(0, "NormalNC", { fg = "#383a42", bg = "#fafafa" })
-    vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#fafafa" })
-    vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#d4d4d4", bg = "#fafafa" })
-    vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#f0f0f0", bg = "#fafafa" })
-end
-
 -- Day/night colorscheme switching. sunset calls day_callback/night_callback
 -- based on sunrise/sunset at the given coordinates. The two callbacks are
 -- public (M.theme_day / M.theme_night) so they can be flipped by hand:
 --   :lua require("modules.ui.config").theme_day()
 function M.sunset()
-    -- So a manual `:colorscheme onehalflight` looks like sunset's day switch.
-    vim.api.nvim_create_autocmd("ColorScheme", { callback = fix_onehalflight })
     require("sunset").setup({
         latitude = 34.26111,
         longitude = 108.94250,
@@ -35,16 +18,13 @@ function M.sunset()
     })
 end
 
--- One Half Light (sonph/onehalf, the original; see the spec for how the repo's
--- vim/ subtree gets onto 'runtimepath'). `colors_name` is cleared first on
--- purpose: changing 'background' makes Neovim re-source the active colorscheme,
--- and both colors files here hardcode their variant, so the switch would be
--- undone and end up as a light palette on top of 'background' = dark.
+-- sainnhe/edge, light variant. `colors_name` is cleared first on purpose:
+-- changing 'background' makes Neovim re-source the active colorscheme, so the
+-- old theme would be re-applied once for nothing before the switch.
 function M.theme_day()
     vim.g.colors_name = nil
     vim.opt.background = "light"
-    vim.cmd.colorscheme("onehalflight")
-    fix_onehalflight()
+    vim.cmd.colorscheme("edge")
 end
 
 -- navarasu/onedark, the dark theme this config has always used. The `style`
