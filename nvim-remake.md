@@ -157,7 +157,7 @@ sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sys
 | **删除** lazygit | 花里胡哨，用不上 |
 | **删除** snacks.terminal | 终端走 toggleterm，冗余 |
 | **删除** mason-lspconfig.nvim | 声明了但从未 `setup()`，纯死插件 |
-| **删除** tokyonight / onenord | 主题只用 onedark（白天 light / 夜晚 warmer；edge 作为备选装着） |
+| **删除** tokyonight / onenord | 主题只用 edge / onedark |
 | **ui + window 合并** | 窗口布局是 UI 的一部分 |
 | **git 独立成模块** | 从 `ui` 里拆出 gitsigns / git-conflict |
 | **editor 定义** | "和 LSP 无关、和 UI 无关的编辑优化"；因此 hlslens（检索）移到 `nav` |
@@ -189,7 +189,7 @@ sudo systemctl start systemd-binfmt   # 目录非空后，之后每次开机 sys
 
 | 项 | 决定 |
 |---|---|
-| 主题 | `sunset.nvim` 按时间切换：白天 `onedark` 的 `light` 变体，夜晚 `onedark`（warmer）。之前白天用 `edge`，2026-09-22 换成 onedark light（插件高亮覆盖更全；edge 仍装着，随时可切回）。两个回调都必须走 `require("onedark").setup({ style = ... })`，直接赋值 `require("onedark").style` 是空操作，而且只要配置里的 style 还是 `light`，`:colorscheme onedark` 会一直保持浅色 |
+| 主题 | `sunset.nvim` 按时间切换：白天 `edge`，夜晚 `onedark`（warmer） |
 | 状态栏 | `lualine`（底部，`laststatus=3` 全局） |
 | tabline | `barbar`（顶部，buffer 标签） |
 | winbar | `dropbar`（每个窗口顶部的面包屑） |
