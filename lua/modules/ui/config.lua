@@ -37,8 +37,10 @@ end
 function M.theme_day()
     vim.g.colors_name = nil
     vim.opt.background = "light"
-    vim.cmd.colorscheme("catppuccin-latte")
+    -- Before the theme, not after: catppuccin defines a couple of these
+    -- (@lsp.type.enumMember and friends) and its definitions should win.
     fix_lsp_groups()
+    vim.cmd.colorscheme("catppuccin-latte")
 end
 
 -- The dark theme defines the @lsp.* semantic-token groups explicitly (navarasu
