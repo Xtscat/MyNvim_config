@@ -105,7 +105,8 @@ order = {
 | `<leader>n*` | haunt.nvim 笔记（`na` 加 note、`nl` 列表、`nq` quickfix…） |
 | `gd gD gr gR` / `<leader>rn` / `<leader>t` / `<leader>d` | LSP 跳转 / 重命名 / trouble / 诊断浮窗 |
 | `<c-l>` | 格式化 |
-| `<leader>g*` | git-conflict（next/prev/ours/theirs/both/none） |
+| `<leader>gn` / `<leader>gN` | 跳到下一个 / 上一个 git 改动（gitsigns，含已暂存） |
+| `<leader>G*` | git-conflict（next/prev/ours/theirs/both/none） |
 | `<leader>1-9/0` | barbar 切 buffer；`<leader>pb/cb/x[/x]`；`\[ \] \{ \}` |
 | `<leader>T` / `<leader>fw` | toggleterm / winpick |
 | `<leader>C*` | CMake |
