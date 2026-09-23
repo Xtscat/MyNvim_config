@@ -13,15 +13,21 @@
 --              selection #BFCEFF, line highlight #F0F0F0
 --   * Vim:     vim/colors/onehalflight.vim (same palette, #fafafa background)
 --
--- ...with the three things that made it glare on a full screen fixed, all
--- measured against the `edge` light theme this config was happy with:
+-- ...with the three things that made it glare on a full screen fixed (plus the
+-- editor background brought back to #fafafa, which is what edge used and what
+-- this config turns out to prefer -- issue #4):
 --
 --                         One Half      edge          this theme
---   editor background     #fafafa       #fafafa       #f1f2f4  (-6.3% light)
---   body text contrast    10.1:1        7.2:1         8.32:1
---   panel step            ~0%            ~4.7%         5.4%   (mantle)
---   chrome/separator step ~0%            ~7.6%         8.3%   (crust)
+--   editor background     #fafafa       #fafafa       #fafafa
+--   body text contrast    10.1:1        7.2:1         8.9:1
+--   panel step            ~0%            ~4.7%         7.8%   (mantle)
+--   chrome/separator step ~0%            ~7.6%         10.6%  (crust)
 --   accent saturation     0.77-0.99     0.55-0.65     0.59-0.94
+--
+-- The panel/chrome steps are deliberately one notch stronger than edge's: the
+-- float/picker background (#dee1e5) is the colour the docks and the search
+-- window are happiest with, and on a #fafafa editor that also makes them read
+-- as separate surfaces.
 --
 -- Two consequences of catppuccin's structure worth knowing:
 --   * It has 26 colour slots (14 accents + text/subtext0-1 + overlay0-2 +
@@ -44,11 +50,15 @@ local AMBER = "#b57d06" -- #c18401 (types, numbers, constants)
 local BLUE = "#057db0" -- #0184bc (functions)
 local PURPLE = "#9c289a" -- #a626a4 (keywords, storage)
 local CYAN = "#0d8ea8" -- #0997b3 (escapes, preproc)
-local TEXT = "#43474f" -- #383a42, softened to ~8.32:1 on the new base
+local TEXT = "#43474f" -- #383a42, softened to ~8.9:1 on the new base
+-- Secondary text inside floats (picker paths, completion descriptions, line
+-- numbers): catppuccin links these to NonText/Comment/LineNr, which land at
+-- 1.4-2.2:1 on the float background and are genuinely hard to read (issue #5).
+local DIM = "#767a81" -- 3.3:1 on the float background, 4.1:1 on the editor
 
 M.palette = {
     -- surfaces: editor / panels / chrome
-    base = "#f1f2f4",
+    base = "#fafafa",
     mantle = "#dee1e5",
     crust = "#d4d8de",
     surface0 = "#ccd1d8",
@@ -135,13 +145,29 @@ M.highlights = {
     CurSearch = { bg = "#d2b06c", fg = TEXT },
 
     -- Completion menu: the item text is body-coloured in One Half (and easier
-    -- to read than catppuccin's overlay2), descriptions stay muted.
+    -- to read than catppuccin's overlay2), descriptions stay muted -- but muted
+    -- enough to be legible, see DIM above.
     Pmenu = { bg = M.palette.mantle, fg = TEXT },
-    PmenuExtra = { fg = M.palette.overlay1 },
+    PmenuExtra = { fg = DIM },
+    PmenuExtraSel = { fg = DIM },
     PmenuMatch = { fg = TEXT, bold = true },
     BlinkCmpLabel = { fg = TEXT },
-    BlinkCmpLabelDescription = { fg = M.palette.overlay1 },
-    BlinkCmpLabelDetail = { fg = M.palette.overlay1 },
+    BlinkCmpLabelDescription = { fg = DIM },
+    BlinkCmpLabelDetail = { fg = DIM },
+
+    -- Search window (snacks picker): snacks inherits these from NonText /
+    -- Comment / LineNr, which are far too faint on a #dee1e5 panel.
+    SnacksPickerDir = { fg = DIM },
+    SnacksPickerComment = { fg = DIM },
+    SnacksPickerDesc = { fg = DIM },
+    SnacksPickerTotals = { fg = DIM },
+    SnacksPickerCol = { fg = DIM },
+    SnacksPickerRow = { fg = DIM },
+    SnacksPickerTree = { fg = DIM },
+    SnacksPickerBufFlags = { fg = DIM },
+    SnacksPickerPathHidden = { fg = DIM },
+    SnacksPickerPathIgnored = { fg = DIM },
+    SnacksPickerUnselected = { fg = DIM },
 
     -- Terminal buffer / legacy terminal statusline (dark after a theme switch).
     Terminal = { fg = TEXT, bg = M.palette.base },
