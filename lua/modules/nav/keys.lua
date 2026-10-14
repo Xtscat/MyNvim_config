@@ -11,6 +11,7 @@ function M.register()
     -- snacks picker (files / live grep)
     Map.map({ "n", "x" }, "<leader>ff", function() Snacks.picker.files() end, "Find Files")
     Map.map({ "n", "x" }, "<leader>fc", function() Snacks.picker.grep() end, "Find Code")
+    Map.nmap("<leader>fs", function() Snacks.picker.lsp_symbols() end, "Find Symbol")
 
     -- neo-tree
     Map.nmap("tt", "<cmd>Neotree toggle<CR>", "Toggle File Tree")
