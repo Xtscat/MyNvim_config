@@ -70,7 +70,7 @@ end
 function M.theme_night()
     vim.g.colors_name = nil
     vim.opt.background = "dark"
-    require("onedark").setup({ style = "dark" })
+    require("onedark").setup({ style = "warmer" })
     vim.cmd.colorscheme("onedark")
 end
 
