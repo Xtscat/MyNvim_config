@@ -49,7 +49,23 @@ function M.lsp()
         -- clangd's markers (compile_flags.txt, configure.ac, .clang-tidy,
         -- .clang-format) -- which make a subdirectory the workspace root -- a typo
         -- ("clide.toml") and offsetEncoding = utf-8 while clice answers in UTF-16.
-        clice = {},
+        --
+        -- clice has no user-level config file: settings come from the
+        -- workspace's clice.toml or from the client's initializationOptions,
+        -- and this is the only place that reaches every project at once.
+        -- `index = false` only keeps a TU out of the background index (which
+        -- makes the rebuild after a nightly cache-format bump cheap); gd and
+        -- hover still resolve into those files, because they come from the
+        -- open document's own AST, not from the index.
+        clice = {
+            init_options = {
+                rules = {
+                    { patterns = { "third_party/**" }, index = false },
+                    { patterns = { "**/unittests/**" }, index = false },
+                    { patterns = { "**/examples/**" }, index = false },
+                },
+            },
+        },
 
         -- Python
         ty = {},
