@@ -42,24 +42,14 @@ function M.lsp()
         --         "--header-insertion=iwyu",
         --     },
         -- },
-        clice = {
-            cmd = { "clice", "serve" },
-            filetypes = { "c", "cpp" },
-            -- Where clice looks for the project root; first match wins per dir.
-            root_markers = {
-                ".git/",
-                "clide.toml",
-                ".clang-tidy",
-                ".clang-format",
-                "compile_commands.json",
-                "compile_flags.txt",
-                "configure.ac",
-            },
-            capabilities = {
-                textDocument = { completion = { editsNearCursor = true } },
-                offsetEncoding = { "utf-8" },
-            },
-        },
+        -- No hand-written clice config: nvim-lspconfig ships one in lsp/clice.lua
+        -- (cmd, filetypes c/cpp/cuda, root_markers clice.toml /
+        -- compile_commands.json / .git) plus the :LspClice{Show,Switch,Reset}Context
+        -- and :LspCliceSwitchConfiguration commands via on_attach. Our own copy had
+        -- clangd's markers (compile_flags.txt, configure.ac, .clang-tidy,
+        -- .clang-format) -- which make a subdirectory the workspace root -- a typo
+        -- ("clide.toml") and offsetEncoding = utf-8 while clice answers in UTF-16.
+        clice = {},
 
         -- Python
         ty = {},
