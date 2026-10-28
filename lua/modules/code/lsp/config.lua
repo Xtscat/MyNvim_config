@@ -53,18 +53,34 @@ function M.lsp()
         -- clice has no user-level config file: settings come from the
         -- workspace's clice.toml or from the client's initializationOptions,
         -- and this is the only place that reaches every project at once.
-        -- `index = false` only keeps a TU out of the background index (which
-        -- makes the rebuild after a nightly cache-format bump cheap); gd and
-        -- hover still resolve into those files, because they come from the
-        -- open document's own AST, not from the index.
+        -- No index rules here: every TU in the compilation database joins the
+        -- index, which is what lets a cross-file gd land in any .cpp -- the
+        -- index, and not the open document's AST, answers it. A rule saying
+        -- `index = false` does not just skip indexing: it DROPS the rows the
+        -- index already holds for the matching TUs, so add one only for trees
+        -- that must never be a jump target, and expect to pay their rebuild
+        -- again the day the rule goes away.
         clice = {
-            init_options = {
-                rules = {
-                    { patterns = { "third_party/**" }, index = false },
-                    { patterns = { "**/unittests/**" }, index = false },
-                    { patterns = { "**/examples/**" }, index = false },
-                },
-            },
+            -- lspconfig's root_markers stop at the nearest ancestor, and
+            -- third_party/llvm-project carries its own .git: a header opened
+            -- there became a workspace of its own, which has no
+            -- compile_commands.json -- so clice guessed the flags and had
+            -- nothing to index. clice derives its whole index from the
+            -- compilation database, so take the nearest ancestor that has one
+            -- (at its root or in an immediate subdirectory, the usual build/
+            -- layout) and only fall back to the marker-based root if there is
+            -- none.
+            root_dir = function(bufnr, on_dir)
+                local dir = vim.fs.dirname(vim.api.nvim_buf_get_name(bufnr))
+                while dir and dir ~= "/" and dir ~= "" do
+                    local found = vim.fn.filereadable(dir .. "/compile_commands.json") == 1
+                        or #vim.fn.glob(dir .. "/*/compile_commands.json", true, true) > 0
+                    if found then return on_dir(dir) end
+                    if dir == vim.env.HOME then break end
+                    dir = vim.fs.dirname(dir)
+                end
+                on_dir(vim.fs.root(bufnr, { "clice.toml", "compile_commands.json", ".git" }))
+            end,
         },
 
         -- Python
