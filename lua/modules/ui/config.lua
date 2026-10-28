@@ -218,6 +218,18 @@ function M.edgy()
             },
         },
     })
+
+    -- edgy's own `exit_when_last = true` does not take effect on Neovim 0.12:
+    -- while WinClosed runs, the window being closed is still returned by
+    -- nvim_tabpage_list_wins(), so edgy's check_main() sees a main window and
+    -- returns early, leaving the docks filling the screen after `:q`.
+    -- Re-run that same check once the close has actually finished.
+    vim.api.nvim_create_autocmd("WinClosed", {
+        group = vim.api.nvim_create_augroup("edgy_exit_when_last", { clear = true }),
+        callback = function()
+            vim.schedule(function() require("edgy.editor").check_main() end)
+        end,
+    })
 end
 
 -- Terminal (bottom docks / floating).
