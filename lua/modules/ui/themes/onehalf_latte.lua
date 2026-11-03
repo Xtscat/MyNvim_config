@@ -138,6 +138,15 @@ M.highlights = {
     -- Blue + underline, like the original.
     MatchParen = { fg = BLUE, underline = true },
 
+    -- The buffer-tab bar. barbar derives its Buffer* colour family from these two
+    -- groups (see M.barbar() in modules/ui/config.lua), which makes this the only
+    -- place the day theme has to describe the bar. catppuccin paints the tabs at
+    -- `crust` but the rest of the bar at `mantle`, and its tab text at `overlay0`
+    -- (1.6:1 on that background) -- so the bar gets one colour, the chrome step
+    -- the palette comment names for the tabline, and readable tab text.
+    TabLine = { bg = M.palette.crust, fg = M.palette.subtext0 },
+    TabLineFill = { bg = M.palette.crust },
+
     -- Search: One Half's amber, softened to 25/40/60% over the background
     -- instead of the original solid amber block (the harshest thing in it).
     Search = { bg = "#e4d6bc", fg = TEXT },

@@ -67,10 +67,28 @@ end
 -- option has to be written through setup(): it lives in vim.g.onedark_config, so
 -- `require("onedark").style = "dark"` is a silent no-op, and onedark pins
 -- itself to "light" for as long as that option says "light".
+--
+-- The tab bar follows the structure of the WezTerm tab bar in
+-- C:\Users\15089\.config\wezterm (utils/theme.lua): the strip is one step darker
+-- than the working surface and the inactive tabs blend into it, while the active
+-- tab is raised out of it. WezTerm raises its active tab with a saturated blue
+-- because its window chrome is built on that blue; here the values are onedark
+-- palette slots referenced as `$name` (onedark substitutes them with the active
+-- style's colour), so the bar stays inside the theme: $bg_d for the strip, $bg3
+-- for the active tab -- 1.46:1 against the strip, against 1.41:1 for $bg2 and
+-- 1.24:1 for $bg1, i.e. the top of the range the palette has -- and $fg /
+-- $light_grey for the two text levels.
 function M.theme_night()
     vim.g.colors_name = nil
     vim.opt.background = "dark"
-    require("onedark").setup({ style = "warmer" })
+    require("onedark").setup({
+        style = "warmer",
+        highlights = {
+            TabLine = { bg = "$bg_d", fg = "$light_grey" },
+            TabLineFill = { bg = "$bg_d" },
+            TabLineSel = { bg = "$bg3", fg = "$fg" },
+        },
+    })
     vim.cmd.colorscheme("onedark")
 end
 
@@ -113,8 +131,63 @@ function M.barbar()
         icons = {
             buffer_index = true,
             buffer_numbers = true,
+            -- No "▎" separators between tabs: the tab surfaces already separate
+            -- themselves, and the glyph is drawn in a colour of its own (barbar
+            -- derives it from `Special`), which put a stray coloured line on the
+            -- left edge of the active tab.
+            separator = { left = "", right = "" },
+            inactive = { separator = { left = "", right = "" } },
+            separator_at_end = false,
+            -- Per-buffer diagnostic counts, drawn after the file name: barbar's
+            -- one place for them (its node order is fixed, so they cannot go on
+            -- the left edge). The icons are lualine's own, so the tab bar and
+            -- the status line use the same glyphs; all four severities are
+            -- written out because barbar ships them disabled and only renders a
+            -- severity whose count is above zero. The colours are not set here:
+            -- barbar derives Buffer<state>{ERROR,WARN,INFO,HINT} from the
+            -- Diagnostic* groups and keeps the tab's own background.
+            diagnostics = {
+                [vim.diagnostic.severity.ERROR] = { enabled = true, icon = "󰅚 " },
+                [vim.diagnostic.severity.WARN] = { enabled = true, icon = "󰀪 " },
+                [vim.diagnostic.severity.INFO] = { enabled = true, icon = "󰋽 " },
+                [vim.diagnostic.severity.HINT] = { enabled = true, icon = "󰌶 " },
+            },
         },
     })
+
+    -- barbar derives its whole Buffer* colour family from the colorscheme's
+    -- TabLine / TabLineSel, but a definition inside the colorscheme wins over
+    -- that default link, and both themes here define these groups: onedark marks
+    -- the current tab with bold text only, plus a purple Sign; catppuccin draws
+    -- the tab text at overlay0. The result was a current tab with no background
+    -- at all in the dark theme and an unreadable one in the light theme, leaving
+    -- a single coloured "▎" to mark it. Re-point the family at barbar's own
+    -- derived groups, so the tab colours come from the theme and no palette is
+    -- duplicated here. Runs again on ColorScheme for the same reason as
+    -- CursorWord: every colorscheme starts with `hi clear`.
+    local function derive_tab_colors()
+        require("barbar.highlight").resetup()
+        for _, group in ipairs(vim.fn.getcompletion("", "highlight")) do
+            if group:match("^Buffer") then
+                local default = (group:gsub("^Buffer", "BufferDefault"))
+                if vim.fn.hlexists(default) == 1 then
+                    vim.api.nvim_set_hl(0, group, { link = default })
+                end
+            end
+        end
+        -- barbar paints the buffer index with `Special` and the rest of the
+        -- secondary cells with NonText/Comment, which leaves a red digit inside
+        -- the active tab (onedark's Special is #de5d68) and a 1.5:1 one on the
+        -- light bar. WezTerm's tab bar draws the index in the tab's own
+        -- foreground, so the index follows its tab -- again without naming a
+        -- colour here.
+        for _, state in ipairs({ "Current", "Visible", "Inactive", "Alternate" }) do
+            vim.api.nvim_set_hl(0, "Buffer" .. state .. "Index", { link = "Buffer" .. state })
+        end
+    end
+
+    derive_tab_colors()
+    vim.api.nvim_create_autocmd("ColorScheme", { callback = derive_tab_colors })
 end
 
 -- Vertical scrollbar on the right. No custom colors: nvim-scrollbar's own
