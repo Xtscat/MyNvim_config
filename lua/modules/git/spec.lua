@@ -11,4 +11,5 @@ end
 return {
     { "lewis6991/gitsigns.nvim", config = cfg("gitsigns") },
     { "akinsho/git-conflict.nvim", config = cfg("git_conflict") },
+    { "CoreyKaylor/diffbandit.nvim", config = cfg("diffbandit") },
 }

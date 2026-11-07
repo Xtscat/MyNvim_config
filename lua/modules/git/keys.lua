@@ -22,6 +22,12 @@ function M.register()
     Conflict.nmap("<leader>Gt", function() require("git-conflict").choose("theirs") end, "Choose Theirs")
     Conflict.nmap("<leader>Gb", function() require("git-conflict").choose("both") end, "Choose Both")
     Conflict.nmap("<leader>Gx", function() require("git-conflict").choose("none") end, "Choose None")
+
+    -- diffbandit
+    Map.nmap("<leader>gd", "<cmd>DiffBanditGit<CR>", "Diff Working Tree")
+    Map.nmap("<leader>gD", "<cmd>DiffBanditGitCurrent<CR>", "Diff Current File")
+    Map.nmap("<leader>gc", "<cmd>DiffBanditCommitPanel<CR>", "Commit Panel")
+    Map.nmap("<leader>gl", "<cmd>DiffBanditGitLog<CR>", "Git Log")
 end
 
 return M
