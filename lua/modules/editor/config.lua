@@ -86,11 +86,14 @@ function M.autosave()
         },
         trigger_events = { "InsertLeave", "TextChanged", "BufLeave", "FocusLost" },
         -- Only save "normal" buffers: skip non-modifiable ones (terminals,
-        -- quickfix, ...) and lua (so it doesn't save half-edited config).
+        -- quickfix, ...), lua (so it doesn't save half-edited config) and
+        -- "bigfile" -- the filetype snacks give files above 20MB, which would
+        -- otherwise be written on every TextChanged.
         condition = function(buf)
             local fn = vim.fn
             local utils = require("auto-save.utils.data")
-            return fn.getbufvar(buf, "&modifiable") == 1 and utils.not_in(fn.getbufvar(buf, "&filetype"), { "lua" })
+            return fn.getbufvar(buf, "&modifiable") == 1
+                and utils.not_in(fn.getbufvar(buf, "&filetype"), { "lua", "bigfile" })
         end,
         write_all_buffers = true,
         debounce_delay = 135,

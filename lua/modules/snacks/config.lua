@@ -18,6 +18,18 @@ function M.setup()
         notify = { enabled = false },
         notifier = { enabled = false, style = { anchor = "bottom_right" } },
 
+        -- big files: anything above 20MB (or with an average line length over
+        -- snacks' default 1000 chars) is given the filetype "bigfile", and
+        -- snacks' own hook then switches off completion, MatchParen, folds,
+        -- statuscolumn and conceallevel for that buffer. The plugins we run on
+        -- top are kept off the filetype in their own configs, not in a hook
+        -- here: gitsigns' on_attach (modules/git/config.lua), nvim-scrollbar's
+        -- excluded_filetypes and nvim-cursorline's disable_filetypes
+        -- (modules/ui/config.lua), auto-save's condition
+        -- (modules/editor/config.lua) and the hlslens call in the n/N keymaps
+        -- (modules/nav/keys.lua).
+        bigfile = { enabled = true, size = 20 * 1024 * 1024 },
+
         -- the picker used by <leader>ff / <leader>fc / gd / gr / ...
         picker = {
             enabled = true,

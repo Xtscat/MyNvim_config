@@ -193,7 +193,27 @@ end
 -- Vertical scrollbar on the right. No custom colors: nvim-scrollbar's own
 -- defaults (Search, Diagnostic*, Normal) follow the colorscheme and the plugin
 -- re-applies them on ColorScheme itself, so edge/onedark both work.
-function M.scrollbar() require("scrollbar").setup() end
+function M.scrollbar()
+    require("scrollbar").setup({
+        -- modules/snacks/config.lua tags files above 20MB as filetype "bigfile",
+        -- and the bar is pure overhead on one. scrollbar.config.set() merges
+        -- with tbl_deep_extend("force"), which replaces lists outright, so the
+        -- defaults are repeated here with "bigfile" appended -- passing only
+        -- the new entry would drop the picker/notify windows from the list.
+        excluded_filetypes = {
+            "blink-cmp-menu",
+            "dropbar_menu",
+            "dropbar_menu_fzf",
+            "DressingInput",
+            "cmp_docs",
+            "cmp_menu",
+            "noice",
+            "prompt",
+            "TelescopePrompt",
+            "bigfile",
+        },
+    })
+end
 
 -- Indent guides + scope highlight.
 function M.indent_blankline()
@@ -214,6 +234,12 @@ end
 function M.cursorline()
     local cursorword_hl = { underline = true }
     require("nvim-cursorline").setup({
+        -- "bigfile" is the filetype snacks give files above 20MB. Setting
+        -- 'cursorline' off by hand does not hold there: the plugin's own
+        -- CursorMoved timer switches wo.cursorline back on, so its filetype
+        -- filter is the only place the switch can stay off (cursorword
+        -- underline is skipped by the same filter).
+        disable_filetypes = { "bigfile" },
         -- Delayed current-line highlight: off while moving, lit after `timeout`
         -- ms of no movement (keeps the screen calm).
         cursorline = {

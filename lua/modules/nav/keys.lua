@@ -21,9 +21,20 @@ function M.register()
     Map.nmap("<leader>a", "<cmd>Outline<CR>", "Toggle Outline")
 
     -- hlslens: keep hlslens' match counter/indicator when jumping between
-    -- search hits, and clear the highlight with <Esc>
-    Map.nmap("n", [[<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>]], "Next Match")
-    Map.nmap("N", [[<Cmd>execute('normal! ' . v:count1 . 'N')<CR><Cmd>lua require('hlslens').start()<CR>]], "Prev Match")
+    -- search hits, and clear the highlight with <Esc>. hlslens only has a
+    -- module-level on/off switch and no per-buffer one (hlslens/main.lua:47-77),
+    -- so a big file -- the filetype snacks give files above 20MB -- is kept out
+    -- of the renderer here rather than by switching the plugin off for every
+    -- other buffer. `normal!` stays in the mapping so a missing match still
+    -- reports E486 as it did before.
+    local function jump_matches(cmd)
+        return (
+            [[<Cmd>execute('normal! ' . v:count1 . '%s')<CR>]]
+            .. [[<Cmd>lua if vim.bo.filetype ~= "bigfile" then require('hlslens').start() end<CR>]]
+        ):format(cmd)
+    end
+    Map.nmap("n", jump_matches("n"), "Next Match")
+    Map.nmap("N", jump_matches("N"), "Prev Match")
     Map.nmap("<Esc>", "<Cmd>noh<CR>", "Clear Search Highlight")
 
     -- haunt.nvim (ghost-text notes) -> <leader>n

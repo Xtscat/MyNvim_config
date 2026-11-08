@@ -3,7 +3,16 @@
 local M = {}
 
 function M.gitsigns()
-    require("gitsigns").setup()
+    require("gitsigns").setup({
+        -- Files above 20MB carry the filetype "bigfile" (modules/snacks/config.lua)
+        -- and must not get signs, highlights or an on_lines diff. gitsigns has no
+        -- filetype filter of its own (attach.lua:119 only compares the line count
+        -- with max_file_length) and detach() is async, racing the BufRead /
+        -- BufWritePost attach it would have to undo, so the buffer is refused at
+        -- gitsigns' own attach gate: on_attach() returning false aborts the attach
+        -- (attach.lua:388-392) and every later BufWritePost ends up there again.
+        on_attach = function(bufnr) return vim.bo[bufnr].filetype ~= "bigfile" end,
+    })
     require("scrollbar.handlers.gitsigns").setup()
 end
 
