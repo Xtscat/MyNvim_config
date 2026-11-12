@@ -14,6 +14,36 @@ function M.gitsigns()
         on_attach = function(bufnr) return vim.bo[bufnr].filetype ~= "bigfile" end,
     })
     require("scrollbar.handlers.gitsigns").setup()
+
+    -- `:Gitsigns blame` opens its panel with an explicit `aboveleft`
+    -- (actions/blame.lua:499), so it lands left of the code whatever
+    -- 'splitright' says. Exchange the windows here, inside the FileType event
+    -- (blame.lua:512) and before blame() paints the panel itself at
+    -- blame.lua:544, so the left layout is never drawn. The rest of blame()
+    -- (514-545) works on window handles, so moving the window early is safe.
+    -- The width is the one the plugin computed (blame.lua:245).
+    vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("GitSignsBlameSide", { clear = true }),
+        pattern = "gitsigns-blame",
+        callback = function(args)
+            local win = vim.fn.win_findbuf(args.buf)[1]
+            if not win then
+                return
+            end
+            vim.api.nvim_set_current_win(win)
+            -- `winnr("l")` is the current window when nothing is right of it
+            if vim.fn.winnr("l") == vim.fn.winnr() then
+                return
+            end
+            local width = vim.api.nvim_win_get_width(win)
+            if not pcall(vim.cmd, "wincmd x") or not vim.api.nvim_win_is_valid(win) then
+                return
+            end
+            -- `:wincmd x` leaves the cursor in the exchanged window
+            vim.api.nvim_set_current_win(win)
+            vim.api.nvim_win_set_width(win, width)
+        end,
+    })
 end
 
 function M.git_conflict()

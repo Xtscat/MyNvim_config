@@ -14,6 +14,19 @@ function M.register()
     -- and v:count1.
     Map.nmap("<leader>gn", function() require("gitsigns").nav_hunk("next", { target = "all" }) end, "Next Change")
     Map.nmap("<leader>gN", function() require("gitsigns").nav_hunk("prev", { target = "all" }) end, "Previous Change")
+    Map.nmap("<leader>gb", "<cmd>Gitsigns blame<CR>", "Blame Buffer")
+
+    -- The blame panel maps <CR> r d D R s S e only
+    -- (gitsigns/actions/blame.lua:547-609), so `q` would start macro recording.
+    -- Closing the window is the plugin's own exit path: WinClosed restores the
+    -- code window's foldenable/scrollbind/wrap (blame.lua:664-675).
+    vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("GitBlameKeys", { clear = true }),
+        pattern = "gitsigns-blame",
+        callback = function(ev)
+            Map.nmap("q", "<cmd>close<CR>", "Close Blame Panel", { buffer = ev.buf })
+        end,
+    })
 
     -- git-conflict
     Conflict.nmap("<leader>Gn", function() require("git-conflict").find_next() end, "Next Conflict")
